@@ -1,9 +1,24 @@
-import 'package:chatapp/room.dart';
+import 'package:chatapp/rooms.dart';
 import 'package:flutter/material.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
 
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  List<DropdownMenuItem<String>> get dropdownItems {
+    List<DropdownMenuItem<String>> menuItems = [
+      DropdownMenuItem(child: Text("ايقونة وصورة"), value: "icon_image"),
+      DropdownMenuItem(child: Text("ايقونة فقط "), value: "just_icon"),
+      DropdownMenuItem(child: Text("بدون اشعار"), value: "no_alert"),
+    ];
+    return menuItems;
+  }
+
+  String selectedValue = "icon_image";
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -11,32 +26,23 @@ class Profile extends StatelessWidget {
       home: Scaffold(
         backgroundColor: Color.fromARGB(255, 228, 211, 211),
         appBar: AppBar(
-          leading: Padding(
-            padding: EdgeInsets.all(0.0),
-            child: Image(
-              image: AssetImage('assets/app_images/appbaricon.jpg'),
-              fit: BoxFit.cover,
+          actions: [
+            Padding(
+              padding: EdgeInsets.all(0),
+              child: Image(
+                image: AssetImage('assets/app_images/appbaricon.jpg'),
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
+          ],
           toolbarHeight: 50,
           backgroundColor: Color.fromARGB(255, 228, 211, 211),
         ),
-        body: Column(children: [
+        body: Column(textDirection: TextDirection.rtl, children: [
           TextField(
               decoration: InputDecoration(
-            labelText: "Your Name :", //babel text
+            labelText: "الاسم :", //babel text
             hintText: "اكتب اسمك هنا", //hint text
-            prefixIcon: Icon(Icons.person, color: Colors.black), //prefix iocn
-
-            hintStyle: TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w100), //hint text style
-            labelStyle:
-                TextStyle(fontSize: 13, color: Color.fromARGB(255, 12, 12, 12)),
-          )),
-          TextField(
-              decoration: InputDecoration(
-            labelText: "Description :", //babel text
-            hintText: "الوصف (اختياري )", //hint text
             prefixIcon: Icon(
               Icons.person,
               color: Colors.black,
@@ -47,19 +53,89 @@ class Profile extends StatelessWidget {
             labelStyle:
                 TextStyle(fontSize: 13, color: Color.fromARGB(255, 12, 12, 12)),
           )),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              
-              primary: Colors.black,
-              onPrimary: Colors.white,
+          TextField(
+            decoration: InputDecoration(
+              labelText: "الحالة :", //babel text
+              hintText: " الحالة (اختياري )", //hint text
+              prefixIcon: Icon(
+                Icons.person,
+                color: Colors.black,
+              ),
+
+              hintStyle: TextStyle(
+                  fontSize: 14, fontWeight: FontWeight.w100), //hint text style
+              labelStyle: TextStyle(
+                  fontSize: 13, color: Color.fromARGB(255, 12, 12, 12)),
             ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Rooms()),
-              );
-            },
-            child: Text('Save'),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: Image(
+                  width: 70,
+                  image: AssetImage('assets/app_images/appbaricon.jpg'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Text(
+                '  : صورة',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                  color: Color.fromARGB(255, 12, 12, 12),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              DropdownButton(
+                  value: selectedValue,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedValue = newValue!;
+                    });
+                  },
+                  items: dropdownItems),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                child: Text(
+                  '  : استلام الاشعارات ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                    color: Color.fromARGB(255, 12, 12, 12),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 24, 24, 5),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.black,
+                onPrimary: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Rooms()),
+                );
+              },
+              child: Text('حفظ'),
+            ),
+          ),
+          Text(
+            'سياسة الخصوصية',
+            style: TextStyle(
+              fontWeight: FontWeight.w100,
+              fontSize: 12,
+              color: Color.fromARGB(255, 12, 12, 12),
+            ),
           ),
         ]),
       ),
