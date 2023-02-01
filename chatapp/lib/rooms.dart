@@ -6,18 +6,27 @@ class Rooms extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
+        backgroundColor: Color.fromARGB(255, 228, 211, 211),
         appBar: AppBar(
-          toolbarHeight: 25,
-          backgroundColor: Color.fromARGB(255, 211, 143, 65),
-          title: Text('دردشة شباب وبنات العراق'),
-          titleTextStyle: TextStyle(
-            color: Colors.black,
-            fontSize: 12,
+          leading: Padding(
+            padding: EdgeInsets.all(0),
+            child: Text('hello'),
           ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.all(0),
+              child: Image(
+                image: AssetImage('assets/app_images/appbaricon.jpg'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ],
+          toolbarHeight: 50,
+          backgroundColor: Color.fromARGB(255, 228, 211, 211),
         ),
         body: Column(children: [
-          
           TextField(
               decoration: InputDecoration(
             labelText: "ROOM!", //babel text
@@ -41,15 +50,13 @@ class Rooms extends StatelessWidget {
                 TextStyle(fontSize: 13, color: Color.fromARGB(255, 12, 12, 12)),
           )),
           Text('data'),
-            
-         ElevatedButton(
-          onPressed: () {
-           Navigator.pop(context);
-          }, child: null,
-        ),
-        
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: null,
+          ),
         ]),
-        
       ),
     );
   }
