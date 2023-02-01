@@ -1,8 +1,6 @@
-// import 'dart:html';
-// import 'dart:io';
-// import 'package:image_picker/image_picker.dart';
 import 'package:chatapp/profile.dart';
 import 'package:flutter/material.dart';
+// import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(MyApp());
@@ -101,6 +99,9 @@ void _show_rate_us_dialog(BuildContext context) {
           ElevatedButton(
             child: Text('نعم'),
             onPressed: () {
+              // final uri =
+              //     Uri.parse('https://www.youtube.com/watch?v=1tGBCpx4gEU');
+              // launchUrl(uri);
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const Profile()),
