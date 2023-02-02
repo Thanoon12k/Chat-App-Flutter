@@ -13,42 +13,132 @@ class Rooms extends StatelessWidget {
         backgroundColor: Color.fromARGB(255, 228, 211, 211),
         endDrawer: mydrawer(),
         appBar: myappbar(),
-        body: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: 200,
-              height: 50,
-              decoration: BoxDecoration(
-                //     color: Color.fromARGB(255, 87, 0, 0),
-
-                image: DecorationImage(
-                    image: AssetImage('assets/app_images/tech.png'),
-                    fit: BoxFit.cover),
-              ),
+        body: SingleChildScrollView(
+          child: Column(children: [
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Stack(alignment: AlignmentDirectional.center, children: [
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/app_images/appbaricon.jpg'),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 6,
+                      child: Image.asset('assets/app_images/room.png'),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/app_images/appbaricon.jpg'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  'الكروب العام',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 18,
+                    color: Color.fromARGB(255, 59, 73, 6),
+                  ),
+                ),
+              ]),
             ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: "ROOM2", //babel text
-                hintText: "الوصف (اختياري )", //hint text
-                prefixIcon: Icon(Icons.person), //prefix iocn
-
-                hintStyle: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w100), //hint text style
-                labelStyle: TextStyle(
-                    fontSize: 13, color: Color.fromARGB(255, 12, 12, 12)),
-              ),
+            Padding(
+              padding: EdgeInsets.all(12),
+              child: Stack(alignment: AlignmentDirectional.center, children: [
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/app_images/appbaricon.jpg'),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 6,
+                      child: Image.asset('assets/app_images/room.png'),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/app_images/appbaricon.jpg'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  'الكروب الاول',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 18,
+                    color: Color.fromARGB(255, 59, 73, 6),
+                  ),
+                ),
+              ]),
             ),
-            Text('data'),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: null,
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Stack(alignment: AlignmentDirectional.center, children: [
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/app_images/appbaricon.jpg'),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 6,
+                      child: Image.asset('assets/app_images/room.png'),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/app_images/appbaricon.jpg'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  'كروب بغداد ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 18,
+                    color: Color.fromARGB(255, 59, 73, 6),
+                  ),
+                ),
+              ]),
             ),
-          ],
+          ]),
         ),
       ),
     );

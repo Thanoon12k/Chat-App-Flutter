@@ -1,3 +1,7 @@
+import 'package:chatapp/notification.dart';
+import 'package:chatapp/profile_setting.dart';
+import 'package:chatapp/rooms.dart';
+import 'package:chatapp/utils.dart';
 import 'package:flutter/material.dart';
 
 class myappbar extends StatelessWidget implements PreferredSizeWidget {
@@ -20,8 +24,17 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
         actions: [
           Padding(
             padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
-            child: CircleAvatar(
-              backgroundImage: AssetImage('assets/app_images/appbaricon.jpg'),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ProfileSettings()),
+                );
+              },
+              child: CircleAvatar(
+                backgroundImage: AssetImage('assets/app_images/appbaricon.jpg'),
+              ),
             ),
           ),
           Padding(
@@ -33,10 +46,19 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
               ),
               width: 40,
               height: 40,
-              child: Icon(
-                Icons.notifications,
-                color: Color.fromARGB(255, 255, 255, 255),
-                size: 30,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const NotificationScreen()),
+                  );
+                },
+                child: Icon(
+                  Icons.notifications,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  size: 30,
+                ),
               ),
             ),
           ),
@@ -93,13 +115,19 @@ class mydrawer extends StatelessWidget {
           ListTile(
             title: const Text('❤ الدردشات ❤'),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Rooms()),
+              );
             },
           ),
           ListTile(
             title: const Text('سياسة الخصوصية'),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => privacypolicydialog()),
+              );
             },
           ),
         ],
