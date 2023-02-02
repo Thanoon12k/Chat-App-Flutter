@@ -14,18 +14,20 @@ class Rooms extends StatelessWidget {
         endDrawer: mydrawer(),
         appBar: myappbar(),
         body: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            TextField(
-                decoration: InputDecoration(
-              labelText: "ROOM!", //babel text
-              hintText: "اكتب اسمك هنا", //hint text
-              prefixIcon: Icon(Icons.person), //prefix iocn
+            Container(
+              width: 200,
+              height: 50,
+              decoration: BoxDecoration(
+                //     color: Color.fromARGB(255, 87, 0, 0),
 
-              hintStyle: TextStyle(
-                  fontSize: 14, fontWeight: FontWeight.w100), //hint text style
-              labelStyle: TextStyle(
-                  fontSize: 13, color: Color.fromARGB(255, 12, 12, 12)),
-            )),
+                image: DecorationImage(
+                    image: AssetImage('assets/app_images/tech.png'),
+                    fit: BoxFit.cover),
+              ),
+            ),
             TextField(
               decoration: InputDecoration(
                 labelText: "ROOM2", //babel text
