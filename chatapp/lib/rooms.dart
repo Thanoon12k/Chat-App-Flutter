@@ -14,132 +14,136 @@ class Rooms extends StatelessWidget {
         endDrawer: mydrawer(),
         appBar: myappbar(),
         body: SingleChildScrollView(
-          child: Column(children: [
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Stack(alignment: AlignmentDirectional.center, children: [
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/app_images/appbaricon.jpg'),
+            padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 0, 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                                color: Color.fromARGB(66, 23, 9, 219),
+                                offset: Offset(0, 0),
+                                blurRadius: 20,
+                                blurStyle: BlurStyle.solid),
+                          ],
+                          border: Border.all(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            width: 1,
+                          ),
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                          child: Stack(
+                            alignment: AlignmentDirectional.topCenter,
+                            children: [
+                              Image(
+                                //backgrounimage
+                                image: AssetImage('assets/app_images/sky2.jpg'),
+                                width: 150,
+                                height: 200,
+                                fit: BoxFit.cover,
+                              ),
+                              Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 10, 0, 30),
+                                    child: CircleAvatar(
+                                      radius: 60,
+                                      backgroundImage: AssetImage(
+                                          'assets/app_images/appbaricon.jpg'),
+                                    ),
+                                  ),
+                                  Text(
+                                    'الكروب العام',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      background: Paint()
+                                        ..color =
+                                            Color.fromARGB(255, 255, 255, 255)
+                                        ..strokeWidth = 20
+                                        ..strokeJoin = StrokeJoin.round
+                                        ..strokeCap = StrokeCap.round
+                                        ..style = PaintingStyle.stroke,
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 6,
-                      child: Image.asset('assets/app_images/room.png'),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/app_images/appbaricon.jpg'),
+                      SizedBox(width: 15),
+                      Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                                color: Color.fromARGB(66, 23, 9, 219),
+                                offset: Offset(0, 0),
+                                blurRadius: 20,
+                                blurStyle: BlurStyle.solid),
+                          ],
+                          border: Border.all(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            width: 1,
+                          ),
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                          child: Stack(
+                            alignment: AlignmentDirectional.topCenter,
+                            children: [
+                              Image(
+                                //backgrounimage
+                                image: AssetImage('assets/app_images/sky2.jpg'),
+                                width: 150,
+                                height: 200,
+                                fit: BoxFit.cover,
+                              ),
+                              Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 10, 0, 30),
+                                    child: CircleAvatar(
+                                      radius: 60,
+                                      backgroundImage: AssetImage(
+                                          'assets/app_images/appbaricon.jpg'),
+                                    ),
+                                  ),
+                                  Text(
+                                    'الكروب العام',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      background: Paint()
+                                        ..color =
+                                            Color.fromARGB(255, 255, 255, 255)
+                                        ..strokeWidth = 20
+                                        ..strokeJoin = StrokeJoin.round
+                                        ..strokeCap = StrokeCap.round
+                                        ..style = PaintingStyle.stroke,
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Text(
-                  'الكروب العام',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 18,
-                    color: Color.fromARGB(255, 59, 73, 6),
+                    ],
                   ),
                 ),
-              ]),
-            ),
-            Padding(
-              padding: EdgeInsets.all(12),
-              child: Stack(alignment: AlignmentDirectional.center, children: [
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/app_images/appbaricon.jpg'),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 6,
-                      child: Image.asset('assets/app_images/room.png'),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/app_images/appbaricon.jpg'),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Text(
-                  'الكروب الاول',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 18,
-                    color: Color.fromARGB(255, 59, 73, 6),
-                  ),
-                ),
-              ]),
-            ),
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Stack(alignment: AlignmentDirectional.center, children: [
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/app_images/appbaricon.jpg'),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 6,
-                      child: Image.asset('assets/app_images/room.png'),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/app_images/appbaricon.jpg'),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Text(
-                  'كروب بغداد ',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 18,
-                    color: Color.fromARGB(255, 59, 73, 6),
-                  ),
-                ),
-              ]),
-            ),
-          ]),
-        ),
+              ],
+            )),
       ),
     );
   }
