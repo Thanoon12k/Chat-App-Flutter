@@ -1,4 +1,4 @@
-import 'package:chatapp/rooms.dart';
+import 'package:chatapp/screens/rooms.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatefulWidget {
@@ -30,7 +30,7 @@ class _ProfileState extends State<Profile> {
             Padding(
               padding: EdgeInsets.all(0),
               child: Image(
-                image: AssetImage('assets/app_images/appbaricon.jpg'),
+                image: AssetImage('assets/icons/avatar.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -75,7 +75,7 @@ class _ProfileState extends State<Profile> {
                 padding: EdgeInsets.all(20),
                 child: Image(
                   width: 70,
-                  image: AssetImage('assets/app_images/appbaricon.jpg'),
+                  image: AssetImage('assets/icons/girl.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),

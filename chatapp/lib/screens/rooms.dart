@@ -1,6 +1,7 @@
+// import 'package:chatapp/screens/profile_view.dart';
 import 'package:flutter/material.dart';
 
-import 'appbar.dart';
+import '../widgets/appbar.dart';
 
 class Rooms extends StatelessWidget {
   const Rooms({Key? key}) : super(key: key);
@@ -45,7 +46,7 @@ class Rooms extends StatelessWidget {
                             children: [
                               Image(
                                 //backgrounimage
-                                image: AssetImage('assets/app_images/sky2.jpg'),
+                                image: AssetImage('assets/icons/sky2.jpg'),
                                 width: 150,
                                 height: 200,
                                 fit: BoxFit.cover,
@@ -56,8 +57,8 @@ class Rooms extends StatelessWidget {
                                     padding: EdgeInsets.fromLTRB(0, 10, 0, 30),
                                     child: CircleAvatar(
                                       radius: 60,
-                                      backgroundImage: AssetImage(
-                                          'assets/app_images/appbaricon.jpg'),
+                                      backgroundImage:
+                                          AssetImage('assets/icons/girl.jpg'),
                                     ),
                                   ),
                                   Text(
@@ -75,6 +76,15 @@ class Rooms extends StatelessWidget {
                                     ),
                                   ),
                                 ],
+                              ),
+                              Positioned(
+                                left: 115,
+                                top: 5,
+                                child: Icon(
+                                  Icons.notifications,
+                                  color: Color.fromARGB(255, 149, 215, 235),
+                                  size: 30,
+                                ),
                               ),
                             ],
                           ),
@@ -104,7 +114,7 @@ class Rooms extends StatelessWidget {
                             children: [
                               Image(
                                 //backgrounimage
-                                image: AssetImage('assets/app_images/sky2.jpg'),
+                                image: AssetImage('assets/icons/sky2.jpg'),
                                 width: 150,
                                 height: 200,
                                 fit: BoxFit.cover,
@@ -115,8 +125,8 @@ class Rooms extends StatelessWidget {
                                     padding: EdgeInsets.fromLTRB(0, 10, 0, 30),
                                     child: CircleAvatar(
                                       radius: 60,
-                                      backgroundImage: AssetImage(
-                                          'assets/app_images/appbaricon.jpg'),
+                                      backgroundImage:
+                                          AssetImage('assets/icons/girl.jpg'),
                                     ),
                                   ),
                                   Text(
@@ -134,6 +144,15 @@ class Rooms extends StatelessWidget {
                                     ),
                                   ),
                                 ],
+                              ),
+                              Positioned(
+                                left: 115,
+                                top: 5,
+                                child: Icon(
+                                  Icons.notifications,
+                                  color: Color.fromARGB(255, 149, 215, 235),
+                                  size: 30,
+                                ),
                               ),
                             ],
                           ),

@@ -46,3 +46,4 @@ class privacypolicydialog extends StatelessWidget {
     );
   }
 }
+

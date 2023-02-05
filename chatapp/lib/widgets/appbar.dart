@@ -1,7 +1,7 @@
-import 'package:chatapp/notification.dart';
-import 'package:chatapp/profile_setting.dart';
-import 'package:chatapp/rooms.dart';
-import 'package:chatapp/utils.dart';
+import 'package:chatapp/screens/notification.dart';
+import 'package:chatapp/screens/profile_setting.dart';
+import 'package:chatapp/screens/rooms.dart';
+import 'package:chatapp/widgets/utils.dart';
 import 'package:flutter/material.dart';
 
 class myappbar extends StatelessWidget implements PreferredSizeWidget {
@@ -17,7 +17,7 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
         leading: Padding(
           padding: EdgeInsets.all(0),
           child: Image(
-            image: AssetImage('assets/app_images/appbaricon.jpg'),
+            image: AssetImage('assets/icons/girl.jpg'),
             fit: BoxFit.cover,
           ),
         ),
@@ -33,7 +33,7 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
                 );
               },
               child: CircleAvatar(
-                backgroundImage: AssetImage('assets/app_images/appbaricon.jpg'),
+                backgroundImage: AssetImage('assets/icons/girl.jpg'),
               ),
             ),
           ),
@@ -97,40 +97,44 @@ class mydrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(0),
-              child: Image(
-                image: AssetImage('assets/app_images/appbaricon.jpg'),
-                fit: BoxFit.cover,
+      child: ClipRect(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(0),
+                child: Image(
+                  image: AssetImage('assets/icons/girl.jpg'),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          ListTile(
-            title: const Text('❤ الدردشات ❤'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Rooms()),
-              );
-            },
-          ),
-          ListTile(
-            title: const Text('سياسة الخصوصية'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => privacypolicydialog()),
-              );
-            },
-          ),
-        ],
+            ListTile(
+              title: const Text('❤ الدردشات ❤'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Rooms()),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('سياسة الخصوصية'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => privacypolicydialog()),
+                );
+              },
+            ),
+          ],
+        ),
+        clipBehavior: Clip.antiAlias,
       ),
     );
   }

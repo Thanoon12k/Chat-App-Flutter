@@ -1,5 +1,5 @@
-import 'package:chatapp/profile.dart';
-import 'package:chatapp/rooms.dart';
+import 'package:chatapp/screens/profile_signup.dart';
+import 'package:chatapp/screens/rooms.dart';
 import 'package:flutter/material.dart';
 // import 'package:url_launcher/url_launcher.dart';
 
@@ -35,7 +35,7 @@ class _HomeState extends State<Home> {
 
   Widget build(BuildContext context) {
     return Image(
-      image: AssetImage('assets/app_images/appbaricon.jpg'),
+      image: AssetImage('assets/icons/appbaricon.jpg'),
       fit: BoxFit.cover,
     );
   }
