@@ -1,7 +1,6 @@
-import 'package:chatapp/screens/profile_signup.dart';
-import 'package:chatapp/screens/rooms.dart';
+import 'package:chatapp/profile_init.dart';
+import 'package:chatapp/rooms.dart';
 import 'package:flutter/material.dart';
-// import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(Rooms());
@@ -34,9 +33,11 @@ class _HomeState extends State<Home> {
   }
 
   Widget build(BuildContext context) {
-    return Image(
-      image: AssetImage('assets/icons/appbaricon.jpg'),
-      fit: BoxFit.cover,
+    return Container(
+      child: Image(
+        image: AssetImage('assets/sky2.jpg'),
+        fit: BoxFit.cover,
+      ),
     );
   }
 }
@@ -44,44 +45,58 @@ class _HomeState extends State<Home> {
 Future<void> _showDialogAfter5Seconds(BuildContext context) async {
   await Future.delayed(Duration(seconds: 3));
   String text =
-      """Clients on Demand, LLC, (“Clients on Demand,” “we,” “us,” “our”) is committed to protecting both the personal as well as business information you share and/or store with us. This Privacy Policy applies to transactions and activities and data gathered through the Clients on Demand Website and interaction you may have with its related Social Media accounts. Please review this Privacy Policy periodically as we may revise it without notice.
-nts on Demand, LLC, (“Clients on Demand,” “we,” “us,” “our”) is committed to protecting both the personal as well as business information you share and/or store with us. This Privacy Policy applies to transactions and activities and data gathered through the Clients on Demand Website and interaction you may have with its related Social Media accounts. Please review this Privacy Policy periodically as we may revise it without notice.
-nts on Demand, LLC, (“Clients on Demand,” “we,” “us,” “our”) is committed to protecting both the personal as well as business information you share and/or store with us. This Privacy Policy applies to transactions and activities and data gathered through the Clients on Demand Website and interaction you may have with its related Social Media accounts. Please review this Privacy Policy periodically as we may revise it without notice.
-nts on Demand, LLC, (“Clients on Demand,” “we,” “us,” “our”) is committed to protecting both the personal as well as business information you share and/or store with us. This Privacy Policy applies to transactions and activities and data gathered through the Clients on Demand Website and interaction you may have with its related Social Media accounts. Please review this Privacy Policy periodically as we may revise it without notice.
-nts on Demand, LLC, (“Clients on Demand,” “we,” “us,” “our”) is committed to protecting both the personal as well as business information you share and/or store with us. This Privacy Policy applies to transactions and activities and data gathered through the Clients on Demand Website and interaction you may have with its related Social Media accounts. Please review this Privacy Policy periodically as we may revise it without notice.
-nts on Demand, LLC, (“Clients on Demand,” “we,” “us,” “our”) is committed to protecting both the personal as well as business information you share and/or store with us. This Privacy Policy applies to transactions and activities and data gathered through the Clients on Demand Website and interaction you may have with its related Social Media accounts. Please review this Privacy Policy periodically as we may revise it without notice.
-
-Generally, we may collect and use personal information for many purposes, including, but not limited to: billing, product and service fulfillment, understanding customer needs, providing a better website, improving products and services, and communicating with customers and potential customers regarding our products and services with third-party products and services.""";
+      """Clients on Demand, LLC, (“Clients on Demand,” “we,” “us,” “our”) 
+      is committed to protecting both the personal as well as business 
+      information you share and/or store with us. This Privacy Policy 
+      applies to transactions and activities and data gathered through the
+       Clients on Demand Website and interaction you may have with its
+        related Social Media accounts. Please review this Privacy Policy
+         periodically as we may revise it without notice.""";
 
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return Dialog(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                text,
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  wordSpacing: 3,
-                  color: Color.fromARGB(255, 0, 0, 0),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 14, 0, 12),
-                child: ElevatedButton(
-                  onPressed: () => _show_rate_us_dialog(context),
-                  child: Text('اوافق'),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.black,
-                    onPrimary: Colors.white,
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(15, 15, 15, 35),
+        child: Dialog(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 10, 10, 20),
+                  child: Text(
+                    text,
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
-              )
-            ],
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 14, 0, 12),
+                  child: ElevatedButton(
+                    onPressed: () => _show_rate_us_dialog(context),
+                    child: Text(
+                      'اوافق',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 255, 255, 255),
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.black,
+                      onPrimary: Colors.white,
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       );
@@ -105,7 +120,7 @@ void _show_rate_us_dialog(BuildContext context) {
               // launchUrl(uri);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Profile()),
+                MaterialPageRoute(builder: (context) => const Profile_StartUp()),
               );
             },
           ),
@@ -114,7 +129,7 @@ void _show_rate_us_dialog(BuildContext context) {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Profile()),
+                MaterialPageRoute(builder: (context) => const Profile_StartUp()),
               );
             },
           ),

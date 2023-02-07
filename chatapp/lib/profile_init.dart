@@ -1,16 +1,17 @@
-import 'package:chatapp/screens/rooms.dart';
+import 'package:chatapp/rooms.dart';
+import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
+class Profile_StartUp extends StatefulWidget {
+  const Profile_StartUp({Key? key}) : super(key: key);
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<Profile_StartUp> createState() => _Profile_StartUpState();
 }
 
-class _ProfileState extends State<Profile> {
+class _Profile_StartUpState extends State<Profile_StartUp> {
   List<DropdownMenuItem<String>> get dropdownItems {
-    List<DropdownMenuItem<String>> menuItems = [
+    const List<DropdownMenuItem<String>> menuItems = [
       DropdownMenuItem(child: Text("ايقونة وصورة"), value: "icon_image"),
       DropdownMenuItem(child: Text("ايقونة فقط "), value: "just_icon"),
       DropdownMenuItem(child: Text("بدون اشعار"), value: "no_alert"),
@@ -24,22 +25,10 @@ class _ProfileState extends State<Profile> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: Color.fromARGB(255, 228, 211, 211),
-        appBar: AppBar(
-          actions: [
-            Padding(
-              padding: EdgeInsets.all(0),
-              child: Image(
-                image: AssetImage('assets/icons/avatar.jpg'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ],
-          toolbarHeight: 50,
-          backgroundColor: Color.fromARGB(255, 228, 211, 211),
-        ),
+        backgroundColor: const Color.fromARGB(255, 228, 211, 211),
+        appBar:  AppBar_init(),
         body: Column(textDirection: TextDirection.rtl, children: [
-          TextField(
+          const TextField(
               decoration: InputDecoration(
             labelText: "الاسم :", //babel text
             hintText: "اكتب اسمك هنا", //hint text
@@ -53,7 +42,7 @@ class _ProfileState extends State<Profile> {
             labelStyle:
                 TextStyle(fontSize: 13, color: Color.fromARGB(255, 12, 12, 12)),
           )),
-          TextField(
+          const TextField(
             decoration: InputDecoration(
               labelText: "الحالة :", //babel text
               hintText: " الحالة (اختياري )", //hint text
@@ -71,15 +60,16 @@ class _ProfileState extends State<Profile> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
+               Padding(
                 padding: EdgeInsets.all(20),
-                child: Image(
+                child: 
+                Image(
                   width: 70,
-                  image: AssetImage('assets/icons/girl.jpg'),
+                  image: AssetImage('assets/girl.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
-              Text(
+               Text(
                 '  : صورة',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
@@ -100,8 +90,8 @@ class _ProfileState extends State<Profile> {
                     });
                   },
                   items: dropdownItems),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+              const Padding(
+                padding:  EdgeInsets.fromLTRB(0, 0, 20, 0),
                 child: Text(
                   '  : استلام الاشعارات ',
                   style: TextStyle(
@@ -126,10 +116,10 @@ class _ProfileState extends State<Profile> {
                   MaterialPageRoute(builder: (context) => const Rooms()),
                 );
               },
-              child: Text('حفظ'),
+              child:const Text('حفظ'),
             ),
           ),
-          Text(
+         const Text(
             'سياسة الخصوصية',
             style: TextStyle(
               fontWeight: FontWeight.w100,

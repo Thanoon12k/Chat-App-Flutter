@@ -12,7 +12,7 @@ class ProfileView extends StatelessWidget {
       home: Scaffold(
         backgroundColor: Color.fromARGB(255, 228, 211, 211),
         endDrawer: mydrawer(),
-        appBar: myappbar(),
+        appBar: AppBar_init(),
         body: Padding(
           padding: EdgeInsets.all(8.0),
           child: Column(

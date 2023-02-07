@@ -1,6 +1,6 @@
-import 'package:chatapp/screens/notification.dart';
-import 'package:chatapp/screens/profile_setting.dart';
-import 'package:chatapp/screens/rooms.dart';
+import 'package:chatapp/notification.dart';
+import 'package:chatapp/profile_setting.dart';
+import 'package:chatapp/rooms.dart';
 import 'package:chatapp/widgets/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +17,7 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
         leading: Padding(
           padding: EdgeInsets.all(0),
           child: Image(
-            image: AssetImage('assets/icons/girl.jpg'),
+            image: AssetImage('assets/girl.jpg'),
             fit: BoxFit.cover,
           ),
         ),
@@ -33,7 +33,7 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
                 );
               },
               child: CircleAvatar(
-                backgroundImage: AssetImage('assets/icons/girl.jpg'),
+                backgroundImage: AssetImage('assets/girl.jpg'),
               ),
             ),
           ),
@@ -91,6 +91,32 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
 
+class AppBar_init extends StatelessWidget implements PreferredSizeWidget {
+  const AppBar_init({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: AppBar(
+        actions: [
+          Padding(
+            padding: EdgeInsets.all(0),
+            child: Image(
+              image: AssetImage('assets/girl.jpg'),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ],
+        toolbarHeight: 50,
+        backgroundColor: Color.fromARGB(255, 228, 211, 211),
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+}
+
 class mydrawer extends StatelessWidget {
   const mydrawer({Key? key}) : super(key: key);
 
@@ -108,7 +134,7 @@ class mydrawer extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.all(0),
                 child: Image(
-                  image: AssetImage('assets/icons/girl.jpg'),
+                  image: AssetImage('assets/girl.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
