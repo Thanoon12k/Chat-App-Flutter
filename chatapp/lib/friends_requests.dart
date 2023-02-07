@@ -1,14 +1,14 @@
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 
-class Private extends StatefulWidget {
-  const Private({Key? key}) : super(key: key);
+class Friends extends StatefulWidget {
+  const Friends({Key? key}) : super(key: key);
 
   @override
-  State<Private> createState() => _PrivateState();
+  State<Friends> createState() => _FriendsState();
 }
 
-class _PrivateState extends State<Private> {
+class _FriendsState extends State<Friends> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,24 +19,14 @@ class _PrivateState extends State<Private> {
         appBar: myappbar(),
         body: Directionality(
           textDirection: TextDirection.rtl,
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      MyRow(),
-                      MyRow(),
-                      MyRow(),
-                      MyRow(),
-                      MyRow(),
-                      MyRow(),
-                    ],
-                  ),
-                ),
-              ),
-              MyTextInput()
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                MyRow(),
+                MyRow(),
+                MyRow(),
+              ],
+            ),
           ),
         ),
       ),
@@ -50,34 +40,37 @@ MyRow() {
       Padding(
         padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
         child: Image(
-          height: 50,
+          height: 70,
           image: AssetImage('assets/girl.png'),
         ),
       ),
-      Card(
-        color: Colors.greenAccent,
-        child: Wrap(
-          alignment: WrapAlignment.end,
-          children: <Widget>[
-            Container(
-              width: 200,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 10, 10, 5),
-                    child: Text(" احمد العراقي - 10:00  "),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(" مرحبا بكم"),
-                  ),
-                ],
+      Row(
+        children: [
+          Card(
+            child: Text(
+              " احمد ",
+              style: TextStyle(fontSize: 28),
+            ),
+          ),
+          Card(
+            child: Container(
+              color: Color.fromARGB(255, 68, 226, 165),
+              child: Text(
+                " قبول ",
+                style: TextStyle(fontSize: 14),
               ),
             ),
-          ],
-        ),
+          ),
+          Card(
+            child: Container(
+              color: Color.fromARGB(255, 226, 92, 68),
+              child: Text(
+                " رفض ",
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
+          ),
+        ],
       ),
     ],
   );

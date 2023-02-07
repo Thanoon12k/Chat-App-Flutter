@@ -2,14 +2,14 @@ import 'package:chatapp/rooms.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 
-class Profile_StartUp extends StatefulWidget {
-  const Profile_StartUp({Key? key}) : super(key: key);
+class Profile_Inite extends StatefulWidget {
+  const Profile_Inite({Key? key}) : super(key: key);
 
   @override
-  State<Profile_StartUp> createState() => _Profile_StartUpState();
+  State<Profile_Inite> createState() => _Profile_IniteState();
 }
 
-class _Profile_StartUpState extends State<Profile_StartUp> {
+class _Profile_IniteState extends State<Profile_Inite> {
   List<DropdownMenuItem<String>> get dropdownItems {
     const List<DropdownMenuItem<String>> menuItems = [
       DropdownMenuItem(child: Text("ايقونة وصورة"), value: "icon_image"),
@@ -26,7 +26,7 @@ class _Profile_StartUpState extends State<Profile_StartUp> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: const Color.fromARGB(255, 228, 211, 211),
-        appBar:  AppBar_init(),
+        appBar: AppBar_init(),
         body: Column(textDirection: TextDirection.rtl, children: [
           const TextField(
               decoration: InputDecoration(
@@ -60,16 +60,15 @@ class _Profile_StartUpState extends State<Profile_StartUp> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-               Padding(
+              Padding(
                 padding: EdgeInsets.all(20),
-                child: 
-                Image(
+                child: Image(
                   width: 70,
                   image: AssetImage('assets/girl.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
-               Text(
+              Text(
                 '  : صورة',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
@@ -91,7 +90,7 @@ class _Profile_StartUpState extends State<Profile_StartUp> {
                   },
                   items: dropdownItems),
               const Padding(
-                padding:  EdgeInsets.fromLTRB(0, 0, 20, 0),
+                padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
                 child: Text(
                   '  : استلام الاشعارات ',
                   style: TextStyle(
@@ -104,11 +103,11 @@ class _Profile_StartUpState extends State<Profile_StartUp> {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(24, 24, 24, 5),
+            padding: const EdgeInsets.fromLTRB(25, 25, 25, 5),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.black,
-                onPrimary: Colors.white,
+                primary: Color.fromARGB(255, 255, 255, 255),
+                onPrimary: Color.fromARGB(255, 0, 0, 0),
               ),
               onPressed: () {
                 Navigator.push(
@@ -116,10 +115,13 @@ class _Profile_StartUpState extends State<Profile_StartUp> {
                   MaterialPageRoute(builder: (context) => const Rooms()),
                 );
               },
-              child:const Text('حفظ'),
+              child: const Text(
+                'حفظ',
+                style: TextStyle(fontSize: 16),
+              ),
             ),
           ),
-         const Text(
+          const Text(
             'سياسة الخصوصية',
             style: TextStyle(
               fontWeight: FontWeight.w100,
@@ -132,18 +134,3 @@ class _Profile_StartUpState extends State<Profile_StartUp> {
     );
   }
 }
-
-
-// Working hard to provide for my family and two children (Salam and Ahmad) to build a better future for them. I'm a recent graduate from computer technical engineering college with a good degree, search a lot for work and couldn't find any kind of works that can help me to develop my future both academically and better life for my family . because all companies I want to enroll with it refused me.
-// so I decided to make to work hard to get a job even with my hard-working for the amount of suffering and online learning had no result,
-// so lastly i start to learn software developments start from learn  C++ C# python then django then react then flutter lastly now iam learning sotware development but i have no money to paid for this ourse at all w then java but need these courses to join new work that helped me.  \\\
-
-
-// to be honeset iam aim to do different in the world and that no such dream it is my goal .
-// even I know that reality is so difficult now but time is changing .
-// and with the change in time I take small steps towards my great goal .
-// I believe in myself that I can make the technology and help the companies I work with them to find easier solutions and intelligence to their customer issues.
-// I'm thinking of ending my career in development in the background to do something better and new for Internet users all over the world.
-// and help them to access information in better ways with less predictable errors that may occur.
-// and I think this class is going to help me move forward even if it's a small step.
-// but it will make a certain difference in my soul and heart that this is the first valuable certifecate I'm going to have from the largest company in the world .

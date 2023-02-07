@@ -1,3 +1,7 @@
+import 'package:chatapp/friends_list.dart';
+import 'package:chatapp/friends_requests.dart';
+import 'package:chatapp/notification.dart';
+import 'package:chatapp/private.dart';
 import 'package:chatapp/profile_init.dart';
 import 'package:chatapp/rooms.dart';
 import 'package:chatapp/messages.dart';
@@ -5,7 +9,7 @@ import 'package:chatapp/messages.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(Messages());
+  runApp(Profile_Inite());
 }
 
 class MyApp extends StatelessWidget {
@@ -71,7 +75,7 @@ Future<void> _showDialogAfter5Seconds(BuildContext context) async {
                   child: Text(
                     text,
                     style: TextStyle(
-                      fontFamily: 'Roboto',
+                    
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -122,8 +126,7 @@ void _show_rate_us_dialog(BuildContext context) {
               // launchUrl(uri);
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => const Profile_StartUp()),
+                MaterialPageRoute(builder: (context) => const Profile_Inite()),
               );
             },
           ),
@@ -132,8 +135,7 @@ void _show_rate_us_dialog(BuildContext context) {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => const Profile_StartUp()),
+                MaterialPageRoute(builder: (context) => const Profile_Inite()),
               );
             },
           ),

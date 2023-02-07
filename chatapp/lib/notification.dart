@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../widgets/appbar.dart';
 
-class NotificationScreen extends StatelessWidget {
-  const NotificationScreen({Key? key}) : super(key: key);
+class MyNotification extends StatelessWidget {
+  const MyNotification({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,18 +13,21 @@ class NotificationScreen extends StatelessWidget {
         backgroundColor: Color.fromARGB(255, 228, 211, 211),
         endDrawer: mydrawer(),
         appBar: myappbar(),
-        body: ListView.builder(
-          itemCount: 5,
-          itemBuilder: (context, index) {
-            return ListTile(
-              leading: Icon(
-                Icons.notifications,
-                color: Colors.black,
-              ),
-              title: Text('الاشعار $index'),
-              subtitle: Text('تم قبول طلب الصداقة'),
-            );
-          },
+        body: Directionality(
+          textDirection: TextDirection.rtl,
+          child: ListView.builder(
+            itemCount: 15,
+            itemBuilder: (context, index) {
+              return ListTile(
+                leading: Icon(
+                  Icons.notifications,
+                  color: Colors.black,
+                ),
+                title: Text('الاشعار $index'),
+                subtitle: Text('تم قبول طلب الصداقة'),
+              );
+            },
+          ),
         ),
       ),
     );
