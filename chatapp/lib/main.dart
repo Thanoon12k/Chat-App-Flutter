@@ -1,9 +1,11 @@
 import 'package:chatapp/profile_init.dart';
 import 'package:chatapp/rooms.dart';
+import 'package:chatapp/messages.dart';
+
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(Rooms());
+  runApp(Messages());
 }
 
 class MyApp extends StatelessWidget {
@@ -120,7 +122,8 @@ void _show_rate_us_dialog(BuildContext context) {
               // launchUrl(uri);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Profile_StartUp()),
+                MaterialPageRoute(
+                    builder: (context) => const Profile_StartUp()),
               );
             },
           ),
@@ -129,7 +132,8 @@ void _show_rate_us_dialog(BuildContext context) {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Profile_StartUp()),
+                MaterialPageRoute(
+                    builder: (context) => const Profile_StartUp()),
               );
             },
           ),

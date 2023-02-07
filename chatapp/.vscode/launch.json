@@ -8,21 +8,21 @@
             "name": "chatapp",
             "request": "launch",
             "type": "dart",
-            "program": "lib/screens/main.dart"
+          
         },
         {
             "name": "chatapp (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile",
-            "program": "lib/screens/main.dart"
+          
         },
         {
             "name": "chatapp (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release",
-            "program": "lib/screens/main.dart"
+          
         }
     ]
 }
