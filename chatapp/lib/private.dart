@@ -26,10 +26,10 @@ class _PrivateState extends State<Private> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      MyRow(context),
-                      MyRow(context),
-                      MyRow(context),
-                      MyRow(context),
+                      MessageRow(context),
+                      MessageRow(context),
+                      MessageRow(context),
+                      MessageRow(context),
                     ],
                   ),
                 ),

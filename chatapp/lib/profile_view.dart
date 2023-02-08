@@ -27,6 +27,7 @@ class ProfileView extends StatelessWidget {
                 ),
                 Positioned(
                   bottom: 0,
+                  left: 0,
                   child: Icon(
                     Icons.star,
                     color: Colors.yellow,
@@ -38,7 +39,7 @@ class ProfileView extends StatelessWidget {
                   bottom: 10,
                   child: Text(
                     '15',
-                    style: TextStyle(fontSize: 17),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                   ),
                 ),
               ]),
@@ -46,8 +47,8 @@ class ProfileView extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      MyRow(context),
-                      MyRow(context),
+                      MessageRow(context),
+                      MessageRow(context),
                     ],
                   ),
                 ),

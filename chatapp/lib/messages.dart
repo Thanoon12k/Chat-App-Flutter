@@ -1,4 +1,5 @@
 import 'package:chatapp/private.dart';
+import 'package:chatapp/profile_view.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 
@@ -26,11 +27,11 @@ class _MessagesState extends State<Messages> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      MyRow(context),
-                      MyRow(context),
-                      MyRow(context),
-                      MyRow(context),
-                      MyRow(context),
+                      MessageRow(context),
+                      MessageRow(context),
+                      MessageRow(context),
+                      MessageRow(context),
+                      MessageRow(context),
                     ],
                   ),
                 ),
@@ -44,7 +45,7 @@ class _MessagesState extends State<Messages> {
   }
 }
 
-MyRow(context) {
+MessageRow(context) {
   return Row(
     children: [
       Padding(
@@ -53,7 +54,7 @@ MyRow(context) {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Private()),
+              MaterialPageRoute(builder: (context) => ProfileView()),
             );
           },
           child: Image(
