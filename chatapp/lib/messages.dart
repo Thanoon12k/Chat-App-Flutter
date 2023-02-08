@@ -1,3 +1,4 @@
+import 'package:chatapp/private.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 
@@ -25,12 +26,11 @@ class _MessagesState extends State<Messages> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      MyRow(),
-                      MyRow(),
-                      MyRow(),
-                      MyRow(),
-                      MyRow(),
-                      MyRow(),
+                      MyRow(context),
+                      MyRow(context),
+                      MyRow(context),
+                      MyRow(context),
+                      MyRow(context),
                     ],
                   ),
                 ),
@@ -44,18 +44,26 @@ class _MessagesState extends State<Messages> {
   }
 }
 
-MyRow() {
+MyRow(context) {
   return Row(
     children: [
       Padding(
         padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
-        child: Image(
-          height: 50,
-          image: AssetImage('assets/girl.png'),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Private()),
+            );
+          },
+          child: Image(
+            height: 50,
+            image: AssetImage('assets/girl.png'),
+          ),
         ),
       ),
       Card(
-        color: Colors.greenAccent,
+        color: Color.fromARGB(255, 233, 232, 186),
         child: Wrap(
           alignment: WrapAlignment.end,
           children: <Widget>[
@@ -65,9 +73,22 @@ MyRow() {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 10, 10, 5),
-                    child: Text(" احمد العراقي - 10:00  "),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 10, 10, 5),
+                        child: Text(" احمد العراقي  "),
+                      ),
+                      Expanded(child: Text('')),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 10, 10, 5),
+                        child: Text("  10:10  "),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(2, 10, 0, 5),
+                        child: Icon(Icons.not_interested_rounded),
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -112,13 +133,27 @@ MyTextInput() {
               FloatingActionButton(
                 onPressed: () {},
                 child: Icon(
+                  Icons.attach_file_rounded,
+                  color: Colors.white,
+                ),
+                backgroundColor: Color.fromARGB(255, 0, 0, 0),
+              ),
+              FloatingActionButton(
+                onPressed: () {},
+                child: Icon(
+                  Icons.emoji_emotions_outlined,
+                  color: Colors.white,
+                ),
+                backgroundColor: Color.fromARGB(255, 0, 0, 0),
+              ),
+              FloatingActionButton(
+                onPressed: () {},
+                child: Icon(
                   Icons.send,
                   color: Colors.white,
-                  size: 18,
                   textDirection: TextDirection.rtl,
                 ),
-                backgroundColor: Color.fromARGB(255, 3, 244, 144),
-                elevation: 0,
+                backgroundColor: Color.fromARGB(255, 0, 0, 0),
               ),
             ],
           ),

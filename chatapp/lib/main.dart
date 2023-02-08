@@ -1,15 +1,10 @@
-import 'package:chatapp/friends_list.dart';
-import 'package:chatapp/friends_requests.dart';
-import 'package:chatapp/notification.dart';
-import 'package:chatapp/private.dart';
-import 'package:chatapp/profile_init.dart';
 import 'package:chatapp/rooms.dart';
-import 'package:chatapp/messages.dart';
+import 'package:chatapp/widgets/utils.dart';
 
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(Profile_Inite());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -36,6 +31,7 @@ class _HomeState extends State<Home> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _showDialogAfter5Seconds(context);
+    // _open_roomsafter5seconds(context);
   }
 
   Widget build(BuildContext context) {
@@ -48,99 +44,15 @@ class _HomeState extends State<Home> {
   }
 }
 
-Future<void> _showDialogAfter5Seconds(BuildContext context) async {
-  await Future.delayed(Duration(seconds: 3));
-  String text =
-      """Clients on Demand, LLC, (“Clients on Demand,” “we,” “us,” “our”) 
-      is committed to protecting both the personal as well as business 
-      information you share and/or store with us. This Privacy Policy 
-      applies to transactions and activities and data gathered through the
-       Clients on Demand Website and interaction you may have with its
-        related Social Media accounts. Please review this Privacy Policy
-         periodically as we may revise it without notice.""";
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Padding(
-        padding: const EdgeInsets.fromLTRB(15, 15, 15, 35),
-        child: Dialog(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 10, 20),
-                  child: Text(
-                    text,
-                    style: TextStyle(
-                    
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 14, 0, 12),
-                  child: ElevatedButton(
-                    onPressed: () => _show_rate_us_dialog(context),
-                    child: Text(
-                      'اوافق',
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 255, 255, 255),
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.black,
-                      onPrimary: Colors.white,
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-      );
-    },
+Future<void> _open_roomsafter5seconds(BuildContext context) async {
+  await Future.delayed(Duration(seconds: 2));
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => const Rooms()),
   );
 }
 
-void _show_rate_us_dialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('هل اعجبك التطبيق قيمنا الان 😍😍😍؟'),
-        actionsAlignment: MainAxisAlignment.start,
-        actions: <Widget>[
-          ElevatedButton(
-            child: Text('نعم'),
-            onPressed: () {
-              // final uri =
-              //     Uri.parse('https://www.youtube.com/watch?v=1tGBCpx4gEU');
-              // launchUrl(uri);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Profile_Inite()),
-              );
-            },
-          ),
-          ElevatedButton(
-            child: Text('لا'),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Profile_Inite()),
-              );
-            },
-          ),
-        ],
-      );
-    },
-  );
+Future<void> _showDialogAfter5Seconds(BuildContext context) async {
+  await Future.delayed(Duration(seconds: 3));
+  MyPrivacyDialog(context);
 }

@@ -1,3 +1,4 @@
+import 'package:chatapp/messages.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 
@@ -25,12 +26,10 @@ class _PrivateState extends State<Private> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      MyRow(),
-                      MyRow(),
-                      MyRow(),
-                      MyRow(),
-                      MyRow(),
-                      MyRow(),
+                      MyRow(context),
+                      MyRow(context),
+                      MyRow(context),
+                      MyRow(context),
                     ],
                   ),
                 ),
@@ -42,45 +41,6 @@ class _PrivateState extends State<Private> {
       ),
     );
   }
-}
-
-MyRow() {
-  return Row(
-    children: [
-      Padding(
-        padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
-        child: Image(
-          height: 50,
-          image: AssetImage('assets/girl.png'),
-        ),
-      ),
-      Card(
-        color: Colors.greenAccent,
-        child: Wrap(
-          alignment: WrapAlignment.end,
-          children: <Widget>[
-            Container(
-              width: 200,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 10, 10, 5),
-                    child: Text(" احمد العراقي - 10:00  "),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(" مرحبا بكم"),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
 }
 
 MyTextInput() {

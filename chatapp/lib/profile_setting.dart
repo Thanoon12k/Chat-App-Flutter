@@ -103,7 +103,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                 padding: EdgeInsets.all(20),
                 child: Image(
                   width: 70,
-                  image: AssetImage('assets/icons/girl.jpg'),
+                  image: AssetImage('assets/girl.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),

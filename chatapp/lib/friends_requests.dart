@@ -1,14 +1,14 @@
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 
-class Friends extends StatefulWidget {
-  const Friends({Key? key}) : super(key: key);
+class FriendsRequests extends StatefulWidget {
+  const FriendsRequests({Key? key}) : super(key: key);
 
   @override
-  State<Friends> createState() => _FriendsState();
+  State<FriendsRequests> createState() => _FriendsRequestsState();
 }
 
-class _FriendsState extends State<Friends> {
+class _FriendsRequestsState extends State<FriendsRequests> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

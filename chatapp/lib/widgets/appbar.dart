@@ -1,7 +1,9 @@
+import 'package:chatapp/friends_list.dart';
+import 'package:chatapp/friends_requests.dart';
 import 'package:chatapp/notification.dart';
 import 'package:chatapp/profile_setting.dart';
-import 'package:chatapp/rooms.dart';
 import 'package:chatapp/widgets/utils.dart';
+import 'package:chatapp/rooms.dart';
 import 'package:flutter/material.dart';
 
 class myappbar extends StatelessWidget implements PreferredSizeWidget {
@@ -16,9 +18,17 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
         backgroundColor: Color.fromARGB(255, 228, 211, 211),
         leading: Padding(
           padding: EdgeInsets.all(0),
-          child: Image(
-            image: AssetImage('assets/girl.jpg'),
-            fit: BoxFit.cover,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Rooms()),
+              );
+            },
+            child: Image(
+              image: AssetImage('assets/girl.jpg'),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         actions: [
@@ -64,19 +74,28 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.red,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 3, 5, 0),
-                child: Text(
-                  'تقييم الجات',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 70, 66, 66),
+            child: GestureDetector(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return MyRatingDialog(context);
+                    });
+              },
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.red,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 3, 5, 0),
+                  child: Text(
+                    'تقييم الجات',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 70, 66, 66),
+                    ),
                   ),
                 ),
               ),
@@ -101,9 +120,17 @@ class AppBar_init extends StatelessWidget implements PreferredSizeWidget {
         actions: [
           Padding(
             padding: EdgeInsets.all(0),
-            child: Image(
-              image: AssetImage('assets/girl.jpg'),
-              fit: BoxFit.cover,
+            child: GestureDetector(
+              onDoubleTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Rooms()),
+                );
+              },
+              child: Image(
+                image: AssetImage('assets/girl.jpg'),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ],
@@ -117,9 +144,14 @@ class AppBar_init extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
 
-class mydrawer extends StatelessWidget {
+class mydrawer extends StatefulWidget {
   const mydrawer({Key? key}) : super(key: key);
 
+  @override
+  State<mydrawer> createState() => _mydrawerState();
+}
+
+class _mydrawerState extends State<mydrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -144,17 +176,24 @@ class mydrawer extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Rooms()),
+                  MaterialPageRoute(builder: (context) => FriendsList()),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text(' 😍 طلبات الصداقة  😍'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FriendsRequests()),
                 );
               },
             ),
             ListTile(
               title: const Text('سياسة الخصوصية'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => privacypolicydialog()),
+                Dialog(
+                  child: MyPrivacyDialog(context),
                 );
               },
             ),
