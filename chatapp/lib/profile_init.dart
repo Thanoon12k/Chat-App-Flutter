@@ -129,7 +129,59 @@ class _Profile_IniteState extends State<Profile_Inite> {
               color: Color.fromARGB(255, 12, 12, 12),
             ),
           ),
+          Form(
+            child: TextFormField(
+              validator: (String? value) {
+                if (value == null || value == '') {
+                  return 'Please enter some text';
+                }
+                return null;
+              },
+            ),
+          )
         ]),
+      ),
+    );
+  }
+}
+
+class UserDataForm extends StatefulWidget {
+  const UserDataForm({Key? key}) : super(key: key);
+
+  @override
+  State<UserDataForm> createState() => _UserDataFormState();
+}
+
+class _UserDataFormState extends State<UserDataForm> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextFormField(
+            decoration: const InputDecoration(
+              hintText: 'Enter your name',
+            ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter some text';
+              }
+              return null;
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {}
+              },
+              child: const Text('Submit'),
+            ),
+          ),
+        ],
       ),
     );
   }

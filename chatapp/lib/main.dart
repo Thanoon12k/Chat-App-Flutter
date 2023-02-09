@@ -1,3 +1,4 @@
+
 import 'package:chatapp/rooms.dart';
 import 'package:chatapp/widgets/utils.dart';
 
@@ -28,13 +29,9 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _showDialogAfter5Seconds(context);
-    // _open_roomsafter5seconds(context);
-  }
-
   Widget build(BuildContext context) {
+    _show_privacy_dialog_3s(context);
+
     return Container(
       child: Image(
         image: AssetImage('assets/sky2.jpg'),
@@ -44,15 +41,7 @@ class _HomeState extends State<Home> {
   }
 }
 
-Future<void> _open_roomsafter5seconds(BuildContext context) async {
-  await Future.delayed(Duration(seconds: 2));
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => const Rooms()),
-  );
-}
-
-Future<void> _showDialogAfter5Seconds(BuildContext context) async {
+Future<void> _show_privacy_dialog_3s(BuildContext context) async {
   await Future.delayed(Duration(seconds: 3));
   MyPrivacyDialog(context);
 }

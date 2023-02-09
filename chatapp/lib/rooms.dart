@@ -2,6 +2,9 @@
 import 'dart:ui';
 
 import 'package:chatapp/messages.dart';
+import 'package:chatapp/models/quick_rooms.dart';
+import 'package:chatapp/serivces/client.dart';
+import 'package:chatapp/models/rooms.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/appbar.dart';
@@ -14,15 +17,23 @@ class Rooms extends StatefulWidget {
 }
 
 class _RoomsState extends State<Rooms> {
-  IconData myiconData = Icons.speaker_notes_off_outlined;
-  void changeIcon() {
-    setState(() {
-      if (myiconData == Icons.speaker_notes_off_outlined) {
-        myiconData = Icons.speaker_notes;
-      } else {
-        myiconData = Icons.speaker_notes;
-      }
-    });
+  List<QRoom>? qrooms;
+  var is_loaded = false;
+
+  @override
+  void initState() {
+    GetRooms();
+    super.initState();
+  }
+
+  GetRooms() async {
+    qrooms = await BaseClient().GET_rooms();
+
+    if (qrooms != null) {
+      setState(() {
+        is_loaded = true;
+      });
+    } else {}
   }
 
   @override
@@ -33,33 +44,33 @@ class _RoomsState extends State<Rooms> {
           backgroundColor: Color.fromARGB(255, 228, 211, 211),
           endDrawer: mydrawer(),
           appBar: myappbar(),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    RoomCard(context, myiconData, changeIcon),
-                    RoomCard(context, myiconData, changeIcon),
-                  ],
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    RoomCard(context, myiconData, changeIcon),
-                    RoomCard(context, myiconData, changeIcon),
-                  ],
-                ),
-              ],
+          body: Visibility(
+            visible: is_loaded,
+            replacement: Text('error in loaded'),
+            child: ListView.builder(
+              itemCount: qrooms?.length,
+              itemBuilder: ((context, index) {
+                if (index.isEven && index != (qrooms?.length)! - 1) {
+                  return Row(children: [
+                    RoomCard(context, qrooms, index),
+                    RoomCard(context, qrooms, index + 1)
+                  ]);
+                } else if ((qrooms?.length)!.isOdd &&
+                    index == (qrooms?.length)! - 1) {
+                  return Row(
+                      children: [RoomCard(context, qrooms, index), Container()]);
+                } else {
+                  return Container();
+                }
+              }),
             ),
           )),
     );
   }
 }
 
-RoomCard(context, myicondata, changeicon) {
+RoomCard(context, qrooms, index) {
+  //}, myicondata, changeicon) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
     child: GestureDetector(
@@ -120,7 +131,7 @@ RoomCard(context, myicondata, changeicon) {
                             color: Color.fromARGB(255, 243, 243, 243),
                             size: 25),
                         Text(
-                          '15',
+                          qrooms![index].usersCount.toString(),
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w800,
@@ -152,7 +163,7 @@ RoomCard(context, myicondata, changeicon) {
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
                     ),
                     child: Text(
-                      'الكروب العام',
+                      qrooms[index].name,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Color.fromARGB(255, 0, 0, 0),
