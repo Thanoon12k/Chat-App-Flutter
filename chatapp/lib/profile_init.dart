@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:chatapp/rooms.dart';
 import 'package:chatapp/widgets/appbar.dart';
@@ -16,6 +17,7 @@ class _Profile_IniteState extends State<Profile_Inite> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: const Color.fromARGB(255, 228, 211, 211),
         appBar: AppBar_init(),
         body: UserDataForm());
@@ -24,9 +26,6 @@ class _Profile_IniteState extends State<Profile_Inite> {
 
 class UserDataForm extends StatefulWidget {
   const UserDataForm({Key? key}) : super(key: key);
-  void image_getter(ImageSource media) {
-    _UserDataFormState().getImage(media);
-  }
 
   @override
   State<UserDataForm> createState() => _UserDataFormState();
@@ -46,14 +45,14 @@ class _UserDataFormState extends State<UserDataForm> {
     super.dispose();
   }
 
-  XFile? image;
+  File? image;
   final ImagePicker picker = ImagePicker();
 
   Future getImage(ImageSource media) async {
     var img = await picker.pickImage(source: media);
 
     setState(() {
-      image = img;
+      image = File(img!.path);
     });
   }
 
@@ -67,7 +66,56 @@ class _UserDataFormState extends State<UserDataForm> {
         children: [
           MyTextInput(name_controller, 'اكتب اسمك'),
           MyTextInput(status_controller, ' اكتب الحالة ( اختياري* )'),
-          myAlert(context),
+          Center(
+            child: IconButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          content: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ElevatedButton(
+                                //if user click this button, user can upload image from gallery
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  getImage(ImageSource.gallery);
+                                },
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.image),
+                                    Text('From Gallery'),
+                                  ],
+                                ),
+                              ),
+                              ElevatedButton(
+                                //if user click this button. user can upload image from camera
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  getImage(ImageSource.camera);
+                                },
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.camera),
+                                    Text('From Camera'),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      });
+                },
+                icon: Icon(Icons.camera_alt_outlined),
+                iconSize: 40),
+          ),
+          Center(
+            child: image == null
+                ? Text("No image selected.")
+                : Image.file(image!, width: 150),
+          ),
           Row(
             //notification
             mainAxisAlignment: MainAxisAlignment.end,
@@ -108,7 +156,7 @@ class _UserDataFormState extends State<UserDataForm> {
                     debugPrint('name: ${name_controller.text}');
                     debugPrint('status: ${status_controller.text}');
                     debugPrint('gender: ${_droplist_value}');
-                    debugPrint('image: ${image}');
+                    debugPrint('image: ${image!}');
                   } else {
                     debugPrint('not valid!!!!');
                   }
@@ -158,46 +206,4 @@ NotifyItems() {
   ];
 
   return myitems;
-}
-
-myAlert(context) {
-  UserDataForm userDataForm = new UserDataForm();
-
-  return AlertDialog(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-    title: Text('Please choose media to select'),
-    content: Container(
-      height: MediaQuery.of(context).size.height / 6,
-      child: Column(
-        children: [
-          ElevatedButton(
-            //if user click this button, user can upload image from gallery
-            onPressed: () {
-              Navigator.pop(context);
-              userDataForm.image_getter(ImageSource.gallery);
-            },
-            child: Row(
-              children: [
-                Icon(Icons.image),
-                Text('From Gallery'),
-              ],
-            ),
-          ),
-          ElevatedButton(
-            //if user click this button. user can upload image from camera
-            onPressed: () {
-              Navigator.pop(context);
-              userDataForm.image_getter(ImageSource.camera);
-            },
-            child: Row(
-              children: [
-                Icon(Icons.camera),
-                Text('From Camera'),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
 }
