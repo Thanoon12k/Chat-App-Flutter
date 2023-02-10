@@ -14,25 +14,6 @@ class Profile_Inite extends StatefulWidget {
 }
 
 class _Profile_IniteState extends State<Profile_Inite> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: const Color.fromARGB(255, 228, 211, 211),
-        appBar: AppBar_init(),
-        body: UserDataForm());
-  }
-}
-
-class UserDataForm extends StatefulWidget {
-  const UserDataForm({Key? key}) : super(key: key);
-
-  @override
-  State<UserDataForm> createState() => _UserDataFormState();
-}
-
-class _UserDataFormState extends State<UserDataForm> {
-  Map<String, String> fieldValues = {};
   String _droplist_value = "icon_image";
   final _formKey = GlobalKey<FormState>();
 
@@ -45,132 +26,136 @@ class _UserDataFormState extends State<UserDataForm> {
     super.dispose();
   }
 
-  File? image;
+  File? _image;
   final ImagePicker picker = ImagePicker();
 
   Future getImage(ImageSource media) async {
     var img = await picker.pickImage(source: media);
 
     setState(() {
-      image = File(img!.path);
+      _image = File(img!.path);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        textDirection: TextDirection.rtl,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          MyTextInput(name_controller, 'اكتب اسمك'),
-          MyTextInput(status_controller, ' اكتب الحالة ( اختياري* )'),
-          Center(
-            child: IconButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          content: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ElevatedButton(
-                                //if user click this button, user can upload image from gallery
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  getImage(ImageSource.gallery);
-                                },
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.image),
-                                    Text('From Gallery'),
-                                  ],
-                                ),
-                              ),
-                              ElevatedButton(
-                                //if user click this button. user can upload image from camera
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  getImage(ImageSource.camera);
-                                },
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.camera),
-                                    Text('From Camera'),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      });
-                },
-                icon: Icon(Icons.camera_alt_outlined),
-                iconSize: 40),
-          ),
-          Center(
-            child: image == null
-                ? Text("No image selected.")
-                : Image.file(image!, width: 150),
-          ),
-          Row(
-            //notification
-            mainAxisAlignment: MainAxisAlignment.end,
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: const Color.fromARGB(255, 228, 211, 211),
+        appBar: AppBar_init(),
+        body: Form(
+          key: _formKey,
+          child: Column(
+            textDirection: TextDirection.rtl,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DropdownButton(
-                value: _droplist_value,
-                items: NotifyItems(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _droplist_value = newValue!;
-                  });
-                },
+              MyTextInput(name_controller, 'اكتب اسمك'),
+              MyTextInput(status_controller, ' اكتب الحالة ( اختياري* )'),
+              Center(
+                child: IconButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              content: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ElevatedButton(
+                                    //if user click this button, user can upload image from gallery
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      getImage(ImageSource.gallery);
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.image),
+                                        Text('From Gallery'),
+                                      ],
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    //if user click this button. user can upload image from camera
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      getImage(ImageSource.camera);
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.camera),
+                                        Text('From Camera'),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          });
+                    },
+                    icon: Icon(Icons.camera_alt_outlined),
+                    iconSize: 40),
               ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                child: Text(
-                  '  : استلام الاشعارات ',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
-                    color: Color.fromARGB(255, 12, 12, 12),
+              Center(
+                child: _image == null
+                    ? Text("No image selected.")
+                    : Image.file(_image!, width: 150),
+              ),
+              Row(
+                //notification
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  DropdownButton(
+                    value: _droplist_value,
+                    items: NotifyItems(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _droplist_value = newValue!;
+                      });
+                    },
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                    child: Text(
+                      '  : استلام الاشعارات ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                        color: Color.fromARGB(255, 12, 12, 12),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 255, 255, 255),
+                      onPrimary: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState?.validate() == true) {
+                        debugPrint('ok good form ');
+                        debugPrint('name: ${name_controller.text}');
+                        debugPrint('status: ${status_controller.text}');
+                        debugPrint('gender: ${_droplist_value}');
+                        debugPrint('image: ${_image!}');
+                      } else {
+                        debugPrint('not valid!!!!');
+                      }
+                    },
+                    child: const Text(
+                      'حفظ',
+                      style: TextStyle(fontSize: 16),
+                    ),
                   ),
                 ),
               ),
             ],
           ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Color.fromARGB(255, 255, 255, 255),
-                  onPrimary: Color.fromARGB(255, 0, 0, 0),
-                ),
-                onPressed: () {
-                  if (_formKey.currentState?.validate() == true) {
-                    debugPrint('ok good form ');
-                    debugPrint('name: ${name_controller.text}');
-                    debugPrint('status: ${status_controller.text}');
-                    debugPrint('gender: ${_droplist_value}');
-                    debugPrint('image: ${image!}');
-                  } else {
-                    debugPrint('not valid!!!!');
-                  }
-                },
-                child: const Text(
-                  'حفظ',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 }
 
