@@ -36,37 +36,50 @@ class _FriendsRequestsState extends State<FriendsRequests> {
 
 MyRow() {
   return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Padding(
-        padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
-        child: Image(
-          height: 70,
-          image: AssetImage('assets/girl.png'),
-        ),
+      Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
+            child: Image(
+              height: 60,
+              image: AssetImage('assets/girl.png'),
+            ),
+          ),
+          Column(
+            children: [
+              Text(
+                " احمد العراقي",
+                style: TextStyle(fontSize: 24),
+              ),
+              Text(
+                "   sun 8:15 pm               ",
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w300),
+              ),
+            ],
+          ),
+        ],
       ),
       Row(
         children: [
           Card(
-            child: Text(
-              " احمد ",
-              style: TextStyle(fontSize: 28),
-            ),
-          ),
-          Card(
             child: Container(
-              color: Color.fromARGB(255, 68, 226, 165),
+              color: Color.fromARGB(255, 255, 255, 255),
               child: Text(
                 " قبول ",
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(
+                    fontSize: 14, color: Color.fromARGB(255, 0, 0, 0)),
               ),
             ),
           ),
           Card(
             child: Container(
-              color: Color.fromARGB(255, 226, 92, 68),
+              color: Color.fromARGB(255, 0, 0, 0),
               child: Text(
                 " رفض ",
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(
+                    fontSize: 14, color: Color.fromARGB(255, 255, 255, 255)),
               ),
             ),
           ),

@@ -1,6 +1,7 @@
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:ui' as ui;
 
 class FriendsList extends StatefulWidget {
   const FriendsList({Key? key}) : super(key: key);
@@ -19,12 +20,15 @@ class _FriendsListState extends State<FriendsList> {
         endDrawer: mydrawer(),
         appBar: myappbar(),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              MyRow(),
-              MyRow(),
-              MyRow(),
-            ],
+          child: Directionality(
+            textDirection: ui.TextDirection.rtl,
+            child: Column(
+              children: [
+                MyRow(),
+                MyRow(),
+                MyRow(),
+              ],
+            ),
           ),
         ),
       ),
@@ -40,25 +44,23 @@ MyRow() {
         child: GestureDetector(
           onTap: () {},
           child: Image(
-            height: 70,
+            height: 60,
             image: AssetImage('assets/girl.png'),
           ),
         ),
       ),
       Row(
         children: [
-          Card(
-            child: Text(
-              " احمد ",
-              style: TextStyle(fontSize: 28),
-            ),
+          Text(
+            " احمد ",
+            style: TextStyle(fontSize: 20),
           ),
           GestureDetector(
             onTap: () {},
             child: Icon(
-              Icons.chat_rounded,
-              size: 30,
-              color: Color.fromARGB(255, 255, 255, 255),
+              Icons.edit_note_rounded,
+              size: 24,
+              color: Color.fromARGB(255, 0, 0, 0),
             ),
           ),
         ],
