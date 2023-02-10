@@ -24,6 +24,9 @@ class _Profile_IniteState extends State<Profile_Inite> {
 
 class UserDataForm extends StatefulWidget {
   const UserDataForm({Key? key}) : super(key: key);
+  void image_getter(ImageSource media) {
+    _UserDataFormState().getImage(media);
+  }
 
   @override
   State<UserDataForm> createState() => _UserDataFormState();
@@ -33,27 +36,25 @@ class _UserDataFormState extends State<UserDataForm> {
   Map<String, String> fieldValues = {};
   String _droplist_value = "icon_image";
   final _formKey = GlobalKey<FormState>();
-  XFile? image;
+
   final name_controller = TextEditingController();
   final status_controller = TextEditingController();
-// final gender_controller = controlle();
-
-  final ImagePicker picker = ImagePicker();
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed.
     name_controller.dispose();
     status_controller.dispose();
     super.dispose();
   }
 
+  XFile? image;
+  final ImagePicker picker = ImagePicker();
+
   Future getImage(ImageSource media) async {
     var img = await picker.pickImage(source: media);
-    uploadimage() {
-      setState(() {
-        image = img;
-      });
-    }
+
+    setState(() {
+      image = img;
+    });
   }
 
   @override
@@ -66,7 +67,7 @@ class _UserDataFormState extends State<UserDataForm> {
         children: [
           MyTextInput(name_controller, 'اكتب اسمك'),
           MyTextInput(status_controller, ' اكتب الحالة ( اختياري* )'),
-          MyImageInput(),
+          myAlert(context),
           Row(
             //notification
             mainAxisAlignment: MainAxisAlignment.end,
@@ -125,58 +126,6 @@ class _UserDataFormState extends State<UserDataForm> {
   }
 }
 
-class MyImageInput extends StatefulWidget {
-  @override
-  _MyImageInputState createState() => _MyImageInputState();
-}
-
-class _MyImageInputState extends State<MyImageInput> {
-  File? _image;
-
-  void _getImage(BuildContext context) async {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    setState(() {
-      _image = image as File;
-    });
-    Navigator.pop(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 200,
-      decoration: BoxDecoration(
-        border: Border.all(width: 1, color: Colors.grey),
-      ),
-      child: _image == null
-          ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.add_a_photo,
-                    size: 40,
-                  ),
-                  onPressed: () {
-                    _getImage(context);
-                  },
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 15, 2, 0),
-                  child: Text('اضافة صورة'),
-                ),
-              ],
-            )
-          : Image.file(
-              _image!,
-              fit: BoxFit.cover,
-              width: double.infinity,
-            ),
-    );
-  }
-}
-
 MyTextInput(mycontroller, hint) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -209,4 +158,46 @@ NotifyItems() {
   ];
 
   return myitems;
+}
+
+myAlert(context) {
+  UserDataForm userDataForm = new UserDataForm();
+
+  return AlertDialog(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    title: Text('Please choose media to select'),
+    content: Container(
+      height: MediaQuery.of(context).size.height / 6,
+      child: Column(
+        children: [
+          ElevatedButton(
+            //if user click this button, user can upload image from gallery
+            onPressed: () {
+              Navigator.pop(context);
+              userDataForm.image_getter(ImageSource.gallery);
+            },
+            child: Row(
+              children: [
+                Icon(Icons.image),
+                Text('From Gallery'),
+              ],
+            ),
+          ),
+          ElevatedButton(
+            //if user click this button. user can upload image from camera
+            onPressed: () {
+              Navigator.pop(context);
+              userDataForm.image_getter(ImageSource.camera);
+            },
+            child: Row(
+              children: [
+                Icon(Icons.camera),
+                Text('From Camera'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
