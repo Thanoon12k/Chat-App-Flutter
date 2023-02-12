@@ -70,11 +70,8 @@ MyPrivacyDialog(context) {
                   padding: const EdgeInsets.fromLTRB(0, 14, 0, 12),
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Profile_Inite()),
-                      );
+                     Navigator.pushNamed(context, '/profile_init');
+
                     },
                     child: Text(
                       'اوافق',

@@ -1,11 +1,15 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:chatapp/rooms.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
+  
+  String? my_name=' --nameinit-- ' ;
+  String? my_status = ' --statusinit-- ';
+  String? my_gender = ' --genderinit-- ';
+  String? my_notify = ' --notifyinit-- ';
+ 
 class Profile_Inite extends StatefulWidget {
   const Profile_Inite({Key? key}) : super(key: key);
 
@@ -16,7 +20,7 @@ class Profile_Inite extends StatefulWidget {
 class _Profile_IniteState extends State<Profile_Inite> {
   String _droplist_value = "icon_image";
   final _formKey = GlobalKey<FormState>();
-
+  
   final name_controller = TextEditingController();
   final status_controller = TextEditingController();
   @override
@@ -136,12 +140,16 @@ class _Profile_IniteState extends State<Profile_Inite> {
                       onPrimary: Color.fromARGB(255, 0, 0, 0),
                     ),
                     onPressed: () {
+
                       if (_formKey.currentState?.validate() == true) {
+                         _formKey.currentState!.save();
+                        
                         debugPrint('ok good form ');
-                        debugPrint('name: ${name_controller.text}');
-                        debugPrint('status: ${status_controller.text}');
-                        debugPrint('gender: ${_droplist_value}');
-                        debugPrint('image: ${_image!}');
+                        debugPrint('myname = $my_name ');
+                        // debugPrint('name: ${name_controller.text}');
+                        // debugPrint('status: ${status_controller.text}');
+                        // debugPrint('gender: ${_droplist_value}');
+                        // debugPrint('image: ${_image!}');
                       } else {
                         debugPrint('not valid!!!!');
                       }
@@ -179,6 +187,9 @@ MyTextInput(mycontroller, hint) {
         }
         return null;
       },
+       onSaved: (value) {
+      my_name = value;
+    },
     ),
   );
 }

@@ -20,21 +20,21 @@ class _RoomsState extends State<Rooms> {
   List<QRoom>? qrooms;
   var is_loaded = false;
 
-  @override
-  void initState() {
-    GetRooms();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   GetRooms();
+  //   super.initState();
+  // }
 
-  GetRooms() async {
-    qrooms = await BaseClient().GET_rooms();
+  // GetRooms() async {
+  //   qrooms = await BaseClient().get_rooms('rooms/');
 
-    if (qrooms != null) {
-      setState(() {
-        is_loaded = true;
-      });
-    } else {}
-  }
+  //   if (qrooms != null) {
+  //     setState(() {
+  //       is_loaded = true;
+  //     });
+  //   } else {}
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +57,10 @@ class _RoomsState extends State<Rooms> {
                   ]);
                 } else if ((qrooms?.length)!.isOdd &&
                     index == (qrooms?.length)! - 1) {
-                  return Row(
-                      children: [RoomCard(context, qrooms, index), Container()]);
+                  return Row(children: [
+                    RoomCard(context, qrooms, index),
+                    Container()
+                  ]);
                 } else {
                   return Container();
                 }

@@ -20,10 +20,7 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
           padding: EdgeInsets.all(0),
           child: GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Rooms()),
-              );
+              Navigator.pushNamed(context, '/rooms');
             },
             child: Image(
               image: AssetImage('assets/girl.jpg'),
@@ -36,11 +33,7 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
             padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ProfileSettings()),
-                );
+                Navigator.pushNamed(context, '/profile_setting');
               },
               child: CircleAvatar(
                 backgroundImage: AssetImage('assets/girl.jpg'),
@@ -58,11 +51,8 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
               height: 40,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const MyNotification()),
-                  );
+               
+                  Navigator.pushNamed(context, '/notifications');
                 },
                 child: Icon(
                   Icons.notifications,
@@ -121,11 +111,8 @@ class AppBar_init extends StatelessWidget implements PreferredSizeWidget {
           Padding(
             padding: EdgeInsets.all(0),
             child: GestureDetector(
-              onDoubleTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Rooms()),
-                );
+              onTap: () {
+                Navigator.pushNamed(context, '/rooms');
               },
               child: Image(
                 image: AssetImage('assets/girl.jpg'),
@@ -174,10 +161,7 @@ class _mydrawerState extends State<mydrawer> {
             ListTile(
               title: const Text('❤ الدردشات ❤'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => FriendsList()),
-                );
+                Navigator.pushNamed(context, '/frind_list');
               },
             ),
             ListTile(
