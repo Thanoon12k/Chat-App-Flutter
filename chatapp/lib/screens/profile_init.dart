@@ -6,7 +6,7 @@ import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../serivces/API.dart';
+import '../serivces/UsersAPIs.dart';
 
 String myid = ' -- ';
 String myname = ' -- ';
@@ -22,7 +22,10 @@ class Profile_Inite extends StatefulWidget {
 }
 
 class _Profile_IniteState extends State<Profile_Inite> {
-  String _droplist_value = "icon_image";
+  String _notify_value = "icon_image";
+
+  bool _network_errors = false;
+  bool _name_exist = false;
   final _formKey = GlobalKey<FormState>();
 
   File? _image;
@@ -100,7 +103,10 @@ class _Profile_IniteState extends State<Profile_Inite> {
               Center(
                 //iamge display box
                 child: _image == null
-                    ? Text("No image selected.")
+                    ? Text(
+                        "No image selected.",
+                        style: TextStyle(color: Colors.red),
+                      )
                     : Image.file(_image!, width: 150),
               ),
               Row(
@@ -109,11 +115,11 @@ class _Profile_IniteState extends State<Profile_Inite> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   DropdownButton(
-                    value: _droplist_value,
+                    value: _notify_value,
                     items: NotifyItems(),
                     onChanged: (String? newValue) {
                       setState(() {
-                        _droplist_value = newValue!;
+                        _notify_value = newValue!;
                       });
                     },
                   ),
@@ -139,19 +145,35 @@ class _Profile_IniteState extends State<Profile_Inite> {
                       onPrimary: Color.fromARGB(255, 0, 0, 0),
                     ),
                     onPressed: () async {
-                      if (_formKey.currentState!.validate() == true) {
+                      if (_formKey.currentState!.validate() == true &&
+                          _image != null) {
                         _formKey.currentState!.save();
                         var data = {
                           'name': myname,
                           'status': mystatus,
-                          'notification': true,
+                          'notification': _notify_value,
                           'image': _image,
                         };
-                        try {
-                          await upload_user_data(data, 'users/user_init');
-                        } catch (e) {
-                          print(e);
+
+                        var res =
+                            await upload_user_data(data, 'users/user_init');
+
+                        if (res.statusCode == 200 || res.statusCode == 201) {
+                          print('ok sent  ${res.statusCode}');
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Rooms()),
+                          );
+                        } else if (res.statusCode == 400) {
+                          print('name exist ..  ${res.statusCode}');
+                          _name_exist = true;
+                        } else {
+                          _network_errors = true;
+                          print('network error .. ${res.statusCode}');
                         }
+                      } else {
+                        print('image = 0 or fildes empity');
                       }
                     },
                     child: const Text(
@@ -161,6 +183,28 @@ class _Profile_IniteState extends State<Profile_Inite> {
                   ),
                 ),
               ),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                alignment: Alignment.center,
+                child: Visibility(
+                  visible: _network_errors,
+                  child: Text(
+                    '  network connection error !!  ',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                alignment: Alignment.center,
+                child: Visibility(
+                  visible: _name_exist,
+                  child: Text(
+                    'name already exist write another name .',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              )
             ],
           ),
         ));

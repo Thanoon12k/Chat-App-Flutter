@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:chatapp/screens/messages.dart';
 import 'package:chatapp/models/quick_rooms.dart';
-import 'package:chatapp/serivces/API.dart';
+import 'package:chatapp/serivces/UsersAPIs.dart';
 import 'package:chatapp/models/rooms.dart';
 import 'package:flutter/material.dart';
 
