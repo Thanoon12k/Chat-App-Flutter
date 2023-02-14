@@ -1,4 +1,4 @@
-import 'package:chatapp/rooms.dart';
+import 'package:chatapp/screens/rooms.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 

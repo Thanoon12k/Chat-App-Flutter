@@ -1,8 +1,8 @@
 // TODO Implement this library.import 'package:chatapp/rooms.dart';
-import 'package:chatapp/profile_init.dart';
+import 'package:chatapp/screens/profile_init.dart';
 import 'package:flutter/material.dart';
 
-import '../../../rooms.dart';
+import 'package:chatapp/screens/rooms.dart';
 
 String privacy_text =
     """Clients on Demand, LLC, (“Clients on Demand,” “we,” “us,” “our”) 
@@ -70,8 +70,11 @@ MyPrivacyDialog(context) {
                   padding: const EdgeInsets.fromLTRB(0, 14, 0, 12),
                   child: ElevatedButton(
                     onPressed: () {
-                     Navigator.pushNamed(context, '/profile_init');
-
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Profile_Inite()),
+                      );
                     },
                     child: Text(
                       'اوافق',

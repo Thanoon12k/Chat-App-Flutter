@@ -1,9 +1,9 @@
-import 'package:chatapp/friends_list.dart';
-import 'package:chatapp/friends_requests.dart';
-import 'package:chatapp/notification.dart';
-import 'package:chatapp/profile_setting.dart';
+import 'package:chatapp/screens/friends_list.dart';
+import 'package:chatapp/screens/friends_requests.dart';
+import 'package:chatapp/screens/notification.dart';
+import 'package:chatapp/screens/profile_setting.dart';
 import 'package:chatapp/widgets/utils.dart';
-import 'package:chatapp/rooms.dart';
+import 'package:chatapp/screens/rooms.dart';
 import 'package:flutter/material.dart';
 
 class myappbar extends StatelessWidget implements PreferredSizeWidget {
@@ -20,7 +20,10 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
           padding: EdgeInsets.all(0),
           child: GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/rooms');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Rooms()),
+              );
             },
             child: Image(
               image: AssetImage('assets/girl.jpg'),
@@ -33,7 +36,11 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
             padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
             child: GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, '/profile_setting');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ProfileSettings()),
+                );
               },
               child: CircleAvatar(
                 backgroundImage: AssetImage('assets/girl.jpg'),
@@ -51,8 +58,11 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
               height: 40,
               child: GestureDetector(
                 onTap: () {
-               
-                  Navigator.pushNamed(context, '/notifications');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const MyNotification()),
+                  );
                 },
                 child: Icon(
                   Icons.notifications,
@@ -112,7 +122,10 @@ class AppBar_init extends StatelessWidget implements PreferredSizeWidget {
             padding: EdgeInsets.all(0),
             child: GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, '/rooms');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Rooms()),
+                );
               },
               child: Image(
                 image: AssetImage('assets/girl.jpg'),
@@ -161,7 +174,10 @@ class _mydrawerState extends State<mydrawer> {
             ListTile(
               title: const Text('❤ الدردشات ❤'),
               onTap: () {
-                Navigator.pushNamed(context, '/frind_list');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FriendsList()),
+                );
               },
             ),
             ListTile(

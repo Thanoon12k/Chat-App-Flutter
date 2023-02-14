@@ -1,5 +1,5 @@
-import 'package:chatapp/private.dart';
-import 'package:chatapp/profile_view.dart';
+import 'package:chatapp/screens/private.dart';
+import 'package:chatapp/screens/profile_view.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 

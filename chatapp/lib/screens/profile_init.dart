@@ -1,15 +1,19 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:chatapp/rooms.dart';
+
+import 'package:chatapp/screens/rooms.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-  
-  String? my_name=' --nameinit-- ' ;
-  String? my_status = ' --statusinit-- ';
-  String? my_gender = ' --genderinit-- ';
-  String? my_notify = ' --notifyinit-- ';
- 
+
+import '../serivces/API.dart';
+
+String myid = ' -- ';
+String myname = ' -- ';
+String mystatus = ' -- ';
+String mygender = ' -- ';
+String mynotify = ' -- ';
+
 class Profile_Inite extends StatefulWidget {
   const Profile_Inite({Key? key}) : super(key: key);
 
@@ -20,17 +24,9 @@ class Profile_Inite extends StatefulWidget {
 class _Profile_IniteState extends State<Profile_Inite> {
   String _droplist_value = "icon_image";
   final _formKey = GlobalKey<FormState>();
-  
-  final name_controller = TextEditingController();
-  final status_controller = TextEditingController();
-  @override
-  void dispose() {
-    name_controller.dispose();
-    status_controller.dispose();
-    super.dispose();
-  }
 
   File? _image;
+
   final ImagePicker picker = ImagePicker();
 
   Future getImage(ImageSource media) async {
@@ -53,9 +49,10 @@ class _Profile_IniteState extends State<Profile_Inite> {
             textDirection: TextDirection.rtl,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              MyTextInput(name_controller, 'اكتب اسمك'),
-              MyTextInput(status_controller, ' اكتب الحالة ( اختياري* )'),
+              MyTextInput('_name', 'اكتب اسمك'),
+              MyTextInput('_status', ' اكتب الحالة ( اختياري* )'),
               Center(
+                //image
                 child: IconButton(
                     onPressed: () {
                       showDialog(
@@ -101,11 +98,13 @@ class _Profile_IniteState extends State<Profile_Inite> {
                     iconSize: 40),
               ),
               Center(
+                //iamge display box
                 child: _image == null
                     ? Text("No image selected.")
                     : Image.file(_image!, width: 150),
               ),
               Row(
+                //notification
                 //notification
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -139,19 +138,20 @@ class _Profile_IniteState extends State<Profile_Inite> {
                       primary: Color.fromARGB(255, 255, 255, 255),
                       onPrimary: Color.fromARGB(255, 0, 0, 0),
                     ),
-                    onPressed: () {
-
-                      if (_formKey.currentState?.validate() == true) {
-                         _formKey.currentState!.save();
-                        
-                        debugPrint('ok good form ');
-                        debugPrint('myname = $my_name ');
-                        // debugPrint('name: ${name_controller.text}');
-                        // debugPrint('status: ${status_controller.text}');
-                        // debugPrint('gender: ${_droplist_value}');
-                        // debugPrint('image: ${_image!}');
-                      } else {
-                        debugPrint('not valid!!!!');
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate() == true) {
+                        _formKey.currentState!.save();
+                        var data = {
+                          'name': myname,
+                          'status': mystatus,
+                          'notification': true,
+                          'image': _image,
+                        };
+                        try {
+                          await upload_user_data(data, 'users/user_init');
+                        } catch (e) {
+                          print(e);
+                        }
                       }
                     },
                     child: const Text(
@@ -167,12 +167,11 @@ class _Profile_IniteState extends State<Profile_Inite> {
   }
 }
 
-MyTextInput(mycontroller, hint) {
+MyTextInput(String fieldname, String hint) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
     child: TextFormField(
       textDirection: TextDirection.rtl,
-      controller: mycontroller,
       textAlign: TextAlign.right,
       decoration: InputDecoration(
         hintText: hint, //hint text
@@ -184,12 +183,22 @@ MyTextInput(mycontroller, hint) {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Please enter some text';
+        } else {
+          switch (fieldname) {
+            case '_name':
+              myname = value;
+              break;
+            case '_status':
+              mystatus = value;
+              break;
+
+            default:
+              debugPrint('Other');
+          }
+
+          return null;
         }
-        return null;
       },
-       onSaved: (value) {
-      my_name = value;
-    },
     ),
   );
 }
