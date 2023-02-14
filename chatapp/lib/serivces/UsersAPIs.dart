@@ -4,8 +4,7 @@ import 'package:http/http.dart' as http;
 
 const String url = 'https://iraqchatapp.pythonanywhere.com/api/';
 var client = http.Client();
-
-Future upload_user_data(data, String endpoint) async {
+Future Init_user_data(data, String endpoint) async {
   final dio = Dio();
   var full_url = url + endpoint;
 

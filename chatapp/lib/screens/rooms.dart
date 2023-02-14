@@ -1,8 +1,10 @@
 // import 'package:chatapp/screens/profile_view.dart';
+import 'dart:convert';
 import 'dart:ui';
 
+import 'package:chatapp/models/RoomsModels.dart';
 import 'package:chatapp/screens/messages.dart';
-import 'package:chatapp/models/quick_rooms.dart';
+import 'package:chatapp/serivces/RoomsAPIs.dart';
 import 'package:chatapp/serivces/UsersAPIs.dart';
 import 'package:chatapp/models/rooms.dart';
 import 'package:flutter/material.dart';
@@ -17,59 +19,71 @@ class Rooms extends StatefulWidget {
 }
 
 class _RoomsState extends State<Rooms> {
-  List<QRoom>? qrooms;
-  var is_loaded = false;
-
-  @override
-  void initState() {
-    GetRooms();
-    super.initState();
-  }
-
-  GetRooms() async {
-    // qrooms = await BaseClient().GET_rooms();
-
-    if (qrooms != null) {
-      setState(() {
-        is_loaded = true;
-      });
-    } else {}
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-          backgroundColor: Color.fromARGB(255, 228, 211, 211),
-          endDrawer: mydrawer(),
-          appBar: myappbar(),
-          body: Visibility(
-            visible: is_loaded,
-            replacement: Text('error in loaded'),
-            child: ListView.builder(
-              itemCount: qrooms?.length,
-              itemBuilder: ((context, index) {
-                if (index.isEven && index != (qrooms?.length)! - 1) {
-                  return Row(children: [
-                    RoomCard(context, qrooms, index),
-                    RoomCard(context, qrooms, index + 1)
-                  ]);
-                } else if ((qrooms?.length)!.isOdd &&
-                    index == (qrooms?.length)! - 1) {
-                  return Row(
-                      children: [RoomCard(context, qrooms, index), Container()]);
-                } else {
-                  return Container();
-                }
-              }),
-            ),
-          )),
+        backgroundColor: Color.fromARGB(255, 228, 211, 211),
+        endDrawer: mydrawer(),
+        appBar: myappbar(),
+        body: listbuilser(),
+      ),
     );
   }
 }
 
-RoomCard(context, qrooms, index) {
+class listbuilser extends StatelessWidget {
+  listbuilser({Key? key}) : super(key: key);
+
+  Future<dynamic> getjson() async {
+    var jsonrooms = await Get_rooms_list('rooms');
+    // print('js>> $jsonrooms');
+    return jsonrooms;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: getjson(),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.hasData) {
+          List<modelroom> roomslist =
+              (jsonDecode(snapshot.data) as List<dynamic>)
+                  .map((dynamic item) =>
+                      modelroom.fromJson(item as Map<String, dynamic>))
+                  .toList();
+
+          return ListView.builder(
+              itemCount: roomslist?.length,
+              itemBuilder: ((context, index) {
+                if (index.isEven && index != (roomslist?.length)! - 1) {
+                  return Row(children: [
+                    RoomCard(context, roomslist, index),
+                    RoomCard(context, roomslist, index + 1)
+                  ]);
+                } else if ((roomslist?.length)!.isOdd &&
+                    index == (roomslist?.length)! - 1) {
+                  return Row(children: [
+                    RoomCard(context, roomslist, index),
+                    Container()
+                  ]);
+                } else {
+                  return Container();
+                }
+              }));
+        } else {
+          return Center(
+              child: CircularProgressIndicator(
+            color: Colors.red,
+          ));
+        }
+      },
+    );
+  }
+}
+
+RoomCard(context, roomslist, index) {
   //}, myicondata, changeicon) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
@@ -131,7 +145,7 @@ RoomCard(context, qrooms, index) {
                             color: Color.fromARGB(255, 243, 243, 243),
                             size: 25),
                         Text(
-                          qrooms![index].usersCount.toString(),
+                          roomslist![index].users_count.toString(),
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w800,
@@ -163,7 +177,7 @@ RoomCard(context, qrooms, index) {
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
                     ),
                     child: Text(
-                      qrooms[index].name,
+                      roomslist[index].name,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Color.fromARGB(255, 0, 0, 0),
