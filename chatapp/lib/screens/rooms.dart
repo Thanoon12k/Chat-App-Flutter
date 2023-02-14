@@ -38,7 +38,6 @@ class listbuilser extends StatelessWidget {
 
   Future<dynamic> getjson() async {
     var jsonrooms = await Get_rooms_list('rooms');
-    // print('js>> $jsonrooms');
     return jsonrooms;
   }
 
@@ -55,15 +54,15 @@ class listbuilser extends StatelessWidget {
                   .toList();
 
           return ListView.builder(
-              itemCount: roomslist?.length,
+              itemCount: roomslist.length,
               itemBuilder: ((context, index) {
-                if (index.isEven && index != (roomslist?.length)! - 1) {
+                if (index.isEven && index != (roomslist.length) - 1) {
                   return Row(children: [
                     RoomCard(context, roomslist, index),
                     RoomCard(context, roomslist, index + 1)
                   ]);
-                } else if ((roomslist?.length)!.isOdd &&
-                    index == (roomslist?.length)! - 1) {
+                } else if ((roomslist.length).isOdd &&
+                    index == (roomslist.length) - 1) {
                   return Row(children: [
                     RoomCard(context, roomslist, index),
                     Container()
