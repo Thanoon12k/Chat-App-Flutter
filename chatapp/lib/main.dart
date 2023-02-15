@@ -1,4 +1,6 @@
-import 'package:chatapp/screens/profile_init.dart';import 'package:chatapp/widgets/utils.dart';
+
+import 'package:chatapp/screens/profile_init.dart';
+import 'package:chatapp/widgets/utils.dart';
 
 import 'package:flutter/material.dart';
 

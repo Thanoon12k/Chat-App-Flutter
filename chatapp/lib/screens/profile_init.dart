@@ -6,7 +6,7 @@ import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../serivces/UsersAPIs.dart';
+import '../serivces/POSTs.dart';
 
 String myid = ' -- ';
 String myname = ' -- ';

@@ -1,7 +1,12 @@
-import 'package:chatapp/screens/private.dart';
+import 'dart:convert';
+import 'dart:math';
+import 'package:http/http.dart' as http;
 import 'package:chatapp/screens/profile_view.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
+
+import '../models/Message.dart';
+import '../serivces/GEts.dart';
 
 class Messages extends StatefulWidget {
   const Messages({Key? key}) : super(key: key);
@@ -20,32 +25,75 @@ class _MessagesState extends State<Messages> {
         endDrawer: mydrawer(),
         appBar: myappbar(),
         body: Directionality(
-          textDirection: TextDirection.rtl,
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      MessageRow(context),
-                      MessageRow(context),
-                      MessageRow(context),
-                      MessageRow(context),
-                      MessageRow(context),
-                    ],
-                  ),
-                ),
-              ),
-              MyTextInput()
-            ],
-          ),
-        ),
+            textDirection: TextDirection.rtl, child: MsgListBuilder()),
       ),
     );
   }
 }
 
-MessageRow(context) {
+class MsgListBuilder extends StatelessWidget {
+  const MsgListBuilder({Key? key}) : super(key: key);
+
+  Future<List<MessgesModel>> getJson() async {
+    print('sending request');
+    final jsonmsgs = await Get_messages_list('rooms/1/messages');
+    print(' reques t ok ');
+    final List<dynamic> jsonList = jsonDecode(jsonmsgs);
+    final List<MessgesModel> msgslist = jsonList
+        .map((dynamic item) =>
+            MessgesModel.fromJson(item as Map<String, dynamic>))
+        .toList();
+    // print(' msgs >> $msgslist');
+    return msgslist;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<MessgesModel>>(
+      future: getJson(),
+      builder:
+          (BuildContext context, AsyncSnapshot<List<MessgesModel>> snapshot) {
+        if (snapshot.hasData) {
+          final List<MessgesModel> msgslist = snapshot.data!;
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: msgslist.length,
+                  itemBuilder: ((context, index) {
+                    Color msgcolor;
+                    List<Color> colorsarray = [
+                      Color.fromARGB(255, 233, 232, 186),
+                      Color.fromARGB(255, 186, 233, 221),
+                      Color.fromARGB(255, 225, 186, 233),
+                      Color.fromARGB(255, 190, 233, 186),
+                    ];
+
+                    return MessageRow(
+                      context,
+                      msgslist[index].sender,
+                      msgslist[index].text,
+                      msgslist[index].addtime,
+                      colorsarray[Random().nextInt(colorsarray.length)],
+                    );
+                  }),
+                ),
+              ),
+              MyTextInput(),
+            ],
+          );
+        } else {
+          return Center(
+              child: CircularProgressIndicator(
+            color: Colors.red,
+          ));
+        }
+      },
+    );
+  }
+}
+
+MessageRow(context, sender, text, addtime, msgcolor) {
   return Row(
     children: [
       Padding(
@@ -64,7 +112,7 @@ MessageRow(context) {
         ),
       ),
       Card(
-        color: Color.fromARGB(255, 233, 232, 186),
+        color: msgcolor,
         child: Wrap(
           alignment: WrapAlignment.end,
           children: <Widget>[
@@ -78,12 +126,12 @@ MessageRow(context) {
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0, 10, 10, 5),
-                        child: Text(" احمد العراقي  "),
+                        child: Text(sender.toString()),
                       ),
                       Expanded(child: Text('')),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0, 10, 10, 5),
-                        child: Text("  10:10  "),
+                        child: Text(addtime),
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(2, 10, 0, 5),
@@ -93,7 +141,7 @@ MessageRow(context) {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(" مرحبا بكم"),
+                    child: Text(text),
                   ),
                 ],
               ),

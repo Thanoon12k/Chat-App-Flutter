@@ -47,13 +47,13 @@ class ProfileView extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      MessageRow(context),
-                      MessageRow(context),
+                      // MessageRow(context),
+                      // MessageRow(context),
                     ],
                   ),
                 ),
               ),
-              MyTextInput()
+              MyTextInput1()
             ],
           ),
         ),
