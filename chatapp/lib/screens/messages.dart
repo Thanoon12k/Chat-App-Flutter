@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 import 'package:chatapp/serivces/POSTs.dart';
 import 'package:chatapp/screens/profile_view.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../models/Messages.dart';
 import '../serivces/GEts.dart';
@@ -21,15 +19,11 @@ class Messages extends StatefulWidget {
 }
 
 class _MessagesState extends State<Messages> {
-  File? _image;
-
-  final ImagePicker picker = ImagePicker();
-
   TextEditingController msgcontroller = TextEditingController();
   Future<List<MessgesModel>> getJson() async {
     var jsonmsgs = await Get_messages_list('rooms/${widget.roomid}/messages');
-    final List<dynamic> jsonList = jsonDecode(jsonmsgs);
 
+    final List<dynamic> jsonList = jsonDecode(jsonmsgs);
     final List<MessgesModel> msgslist = jsonList
         .map((dynamic item) =>
             MessgesModel.fromJson(item as Map<String, dynamic>))
@@ -38,15 +32,8 @@ class _MessagesState extends State<Messages> {
   }
 
   void refresh() {
+    print('iam refreshed >>>>>');
     setState(() {});
-  }
-
-  Future getImage(ImageSource media) async {
-    var img = await picker.pickImage(source: media);
-
-    setState(() {
-      _image = File(img!.path);
-    });
   }
 
   @override
@@ -89,8 +76,7 @@ class _MessagesState extends State<Messages> {
                         }),
                       ),
                     ),
-                    MyTextInput(widget.roomid, msgcontroller, context, refresh,
-                        getImage, _image),
+                    MyTextInput(widget.roomid, msgcontroller, context, refresh),
                   ],
                 );
               } else {
@@ -167,7 +153,7 @@ MessageRow(context, sender, text, addtime, msgcolor) {
   );
 }
 
-MyTextInput(int roomid, msgcontroller, context, refresh, getimage, _image) {
+MyTextInput(int roomid, msgcontroller, context, refresh) {
   return Stack(
     children: <Widget>[
       Align(
@@ -195,9 +181,7 @@ MyTextInput(int roomid, msgcontroller, context, refresh, getimage, _image) {
                 width: 15,
               ),
               FloatingActionButton(
-                onPressed: () {
-                  return MyImageInput(context, getimage, _image);
-                },
+                onPressed: () {},
                 child: Icon(
                   Icons.attach_file_rounded,
                   color: Colors.white,
@@ -238,55 +222,4 @@ MyTextInput(int roomid, msgcontroller, context, refresh, getimage, _image) {
       ),
     ],
   );
-}
-
-MyImageInput(context, getImage, _image) {
-  return Column(children: [
-    Center(
-      //image
-      child: IconButton(
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    content: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ElevatedButton(
-                          //if user click this button, user can upload image from gallery
-                          onPressed: () {
-                            Navigator.pop(context);
-                            getImage(ImageSource.gallery);
-                          },
-                          child: Row(
-                            children: [
-                              Icon(Icons.image),
-                              Text('From Gallery'),
-                            ],
-                          ),
-                        ),
-                        ElevatedButton(
-                          //if user click this button. user can upload image from camera
-                          onPressed: () {
-                            Navigator.pop(context);
-                            getImage(ImageSource.camera);
-                          },
-                          child: Row(
-                            children: [
-                              Icon(Icons.camera),
-                              Text('From Camera'),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                });
-          },
-          icon: Icon(Icons.camera_alt_outlined),
-          iconSize: 40),
-    ),
-  ]);
 }

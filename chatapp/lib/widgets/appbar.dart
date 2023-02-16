@@ -6,6 +6,8 @@ import 'package:chatapp/widgets/utils.dart';
 import 'package:chatapp/screens/rooms.dart';
 import 'package:flutter/material.dart';
 
+import '../screens/get1.dart';
+
 class myappbar extends StatelessWidget implements PreferredSizeWidget {
   const myappbar({Key? key}) : super(key: key);
 
@@ -61,7 +63,7 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const MyNotification()),
+                        builder: (context) => const GETX_TEST()),
                   );
                 },
                 child: Icon(

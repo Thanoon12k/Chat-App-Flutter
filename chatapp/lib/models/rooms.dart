@@ -1,4 +1,6 @@
-class RoomModel {
+import 'package:flutter/cupertino.dart';
+
+class RoomModel extends ChangeNotifier {
   int? id;
   String? name;
   int? owner;
@@ -15,7 +17,7 @@ class RoomModel {
       this.addtime});
 
   factory RoomModel.fromJson(Map<String, dynamic> json) {
-    return RoomModel(
+     return RoomModel(
       id: json['id'],
       name: json['name'],
       owner: json['owner'],
@@ -23,6 +25,6 @@ class RoomModel {
       image: json['image'],
       addtime: json['addtime'],
     );
+   
   }
 }
-
