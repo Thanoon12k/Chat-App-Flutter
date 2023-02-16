@@ -47,10 +47,10 @@ class listbuilser extends StatelessWidget {
       future: getjson(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
-          List<modelroom> roomslist =
+          List<RoomModel> roomslist =
               (jsonDecode(snapshot.data) as List<dynamic>)
                   .map((dynamic item) =>
-                      modelroom.fromJson(item as Map<String, dynamic>))
+                      RoomModel.fromJson(item as Map<String, dynamic>))
                   .toList();
 
           return ListView.builder(
@@ -88,8 +88,9 @@ RoomCard(context, roomslist, index) {
     padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
     child: GestureDetector(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const Messages()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return Messages(roomid: roomslist![index].id);
+        }));
       },
       child: SizedBox(
         width: (MediaQuery.of(context).size.width) * 0.42,
@@ -118,17 +119,6 @@ RoomCard(context, roomslist, index) {
                         ),
                       ),
                     ),
-                  ),
-                ),
-                Positioned(
-                  right: 8,
-                  top: 0,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color.fromARGB(255, 0, 26, 255)),
-                    child: Icon(Icons.volume_up,
-                        color: Color.fromARGB(255, 243, 243, 243), size: 25),
                   ),
                 ),
                 Positioned(

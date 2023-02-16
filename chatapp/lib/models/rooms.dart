@@ -1,4 +1,4 @@
-class modelroom {
+class RoomModel {
   int? id;
   String? name;
   int? owner;
@@ -6,7 +6,7 @@ class modelroom {
   Null? image;
   String? addtime;
 
-  modelroom(
+  RoomModel(
       {this.id,
       this.name,
       this.owner,
@@ -14,8 +14,8 @@ class modelroom {
       this.image,
       this.addtime});
 
-  factory modelroom.fromJson(Map<String, dynamic> json) {
-    return modelroom(
+  factory RoomModel.fromJson(Map<String, dynamic> json) {
+    return RoomModel(
       id: json['id'],
       name: json['name'],
       owner: json['owner'],

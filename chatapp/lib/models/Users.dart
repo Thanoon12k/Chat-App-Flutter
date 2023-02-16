@@ -1,14 +1,18 @@
-class MessgesModel {
+import 'dart:io';
+
+class UserModel {
   int? id;
+  File? image;
   int? sender;
+  
   int? room_id;
   String? text;
   String? addtime;
 
-  MessgesModel({this.id, this.sender, this.room_id, this.text, this.addtime});
+  UserModel({this.id, this.sender,this.image, this.room_id, this.text, this.addtime});
 
-  factory MessgesModel.fromJson(Map<String, dynamic> json) {
-    return MessgesModel(
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
       id: json['id'],
       sender: json['sender'],
       room_id: json['room_id'],

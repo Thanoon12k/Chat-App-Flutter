@@ -4,7 +4,8 @@ import 'package:http/http.dart' as http;
 
 const String url = 'https://iraqchatapp.pythonanywhere.com/api/';
 var client = http.Client();
-Future Init_user_data(data, String endpoint) async {
+
+Future PostUserData(data, String endpoint) async {
   final dio = Dio();
   var full_url = url + endpoint;
 
@@ -22,6 +23,24 @@ Future Init_user_data(data, String endpoint) async {
   final response = await dio.post(
     full_url,
     data: formData,
+    options: Options(
+      followRedirects: false,
+      validateStatus: (status) {
+        return true;
+      },
+    ),
+  );
+
+  return response;
+}
+
+Future PostMessage(data, String endpoint) async {
+  final dio = Dio();
+  var full_url = url + endpoint;
+
+  final response = await dio.post(
+    full_url,
+    data: data,
     options: Options(
       followRedirects: false,
       validateStatus: (status) {

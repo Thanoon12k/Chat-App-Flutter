@@ -1,21 +1,32 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:math';
+import 'package:chatapp/serivces/POSTs.dart';
 import 'package:http/http.dart' as http;
 import 'package:chatapp/screens/profile_view.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 
-import '../models/Message.dart';
+import '../models/Messages.dart';
 import '../serivces/GEts.dart';
 
+TextEditingController msgtext = TextEditingController();
+
 class Messages extends StatefulWidget {
-  const Messages({Key? key}) : super(key: key);
+  final int roomid;
+  Messages({Key? key, required this.roomid}) : super(key: key);
 
   @override
   State<Messages> createState() => _MessagesState();
 }
 
 class _MessagesState extends State<Messages> {
+  // void initState() {
+  //   super.initState();
+  //   // Call your function here
+  //   print('roomid inmessage = ${widget.roomid}');
+  // }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,25 +36,28 @@ class _MessagesState extends State<Messages> {
         endDrawer: mydrawer(),
         appBar: myappbar(),
         body: Directionality(
-            textDirection: TextDirection.rtl, child: MsgListBuilder()),
+          textDirection: TextDirection.rtl,
+          child: MsgListBuilder(
+            roomid: widget.roomid,
+          ),
+        ),
       ),
     );
   }
 }
 
 class MsgListBuilder extends StatelessWidget {
-  const MsgListBuilder({Key? key}) : super(key: key);
+  final int roomid;
+  MsgListBuilder({Key? key, required this.roomid}) : super(key: key);
 
   Future<List<MessgesModel>> getJson() async {
-    print('sending request');
-    final jsonmsgs = await Get_messages_list('rooms/1/messages');
-    print(' reques t ok ');
+    final jsonmsgs = await Get_messages_list('rooms/${roomid}/messages');
+
     final List<dynamic> jsonList = jsonDecode(jsonmsgs);
     final List<MessgesModel> msgslist = jsonList
         .map((dynamic item) =>
             MessgesModel.fromJson(item as Map<String, dynamic>))
         .toList();
-    // print(' msgs >> $msgslist');
     return msgslist;
   }
 
@@ -79,7 +93,7 @@ class MsgListBuilder extends StatelessWidget {
                   }),
                 ),
               ),
-              MyTextInput(),
+              MyTextInput(roomid),
             ],
           );
         } else {
@@ -153,7 +167,7 @@ MessageRow(context, sender, text, addtime, msgcolor) {
   );
 }
 
-MyTextInput() {
+MyTextInput(roomid) {
   return Stack(
     children: <Widget>[
       Align(
@@ -170,6 +184,7 @@ MyTextInput() {
               ),
               Expanded(
                 child: TextField(
+                  // controller: MsgTextController,
                   decoration: InputDecoration(
                       hintText: " اكتب رسالة....",
                       hintStyle: TextStyle(color: Colors.black54),
@@ -196,7 +211,12 @@ MyTextInput() {
                 backgroundColor: Color.fromARGB(255, 0, 0, 0),
               ),
               FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  var data = {
+                    'text': msgtext,
+                  };
+                  PostMessage(data, 'rooms/$roomid/messages/new');
+                },
                 child: Icon(
                   Icons.send,
                   color: Colors.white,

@@ -156,7 +156,7 @@ class _Profile_IniteState extends State<Profile_Inite> {
                         };
 
                         var res =
-                            await Init_user_data(data, 'users/user_init');
+                            await PostUserData(data, 'users/user_init');
 
                         if (res.statusCode == 200 || res.statusCode == 201) {
                           print('ok sent  ${res.statusCode}');
