@@ -11,6 +11,7 @@ import 'package:chatapp/screens/user_view.dart';
 import 'package:chatapp/widgets/utils.dart';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,24 +22,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: {
-        '/userinit': (context) => UserInit(),
-        '/splash': (context) => SplashScreen(),
-        '/usersetting': (context) => UserSetting(),
-        '/userview': (context) => UserView(),
-        '/rooms': (context) => RoomsList(),
-        // '/messages': (context) => MessagesList(roomid: 1,),
-        '/notification': (context) => NotifyList(),
-        '/': (context) => GETX1(),
-        '/frindlist': (context) => FriendsList(),
-        '/friendrequests': (context) => FriendsRequests(),
-        '/get1': (context) => GETX1(),
-        '/get2': (context) => GETX2(),
-      },
-    );
+    return GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/',
+        getPages: [
+          GetPage(name: '/userinit', page: () => UserInit()),
+          GetPage(name: '/splash', page: () => SplashScreen()),
+          GetPage(name: '/usersetting', page: () => UserSetting()),
+          GetPage(name: '/userview', page: () => UserView()),
+          GetPage(name: '/rooms', page: () => RoomsList()),
+          GetPage(name: '/notification', page: () => NotifyList()),
+          GetPage(name: '/frindlist', page: () => FriendsList()),
+          GetPage(name: '/friendrequests', page: () => FriendsRequests()),
+          GetPage(name: '/', page: () => GETX1()),
+          GetPage(name: '/get1', page: () => GETX1()),
+          GetPage(name: '/get2', page: () => GETX2()),
+        ]);
   }
 }
 

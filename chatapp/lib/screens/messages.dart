@@ -4,6 +4,7 @@ import 'package:chatapp/serivces/POSTs.dart';
 import 'package:chatapp/screens/user_view.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../models/Messages.dart';
 import '../serivces/GEts.dart';
@@ -97,7 +98,7 @@ MessageRow(context, sender, text, addtime, msgcolor) {
         padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
         child: GestureDetector(
           onTap: () {
-            Navigator.of(context).pushNamed('/userview');
+            Get.to(() => UserView());
           },
           child: Image(
             height: 50,

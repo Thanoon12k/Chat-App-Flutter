@@ -1,12 +1,9 @@
 // import 'package:chatapp/screens/profile_view.dart';
 import 'dart:convert';
-import 'dart:ui';
-
 import 'package:chatapp/models/Rooms.dart';
 import 'package:chatapp/screens/messages.dart';
-
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import '../serivces/GEts.dart';
 import '../widgets/appbar.dart';
 
@@ -85,7 +82,9 @@ RoomCard(context, roomslist, index) {
     padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
     child: GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed('/messages');
+        Get.to(() => MessagesList(
+              roomid: roomslist[index].id,
+            ));
       },
       child: SizedBox(
         width: (MediaQuery.of(context).size.width) * 0.42,

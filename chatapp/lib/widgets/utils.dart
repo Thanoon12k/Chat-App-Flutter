@@ -3,6 +3,7 @@ import 'package:chatapp/screens/user_init.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chatapp/screens/rooms.dart';
+import 'package:get/get.dart';
 
 String privacy_text =
     """Clients on Demand, LLC, (“Clients on Demand,” “we,” “us,” “our”) 
@@ -24,13 +25,13 @@ MyRatingDialog(context) {
           // final uri =
           //     Uri.parse('https://www.youtube.com/watch?v=1tGBCpx4gEU');
           // launchUrl(uri);
-          Navigator.of(context).pushNamed('/rooms');
+          Get.to(() => RoomsList());
         },
       ),
       ElevatedButton(
         child: Text('لا'),
         onPressed: () {
-          Navigator.of(context).pushNamed('/rooms');
+          Get.to(() => RoomsList());
         },
       ),
     ],
@@ -65,7 +66,7 @@ MyPrivacyDialog(context) {
                   child: ElevatedButton(
                     onPressed: () {
                       print(' to userinit');
-                      Navigator.of(context).pushNamed('/userinit');
+          Get.to(() => UserInit());
                     },
                     child: Text(
                       'اوافق',

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:chatapp/screens/rooms.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../serivces/POSTs.dart';
@@ -106,7 +107,7 @@ class _UserInitState extends State<UserInit> {
                         if (res.statusCode == 200 || res.statusCode == 201) {
                           print('ok sent  ${res.statusCode}');
 
-                                Navigator.of(context).pushNamed('/rooms');
+          Get.to(() => RoomsList());
 
                         } else if (res.statusCode == 400) {
                           print('name exist ..  ${res.statusCode}');

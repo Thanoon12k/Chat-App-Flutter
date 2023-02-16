@@ -5,6 +5,7 @@ import 'package:chatapp/screens/user_setting.dart';
 import 'package:chatapp/widgets/utils.dart';
 import 'package:chatapp/screens/rooms.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../screens/friends_list.dart';
 import '../screens/get1.dart';
@@ -23,7 +24,7 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
           padding: EdgeInsets.all(0),
           child: GestureDetector(
             onTap: () {
-              Navigator.of(context).pushNamed('/rooms');
+              Get.to(() => RoomsList());
             },
             child: Image(
               image: AssetImage('assets/girl.jpg'),
@@ -36,7 +37,7 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
             padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
             child: GestureDetector(
               onTap: () {
-                Navigator.of(context).pushNamed('/usersetting');
+          Get.to(() => UserSetting());
               },
               child: CircleAvatar(
                 backgroundImage: AssetImage('assets/girl.jpg'),
@@ -54,10 +55,7 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
               height: 40,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const GETX1()),
-                  );
+                  Get.to(() => GETX1());
                 },
                 child: Icon(
                   Icons.notifications,
@@ -117,7 +115,7 @@ class AppBar_init extends StatelessWidget implements PreferredSizeWidget {
             padding: EdgeInsets.all(0),
             child: GestureDetector(
               onTap: () {
-                Navigator.of(context).pushNamed('/rooms');
+          Get.to(() => RoomsList());
               },
               child: Image(
                 image: AssetImage('assets/girl.jpg'),
@@ -166,19 +164,13 @@ class _mydrawerState extends State<mydrawer> {
             ListTile(
               title: const Text('❤ الدردشات ❤'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => FriendsList()),
-                );
+                Get.to(() => FriendsList());
               },
             ),
             ListTile(
               title: const Text(' 😍 طلبات الصداقة  😍'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => FriendsRequests()),
-                );
+                Get.to(() => FriendsRequests());
               },
             ),
             ListTile(

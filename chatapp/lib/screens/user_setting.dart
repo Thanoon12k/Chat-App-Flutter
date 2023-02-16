@@ -1,6 +1,7 @@
 import 'package:chatapp/screens/rooms.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../widgets/datepicker.dart';
 
@@ -175,8 +176,7 @@ class _UserSettingState extends State<UserSetting> {
                 onPrimary: Colors.white,
               ),
               onPressed: () {
-                      Navigator.of(context).pushNamed('/rooms');
-
+                Get.to(() => RoomsList());
               },
               child: Text('حفظ'),
             ),
