@@ -54,61 +54,7 @@ class _Profile_IniteState extends State<Profile_Inite> {
             children: [
               MyTextInput('_name', 'اكتب اسمك'),
               MyTextInput('_status', ' اكتب الحالة ( اختياري* )'),
-              Center(
-                //image
-                child: IconButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              content: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  ElevatedButton(
-                                    //if user click this button, user can upload image from gallery
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      getImage(ImageSource.gallery);
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.image),
-                                        Text('From Gallery'),
-                                      ],
-                                    ),
-                                  ),
-                                  ElevatedButton(
-                                    //if user click this button. user can upload image from camera
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      getImage(ImageSource.camera);
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.camera),
-                                        Text('From Camera'),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          });
-                    },
-                    icon: Icon(Icons.camera_alt_outlined),
-                    iconSize: 40),
-              ),
-              Center(
-                //iamge display box
-                child: _image == null
-                    ? Text(
-                        "No image selected.",
-                        style: TextStyle(color: Colors.red),
-                      )
-                    : Image.file(_image!, width: 150),
-              ),
+              MyImageInput(context, getImage, _image),
               Row(
                 //notification
                 //notification
@@ -155,8 +101,7 @@ class _Profile_IniteState extends State<Profile_Inite> {
                           'image': _image,
                         };
 
-                        var res =
-                            await PostUserData(data, 'users/user_init');
+                        var res = await PostUserData(data, 'users/user_init');
 
                         if (res.statusCode == 200 || res.statusCode == 201) {
                           print('ok sent  ${res.statusCode}');
@@ -209,6 +154,66 @@ class _Profile_IniteState extends State<Profile_Inite> {
           ),
         ));
   }
+}
+
+MyImageInput(context, getImage, _image) {
+  return Column(children: [
+    Center(
+      //image
+      child: IconButton(
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    content: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ElevatedButton(
+                          //if user click this button, user can upload image from gallery
+                          onPressed: () {
+                            Navigator.pop(context);
+                            getImage(ImageSource.gallery);
+                          },
+                          child: Row(
+                            children: [
+                              Icon(Icons.image),
+                              Text('From Gallery'),
+                            ],
+                          ),
+                        ),
+                        ElevatedButton(
+                          //if user click this button. user can upload image from camera
+                          onPressed: () {
+                            Navigator.pop(context);
+                            getImage(ImageSource.camera);
+                          },
+                          child: Row(
+                            children: [
+                              Icon(Icons.camera),
+                              Text('From Camera'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                });
+          },
+          icon: Icon(Icons.camera_alt_outlined),
+          iconSize: 40),
+    ),
+    Center(
+      //iamge display box
+      child: _image == null
+          ? Text(
+              "No image selected.",
+              style: TextStyle(color: Colors.red),
+            )
+          : Image.file(_image!, width: 150),
+    ),
+  ]);
 }
 
 MyTextInput(String fieldname, String hint) {

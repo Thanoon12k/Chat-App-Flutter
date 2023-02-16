@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'package:chatapp/serivces/POSTs.dart';
 import 'package:chatapp/screens/profile_view.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../models/Messages.dart';
 import '../serivces/GEts.dart';
@@ -19,11 +21,32 @@ class Messages extends StatefulWidget {
 }
 
 class _MessagesState extends State<Messages> {
+  File? _image;
+
+  final ImagePicker picker = ImagePicker();
+
   TextEditingController msgcontroller = TextEditingController();
-  @override
-  void initState() {
-    super.initState();
-    // Call your function here
+  Future<List<MessgesModel>> getJson() async {
+    var jsonmsgs = await Get_messages_list('rooms/${widget.roomid}/messages');
+    final List<dynamic> jsonList = jsonDecode(jsonmsgs);
+
+    final List<MessgesModel> msgslist = jsonList
+        .map((dynamic item) =>
+            MessgesModel.fromJson(item as Map<String, dynamic>))
+        .toList();
+    return msgslist;
+  }
+
+  void refresh() {
+    setState(() {});
+  }
+
+  Future getImage(ImageSource media) async {
+    var img = await picker.pickImage(source: media);
+
+    setState(() {
+      _image = File(img!.path);
+    });
   }
 
   @override
@@ -36,89 +59,50 @@ class _MessagesState extends State<Messages> {
         appBar: myappbar(),
         body: Directionality(
           textDirection: TextDirection.rtl,
-          child: MsgListBuilder(
-            roomid: widget.roomid,
-            msgcontroller: msgcontroller,
+          child: FutureBuilder<List<MessgesModel>>(
+            future: getJson(),
+            builder: (BuildContext context,
+                AsyncSnapshot<List<MessgesModel>> snapshot) {
+              if (snapshot.hasData) {
+                final List<MessgesModel> msgslist = snapshot.data!;
+                return Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: msgslist.length,
+                        itemBuilder: ((context, index) {
+                          Color msgcolor;
+                          List<Color> colorsarray = [
+                            Color.fromARGB(255, 233, 232, 186),
+                            Color.fromARGB(255, 186, 233, 221),
+                            Color.fromARGB(255, 225, 186, 233),
+                            Color.fromARGB(255, 190, 233, 186),
+                          ];
+
+                          return MessageRow(
+                            context,
+                            msgslist[index].sender_name,
+                            msgslist[index].text,
+                            msgslist[index].addtime,
+                            colorsarray[Random().nextInt(colorsarray.length)],
+                          );
+                        }),
+                      ),
+                    ),
+                    MyTextInput(widget.roomid, msgcontroller, context, refresh,
+                        getImage, _image),
+                  ],
+                );
+              } else {
+                return Center(
+                    child: CircularProgressIndicator(
+                  color: Colors.red,
+                ));
+              }
+            },
           ),
         ),
       ),
-    );
-  }
-}
-
-class MsgListBuilder extends StatefulWidget {
-  final int roomid;
-
-  final TextEditingController msgcontroller;
-  MsgListBuilder({
-    Key? key,
-    required this.roomid,
-    required this.msgcontroller,
-  }) : super(key: key);
-
-  @override
-  State<MsgListBuilder> createState() => _MsgListBuilderState();
-}
-
-class _MsgListBuilderState extends State<MsgListBuilder> {
-  Future<List<MessgesModel>> getJson() async {
-    final jsonmsgs = await Get_messages_list('rooms/${widget.roomid}/messages');
-
-    final List<dynamic> jsonList = jsonDecode(jsonmsgs);
-    final List<MessgesModel> msgslist = jsonList
-        .map((dynamic item) =>
-            MessgesModel.fromJson(item as Map<String, dynamic>))
-        .toList();
-    return msgslist;
-  }
-
-  void refresh() {
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<MessgesModel>>(
-      future: getJson(),
-      builder:
-          (BuildContext context, AsyncSnapshot<List<MessgesModel>> snapshot) {
-        if (snapshot.hasData) {
-          final List<MessgesModel> msgslist = snapshot.data!;
-          return Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: msgslist.length,
-                  itemBuilder: ((context, index) {
-                    Color msgcolor;
-                    List<Color> colorsarray = [
-                      Color.fromARGB(255, 233, 232, 186),
-                      Color.fromARGB(255, 186, 233, 221),
-                      Color.fromARGB(255, 225, 186, 233),
-                      Color.fromARGB(255, 190, 233, 186),
-                    ];
-
-                    return MessageRow(
-                      context,
-                      msgslist[index].sender_name,
-                      msgslist[index].text,
-                      msgslist[index].addtime,
-                      colorsarray[Random().nextInt(colorsarray.length)],
-                    );
-                  }),
-                ),
-              ),
-              MyTextInput(
-                  widget.roomid, widget.msgcontroller, context, refresh),
-            ],
-          );
-        } else {
-          return Center(
-              child: CircularProgressIndicator(
-            color: Colors.red,
-          ));
-        }
-      },
     );
   }
 }
@@ -183,7 +167,7 @@ MessageRow(context, sender, text, addtime, msgcolor) {
   );
 }
 
-MyTextInput(int roomid, msgcontroller, context, refresh) {
+MyTextInput(int roomid, msgcontroller, context, refresh, getimage, _image) {
   return Stack(
     children: <Widget>[
       Align(
@@ -211,7 +195,9 @@ MyTextInput(int roomid, msgcontroller, context, refresh) {
                 width: 15,
               ),
               FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  return MyImageInput(context, getimage, _image);
+                },
                 child: Icon(
                   Icons.attach_file_rounded,
                   color: Colors.white,
@@ -252,4 +238,55 @@ MyTextInput(int roomid, msgcontroller, context, refresh) {
       ),
     ],
   );
+}
+
+MyImageInput(context, getImage, _image) {
+  return Column(children: [
+    Center(
+      //image
+      child: IconButton(
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    content: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ElevatedButton(
+                          //if user click this button, user can upload image from gallery
+                          onPressed: () {
+                            Navigator.pop(context);
+                            getImage(ImageSource.gallery);
+                          },
+                          child: Row(
+                            children: [
+                              Icon(Icons.image),
+                              Text('From Gallery'),
+                            ],
+                          ),
+                        ),
+                        ElevatedButton(
+                          //if user click this button. user can upload image from camera
+                          onPressed: () {
+                            Navigator.pop(context);
+                            getImage(ImageSource.camera);
+                          },
+                          child: Row(
+                            children: [
+                              Icon(Icons.camera),
+                              Text('From Camera'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                });
+          },
+          icon: Icon(Icons.camera_alt_outlined),
+          iconSize: 40),
+    ),
+  ]);
 }
