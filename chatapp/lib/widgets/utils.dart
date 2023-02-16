@@ -1,5 +1,5 @@
 // TODO Implement this library.import 'package:chatapp/rooms.dart';
-import 'package:chatapp/screens/profile_init.dart';
+import 'package:chatapp/screens/user_init.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chatapp/screens/rooms.dart';
@@ -24,19 +24,13 @@ MyRatingDialog(context) {
           // final uri =
           //     Uri.parse('https://www.youtube.com/watch?v=1tGBCpx4gEU');
           // launchUrl(uri);
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const Rooms()),
-          );
+          Navigator.of(context).pushNamed('/rooms');
         },
       ),
       ElevatedButton(
         child: Text('لا'),
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const Rooms()),
-          );
+          Navigator.of(context).pushNamed('/rooms');
         },
       ),
     ],
@@ -70,11 +64,8 @@ MyPrivacyDialog(context) {
                   padding: const EdgeInsets.fromLTRB(0, 14, 0, 12),
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Profile_Inite()),
-                      );
+                      print(' to userinit');
+                      Navigator.of(context).pushNamed('/userinit');
                     },
                     child: Text(
                       'اوافق',

@@ -13,22 +13,19 @@ class FriendsList extends StatefulWidget {
 class _FriendsListState extends State<FriendsList> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Color.fromARGB(255, 228, 211, 211),
-        endDrawer: mydrawer(),
-        appBar: myappbar(),
-        body: SingleChildScrollView(
-          child: Directionality(
-            textDirection: ui.TextDirection.rtl,
-            child: Column(
-              children: [
-                MyRow(),
-                MyRow(),
-                MyRow(),
-              ],
-            ),
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 228, 211, 211),
+      endDrawer: mydrawer(),
+      appBar: myappbar(),
+      body: SingleChildScrollView(
+        child: Directionality(
+          textDirection: ui.TextDirection.rtl,
+          child: Column(
+            children: [
+              MyRow(),
+              MyRow(),
+              MyRow(),
+            ],
           ),
         ),
       ),

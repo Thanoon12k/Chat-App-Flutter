@@ -1,5 +1,13 @@
-
-import 'package:chatapp/screens/profile_init.dart';
+import 'package:chatapp/screens/friends_list.dart';
+import 'package:chatapp/screens/friends_requests.dart';
+import 'package:chatapp/screens/get1.dart';
+import 'package:chatapp/screens/get2.dart';
+import 'package:chatapp/screens/messages.dart';
+import 'package:chatapp/screens/notification.dart';
+import 'package:chatapp/screens/rooms.dart';
+import 'package:chatapp/screens/user_init.dart';
+import 'package:chatapp/screens/user_setting.dart';
+import 'package:chatapp/screens/user_view.dart';
 import 'package:chatapp/widgets/utils.dart';
 
 import 'package:flutter/material.dart';
@@ -15,19 +23,33 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Profile_Inite(),
+      initialRoute: '/',
+      routes: {
+        '/userinit': (context) => UserInit(),
+        '/splash': (context) => SplashScreen(),
+        '/usersetting': (context) => UserSetting(),
+        '/userview': (context) => UserView(),
+        '/rooms': (context) => RoomsList(),
+        // '/messages': (context) => MessagesList(roomid: 1,),
+        '/notification': (context) => NotifyList(),
+        '/': (context) => GETX1(),
+        '/frindlist': (context) => FriendsList(),
+        '/friendrequests': (context) => FriendsRequests(),
+        '/get1': (context) => GETX1(),
+        '/get2': (context) => GETX2(),
+      },
     );
   }
 }
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _HomeState extends State<Home> {
+class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     _show_privacy_dialog_3s(context);

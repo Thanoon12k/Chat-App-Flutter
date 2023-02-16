@@ -14,14 +14,14 @@ String mystatus = ' -- ';
 String mygender = ' -- ';
 String mynotify = ' -- ';
 
-class Profile_Inite extends StatefulWidget {
-  const Profile_Inite({Key? key}) : super(key: key);
+class UserInit extends StatefulWidget {
+  const UserInit({Key? key}) : super(key: key);
 
   @override
-  State<Profile_Inite> createState() => _Profile_IniteState();
+  State<UserInit> createState() => _UserInitState();
 }
 
-class _Profile_IniteState extends State<Profile_Inite> {
+class _UserInitState extends State<UserInit> {
   String _notify_value = "icon_image";
 
   bool _network_errors = false;
@@ -106,10 +106,8 @@ class _Profile_IniteState extends State<Profile_Inite> {
                         if (res.statusCode == 200 || res.statusCode == 201) {
                           print('ok sent  ${res.statusCode}');
 
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Rooms()),
-                          );
+                                Navigator.of(context).pushNamed('/rooms');
+
                         } else if (res.statusCode == 400) {
                           print('name exist ..  ${res.statusCode}');
                           _name_exist = true;

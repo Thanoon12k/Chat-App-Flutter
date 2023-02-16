@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 
 import '../widgets/datepicker.dart';
 
-class ProfileSettings extends StatefulWidget {
-  const ProfileSettings({Key? key}) : super(key: key);
+class UserSetting extends StatefulWidget {
+  const UserSetting({Key? key}) : super(key: key);
 
   @override
-  State<ProfileSettings> createState() => _ProfileSettingsState();
+  State<UserSetting> createState() => _UserSettingState();
 }
 
-class _ProfileSettingsState extends State<ProfileSettings> {
+class _UserSettingState extends State<UserSetting> {
   List<DropdownMenuItem<String>> get genderitems {
     List<DropdownMenuItem<String>> menuItems = [
       DropdownMenuItem(child: Text("ذكر"), value: "male"),
@@ -175,10 +175,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                 onPrimary: Colors.white,
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Rooms()),
-                );
+                      Navigator.of(context).pushNamed('/rooms');
+
               },
               child: Text('حفظ'),
             ),

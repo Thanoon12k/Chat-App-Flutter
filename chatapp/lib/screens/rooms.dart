@@ -10,24 +10,21 @@ import 'package:flutter/material.dart';
 import '../serivces/GEts.dart';
 import '../widgets/appbar.dart';
 
-class Rooms extends StatefulWidget {
-  const Rooms({Key? key}) : super(key: key);
+class RoomsList extends StatefulWidget {
+  const RoomsList({Key? key}) : super(key: key);
 
   @override
-  State<Rooms> createState() => _RoomsState();
+  State<RoomsList> createState() => _RoomsListState();
 }
 
-class _RoomsState extends State<Rooms> {
+class _RoomsListState extends State<RoomsList> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Color.fromARGB(255, 228, 211, 211),
-        endDrawer: mydrawer(),
-        appBar: myappbar(),
-        body: listbuilser(),
-      ),
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 228, 211, 211),
+      endDrawer: mydrawer(),
+      appBar: myappbar(),
+      body: listbuilser(),
     );
   }
 }
@@ -88,14 +85,7 @@ RoomCard(context, roomslist, index) {
     padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
     child: GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return Messages(roomid: roomslist![index].id);
-            },
-          ),
-        );
+        Navigator.of(context).pushNamed('/messages');
       },
       child: SizedBox(
         width: (MediaQuery.of(context).size.width) * 0.42,

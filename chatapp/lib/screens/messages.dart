@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:chatapp/serivces/POSTs.dart';
-import 'package:chatapp/screens/profile_view.dart';
+import 'package:chatapp/screens/user_view.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 
@@ -10,15 +10,15 @@ import '../serivces/GEts.dart';
 
 bool postmessagecomplete = false;
 
-class Messages extends StatefulWidget {
+class MessagesList extends StatefulWidget {
   final int roomid;
-  Messages({Key? key, required this.roomid}) : super(key: key);
+  MessagesList({Key? key, required this.roomid}) : super(key: key);
 
   @override
-  State<Messages> createState() => _MessagesState();
+  State<MessagesList> createState() => _MessagesListState();
 }
 
-class _MessagesState extends State<Messages> {
+class _MessagesListState extends State<MessagesList> {
   TextEditingController msgcontroller = TextEditingController();
   Future<List<MessgesModel>> getJson() async {
     var jsonmsgs = await Get_messages_list('rooms/${widget.roomid}/messages');
@@ -38,55 +38,52 @@ class _MessagesState extends State<Messages> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Color.fromARGB(255, 228, 211, 211),
-        endDrawer: mydrawer(),
-        appBar: myappbar(),
-        body: Directionality(
-          textDirection: TextDirection.rtl,
-          child: FutureBuilder<List<MessgesModel>>(
-            future: getJson(),
-            builder: (BuildContext context,
-                AsyncSnapshot<List<MessgesModel>> snapshot) {
-              if (snapshot.hasData) {
-                final List<MessgesModel> msgslist = snapshot.data!;
-                return Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: msgslist.length,
-                        itemBuilder: ((context, index) {
-                          Color msgcolor;
-                          List<Color> colorsarray = [
-                            Color.fromARGB(255, 233, 232, 186),
-                            Color.fromARGB(255, 186, 233, 221),
-                            Color.fromARGB(255, 225, 186, 233),
-                            Color.fromARGB(255, 190, 233, 186),
-                          ];
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 228, 211, 211),
+      endDrawer: mydrawer(),
+      appBar: myappbar(),
+      body: Directionality(
+        textDirection: TextDirection.rtl,
+        child: FutureBuilder<List<MessgesModel>>(
+          future: getJson(),
+          builder: (BuildContext context,
+              AsyncSnapshot<List<MessgesModel>> snapshot) {
+            if (snapshot.hasData) {
+              final List<MessgesModel> msgslist = snapshot.data!;
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: msgslist.length,
+                      itemBuilder: ((context, index) {
+                        Color msgcolor;
+                        List<Color> colorsarray = [
+                          Color.fromARGB(255, 233, 232, 186),
+                          Color.fromARGB(255, 186, 233, 221),
+                          Color.fromARGB(255, 225, 186, 233),
+                          Color.fromARGB(255, 190, 233, 186),
+                        ];
 
-                          return MessageRow(
-                            context,
-                            msgslist[index].sender_name,
-                            msgslist[index].text,
-                            msgslist[index].addtime,
-                            colorsarray[Random().nextInt(colorsarray.length)],
-                          );
-                        }),
-                      ),
+                        return MessageRow(
+                          context,
+                          msgslist[index].sender_name,
+                          msgslist[index].text,
+                          msgslist[index].addtime,
+                          colorsarray[Random().nextInt(colorsarray.length)],
+                        );
+                      }),
                     ),
-                    MyTextInput(widget.roomid, msgcontroller, context, refresh),
-                  ],
-                );
-              } else {
-                return Center(
-                    child: CircularProgressIndicator(
-                  color: Colors.red,
-                ));
-              }
-            },
-          ),
+                  ),
+                  MyTextInput(widget.roomid, msgcontroller, context, refresh),
+                ],
+              );
+            } else {
+              return Center(
+                  child: CircularProgressIndicator(
+                color: Colors.red,
+              ));
+            }
+          },
         ),
       ),
     );
@@ -100,10 +97,7 @@ MessageRow(context, sender, text, addtime, msgcolor) {
         padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
         child: GestureDetector(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProfileView()),
-            );
+            Navigator.of(context).pushNamed('/userview');
           },
           child: Image(
             height: 50,

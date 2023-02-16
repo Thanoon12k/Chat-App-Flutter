@@ -1,11 +1,12 @@
-import 'package:chatapp/screens/friends_list.dart';
+import 'package:chatapp/screens/friends_requests.dart';
 import 'package:chatapp/screens/friends_requests.dart';
 import 'package:chatapp/screens/notification.dart';
-import 'package:chatapp/screens/profile_setting.dart';
+import 'package:chatapp/screens/user_setting.dart';
 import 'package:chatapp/widgets/utils.dart';
 import 'package:chatapp/screens/rooms.dart';
 import 'package:flutter/material.dart';
 
+import '../screens/friends_list.dart';
 import '../screens/get1.dart';
 
 class myappbar extends StatelessWidget implements PreferredSizeWidget {
@@ -22,10 +23,7 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
           padding: EdgeInsets.all(0),
           child: GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Rooms()),
-              );
+              Navigator.of(context).pushNamed('/rooms');
             },
             child: Image(
               image: AssetImage('assets/girl.jpg'),
@@ -38,11 +36,7 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
             padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ProfileSettings()),
-                );
+                Navigator.of(context).pushNamed('/usersetting');
               },
               child: CircleAvatar(
                 backgroundImage: AssetImage('assets/girl.jpg'),
@@ -62,8 +56,7 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const GETX_TEST()),
+                    MaterialPageRoute(builder: (context) => const GETX1()),
                   );
                 },
                 child: Icon(
@@ -124,10 +117,7 @@ class AppBar_init extends StatelessWidget implements PreferredSizeWidget {
             padding: EdgeInsets.all(0),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Rooms()),
-                );
+                Navigator.of(context).pushNamed('/rooms');
               },
               child: Image(
                 image: AssetImage('assets/girl.jpg'),

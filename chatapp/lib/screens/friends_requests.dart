@@ -11,22 +11,19 @@ class FriendsRequests extends StatefulWidget {
 class _FriendsRequestsState extends State<FriendsRequests> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Color.fromARGB(255, 228, 211, 211),
-        endDrawer: mydrawer(),
-        appBar: myappbar(),
-        body: Directionality(
-          textDirection: TextDirection.rtl,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                MyRow(),
-                MyRow(),
-                MyRow(),
-              ],
-            ),
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 228, 211, 211),
+      endDrawer: mydrawer(),
+      appBar: myappbar(),
+      body: Directionality(
+        textDirection: TextDirection.rtl,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              MyRow(),
+              MyRow(),
+              MyRow(),
+            ],
           ),
         ),
       ),

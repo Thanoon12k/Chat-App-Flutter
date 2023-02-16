@@ -12,31 +12,28 @@ class Private extends StatefulWidget {
 class _PrivateState extends State<Private> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Color.fromARGB(255, 228, 211, 211),
-        endDrawer: mydrawer(),
-        appBar: myappbar(),
-        body: Directionality(
-          textDirection: TextDirection.rtl,
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      // MessageRow(context),
-                      // MessageRow(context),
-                      // MessageRow(context),
-                      // MessageRow(context),
-                    ],
-                  ),
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 228, 211, 211),
+      endDrawer: mydrawer(),
+      appBar: myappbar(),
+      body: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    // MessageRow(context),
+                    // MessageRow(context),
+                    // MessageRow(context),
+                    // MessageRow(context),
+                  ],
                 ),
               ),
-              MyTextInput()
-            ],
-          ),
+            ),
+            MyTextInput()
+          ],
         ),
       ),
     );
