@@ -88,9 +88,14 @@ RoomCard(context, roomslist, index) {
     padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
     child: GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return Messages(roomid: roomslist![index].id);
-        }));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return Messages(roomid: roomslist![index].id);
+            },
+          ),
+        );
       },
       child: SizedBox(
         width: (MediaQuery.of(context).size.width) * 0.42,

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -35,19 +37,18 @@ Future PostUserData(data, String endpoint) async {
 }
 
 Future PostMessage(data, String endpoint) async {
-  final dio = Dio();
   var full_url = url + endpoint;
+  print('mesesage to : $data');
+  print('mesesage : ${data['text']}');
+  print('url ${full_url}');
 
-  final response = await dio.post(
-    full_url,
-    data: data,
-    options: Options(
-      followRedirects: false,
-      validateStatus: (status) {
-        return true;
-      },
-    ),
+  final response = await http.post(
+    Uri.parse(full_url),
+    body: jsonEncode(data),
+    headers: {'Content-Type': 'application/json'},
   );
+
+  print('mesesage sent ${response.body}');
 
   return response;
 }

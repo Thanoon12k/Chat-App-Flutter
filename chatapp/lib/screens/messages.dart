@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:math';
 import 'package:chatapp/serivces/POSTs.dart';
-import 'package:http/http.dart' as http;
 import 'package:chatapp/screens/profile_view.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +8,7 @@ import 'package:flutter/material.dart';
 import '../models/Messages.dart';
 import '../serivces/GEts.dart';
 
-TextEditingController msgtext = TextEditingController();
+bool postmessagecomplete = false;
 
 class Messages extends StatefulWidget {
   final int roomid;
@@ -21,11 +19,12 @@ class Messages extends StatefulWidget {
 }
 
 class _MessagesState extends State<Messages> {
-  // void initState() {
-  //   super.initState();
-  //   // Call your function here
-  //   print('roomid inmessage = ${widget.roomid}');
-  // }
+  TextEditingController msgcontroller = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    // Call your function here
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +38,7 @@ class _MessagesState extends State<Messages> {
           textDirection: TextDirection.rtl,
           child: MsgListBuilder(
             roomid: widget.roomid,
+            msgcontroller: msgcontroller,
           ),
         ),
       ),
@@ -46,12 +46,23 @@ class _MessagesState extends State<Messages> {
   }
 }
 
-class MsgListBuilder extends StatelessWidget {
+class MsgListBuilder extends StatefulWidget {
   final int roomid;
-  MsgListBuilder({Key? key, required this.roomid}) : super(key: key);
 
+  final TextEditingController msgcontroller;
+  MsgListBuilder({
+    Key? key,
+    required this.roomid,
+    required this.msgcontroller,
+  }) : super(key: key);
+
+  @override
+  State<MsgListBuilder> createState() => _MsgListBuilderState();
+}
+
+class _MsgListBuilderState extends State<MsgListBuilder> {
   Future<List<MessgesModel>> getJson() async {
-    final jsonmsgs = await Get_messages_list('rooms/${roomid}/messages');
+    final jsonmsgs = await Get_messages_list('rooms/${widget.roomid}/messages');
 
     final List<dynamic> jsonList = jsonDecode(jsonmsgs);
     final List<MessgesModel> msgslist = jsonList
@@ -59,6 +70,10 @@ class MsgListBuilder extends StatelessWidget {
             MessgesModel.fromJson(item as Map<String, dynamic>))
         .toList();
     return msgslist;
+  }
+
+  void refresh() {
+    setState(() {});
   }
 
   @override
@@ -85,7 +100,7 @@ class MsgListBuilder extends StatelessWidget {
 
                     return MessageRow(
                       context,
-                      msgslist[index].sender,
+                      msgslist[index].sender_name,
                       msgslist[index].text,
                       msgslist[index].addtime,
                       colorsarray[Random().nextInt(colorsarray.length)],
@@ -93,7 +108,8 @@ class MsgListBuilder extends StatelessWidget {
                   }),
                 ),
               ),
-              MyTextInput(roomid),
+              MyTextInput(
+                  widget.roomid, widget.msgcontroller, context, refresh),
             ],
           );
         } else {
@@ -167,7 +183,7 @@ MessageRow(context, sender, text, addtime, msgcolor) {
   );
 }
 
-MyTextInput(roomid) {
+MyTextInput(int roomid, msgcontroller, context, refresh) {
   return Stack(
     children: <Widget>[
       Align(
@@ -184,7 +200,7 @@ MyTextInput(roomid) {
               ),
               Expanded(
                 child: TextField(
-                  // controller: MsgTextController,
+                  controller: msgcontroller,
                   decoration: InputDecoration(
                       hintText: " اكتب رسالة....",
                       hintStyle: TextStyle(color: Colors.black54),
@@ -213,9 +229,15 @@ MyTextInput(roomid) {
               FloatingActionButton(
                 onPressed: () {
                   var data = {
-                    'text': msgtext,
+                    'text': msgcontroller.text,
+                    'room_id': roomid,
+                    // 'addtime':
                   };
-                  PostMessage(data, 'rooms/$roomid/messages/new');
+                  refresh();
+                  if (msgcontroller.text != '') {
+                    PostMessage(data, 'rooms/$roomid/messages/new');
+                    msgcontroller.text = '';
+                  }
                 },
                 child: Icon(
                   Icons.send,
