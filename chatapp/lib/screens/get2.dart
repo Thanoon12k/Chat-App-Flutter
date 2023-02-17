@@ -12,8 +12,7 @@ class GETX2 extends StatefulWidget {
 }
 
 class _GETX2State extends State<GETX2> {
-  TextEditingController txtcon = TextEditingController();
-
+  var text = 'here i iam  ';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,36 +23,18 @@ class _GETX2State extends State<GETX2> {
         child: Column(
           children: [
             Text('page  2  '),
+            Text(text),
             ElevatedButton(
               onPressed: () {
-                Get.back();
+                // Get.back();
               },
               child: Text('go page 1'),
             ),
             TextField(
-              controller: txtcon,
             ),
           ],
         ),
       ),
     );
   }
-}
-
-MyTextInput() {
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-    child: TextFormField(
-      textDirection: TextDirection.rtl,
-      textAlign: TextAlign.right,
-      decoration: InputDecoration(
-        hintText: 'hint', //hint text
-        prefixIcon: Icon(
-          Icons.person,
-          color: Colors.black,
-        ),
-      ),
-      validator: (value) {},
-    ),
-  );
 }

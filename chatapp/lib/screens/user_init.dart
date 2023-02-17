@@ -56,9 +56,7 @@ class _UserInitState extends State<UserInit> {
               MyTextInput('_name', 'اكتب اسمك'),
               MyTextInput('_status', ' اكتب الحالة ( اختياري* )'),
               MyImageInput(context, getImage, _image),
-              Row(
-                //notification
-                //notification
+              Row( 
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   DropdownButton(
@@ -107,7 +105,7 @@ class _UserInitState extends State<UserInit> {
                         if (res.statusCode == 200 || res.statusCode == 201) {
                           print('ok sent  ${res.statusCode}');
 
-          Get.to(() => RoomsList());
+                     Get.to(() => RoomsList());
 
                         } else if (res.statusCode == 400) {
                           print('name exist ..  ${res.statusCode}');

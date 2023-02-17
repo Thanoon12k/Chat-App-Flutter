@@ -1,6 +1,5 @@
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
 
 class FriendsList extends StatefulWidget {
