@@ -1,18 +1,12 @@
 // TODO Implement this library.import 'package:chatapp/rooms.dart';
-import 'package:chatapp/screens/user_init.dart';
+import 'package:chatapp/screens/user_register.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chatapp/screens/rooms.dart';
 import 'package:get/get.dart';
 
 String privacy_text =
-    """Clients on Demand, LLC, (“Clients on Demand,” “we,” “us,” “our”) 
-      is committed to protecting both the personal as well as business 
-      information you share and/or store with us. This Privacy Policy 
-      applies to transactions and activities and data gathered through the
-       Clients on Demand Website and interaction you may have with its
-        related Social Media accounts. Please review this Privacy Policy
-         periodically as we may revise it without notice.""";
+    """Clients on Demand, LLC, (“Clients on Demand,” “we,” “us,” “our”) is committed to protecting both the personal as well as business  information you share and/or store with us. This Privacy Policy   applies to transactions and activities and data gathered through the  Clients on Demand Website and interaction you may have with its  related Social Media accounts. Please review this Privacy Policy   periodically as we may revise it without notice.""";
 
 MyRatingDialog(context) {
   return AlertDialog(
@@ -66,7 +60,7 @@ MyPrivacyDialog(context) {
                   child: ElevatedButton(
                     onPressed: () {
                       print(' to userinit');
-          Get.to(() => UserInit());
+                      Get.to(() => UserRegister());
                     },
                     child: Text(
                       'اوافق',
@@ -91,3 +85,4 @@ MyPrivacyDialog(context) {
     },
   );
 }
+

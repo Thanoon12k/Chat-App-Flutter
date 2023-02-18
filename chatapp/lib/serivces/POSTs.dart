@@ -32,7 +32,7 @@ Future PostUserData(data, String endpoint) async {
       },
     ),
   );
-
+  print('response ${response.statusCode}');
   return response;
 }
 

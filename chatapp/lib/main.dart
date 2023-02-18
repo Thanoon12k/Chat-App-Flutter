@@ -5,7 +5,7 @@ import 'package:chatapp/screens/get2.dart';
 import 'package:chatapp/screens/messages.dart';
 import 'package:chatapp/screens/notification.dart';
 import 'package:chatapp/screens/rooms.dart';
-import 'package:chatapp/screens/user_init.dart';
+import 'package:chatapp/screens/user_register.dart';
 import 'package:chatapp/screens/user_setting.dart';
 import 'package:chatapp/screens/user_view.dart';
 import 'package:chatapp/widgets/utils.dart';
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
         getPages: [
-          GetPage(name: '/userinit', page: () => UserInit()),
+          GetPage(name: '/userinit', page: () => UserRegister()),
           GetPage(name: '/splash', page: () => SplashScreen()),
           GetPage(name: '/usersetting', page: () => UserSetting()),
           GetPage(name: '/userview', page: () => UserView()),
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
           GetPage(name: '/notification', page: () => NotifyList()),
           GetPage(name: '/frindlist', page: () => FriendsList()),
           GetPage(name: '/friendrequests', page: () => FriendsRequests()),
-          GetPage(name: '/', page: () => GETX1()),
+          GetPage(name: '/', page: () => UserRegister()),
           GetPage(name: '/get1', page: () => GETX1()),
           GetPage(name: '/get2', page: () => GETX2()),
         ]);
