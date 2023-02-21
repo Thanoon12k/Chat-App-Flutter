@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-savebutton() {
+savebutton(func) {
   return Center(
     child: Padding(
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),

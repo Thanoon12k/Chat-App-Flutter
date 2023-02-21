@@ -6,41 +6,28 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageInputs extends GetxController {
-  dynamic context;
+  // dynamic context;
+   XFile? image;
 
-  bool got_image = false;
-  ImageInputs({
-    this.context,
-  });
-  XFile? image;
+  // ImageInputs({
+  //    this.context,
+  // });
   final ImagePicker picker = ImagePicker();
 
-  imagewidget() {
-    return imagebutton();
+  imagewidget(context) {
+    return Column(children: [imagebutton(context), imagebox(context)]);
   }
 
-  imagebox(image) {
-    print('got -image = *********** $image != null');
+  imagebutton(context) {
     return Center(
-      child: image != null
-          ? Image.file(File(image!.path), width: 150)
-          : Text(
-              "No image selected.",
-              style: TextStyle(color: Colors.red),
-            ),
+      child: IconButton(
+          onPressed: () => sourcedialoge(context),
+          icon: Icon(Icons.camera_alt_outlined),
+          iconSize: 40),
     );
   }
 
-  imagebutton() {
-    return Obx(() => Center(
-          child: IconButton(
-              onPressed: () => sourcedialoge(),
-              icon: Icon(Icons.camera_alt_outlined),
-              iconSize: 40),
-        ));
-  }
-
-  sourcedialoge() {
+  sourcedialoge(context) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -78,6 +65,18 @@ class ImageInputs extends GetxController {
             ),
           );
         });
+  }
+
+  imagebox(context) {
+    bool is_image = (image != null);
+    return Center(
+      child: is_image
+          ? Image.file(File(image!.path), width: 150)
+          : Text(
+              "No image selected.",
+              style: TextStyle(color: Colors.red),
+            ),
+    );
   }
 
   Future getImage(ImageSource media) async {

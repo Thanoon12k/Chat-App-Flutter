@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class DropDownLists {
+class DropDownLists extends GetxController {
   String defaul_value = 'icon_image';
   String lablel = 'icon_image';
 

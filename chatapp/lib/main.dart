@@ -1,3 +1,4 @@
+import 'package:chatapp/bindings/routes.dart';
 import 'package:chatapp/screens/friends_list.dart';
 import 'package:chatapp/screens/friends_requests.dart';
 import 'package:chatapp/screens/get1.dart';
@@ -25,19 +26,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
-        getPages: [
-          GetPage(name: '/userinit', page: () => UserRegister()),
-          GetPage(name: '/splash', page: () => SplashScreen()),
-          GetPage(name: '/usersetting', page: () => UserSetting()),
-          GetPage(name: '/userview', page: () => UserView()),
-          GetPage(name: '/rooms', page: () => RoomsList()),
-          GetPage(name: '/notification', page: () => NotifyList()),
-          GetPage(name: '/frindlist', page: () => FriendsList()),
-          GetPage(name: '/friendrequests', page: () => FriendsRequests()),
-          GetPage(name: '/', page: () => UserRegister()),
-          GetPage(name: '/get1', page: () => GETX1()),
-          GetPage(name: '/get2', page: () => GETX2()),
-        ]);
+        getPages: app_routes());
   }
 }
 
