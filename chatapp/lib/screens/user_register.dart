@@ -1,14 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:chatapp/controllers/register_controller.dart';
-import 'package:chatapp/screens/rooms.dart';
 import 'package:chatapp/widgets/appbar.dart';
-import 'package:chatapp/widgets/droplists.dart';
-import 'package:chatapp/widgets/imageinputs.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../serivces/POSTs.dart';
 import '../widgets/buttons.dart';
@@ -22,7 +19,7 @@ class UserRegister extends StatefulWidget {
 }
 
 class _UserRegisterState extends State<UserRegister> {
-  final RegisterController controler =
+  final RegisterController controller =
       Get.put<RegisterController>(RegisterController());
 
   @override
@@ -32,33 +29,49 @@ class _UserRegisterState extends State<UserRegister> {
       backgroundColor: const Color.fromARGB(255, 228, 211, 211),
       appBar: AppBar_init(),
       body: Form(
-        key: controler.registerformkey,
+        key: controller.registerformkey,
         child: Column(
           textDirection: TextDirection.rtl,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextInputs(
-                    hint: ' اكتب اسمك هنا ',
-                    controller: controler.namecontroller)
-                .TextInput1(),
-            TextInputs(
-                    hint: 'اكتب الحالة هنا (اختياري *)',
-                    controller: controler.statuscontroller)
-                .TextInput1(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: TextFormField(
+                controller: controller.namecontroller,
+                validator: (v) => controller.TextValidator(v),
+                textDirection: TextDirection.rtl,
+                textAlign: TextAlign.right,
+                decoration: InputDecoration(
+                  hintText: 'اكتب اسمك هنا ',
+                  prefixIcon: Icon(
+                    Icons.person,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: TextFormField(
+                controller: controller.statuscontroller,
+                validator: (v) => controller.TextValidator(v),
+                textDirection: TextDirection.rtl,
+                textAlign: TextAlign.right,
+                decoration: InputDecoration(
+                  hintText: 'اكتب الحالة هنا ',
+                  prefixIcon: Icon(
+                    Icons.person,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Obx(
-                  () => DropdownButton<String>(
-                    value: controler.default_notification.value,
-                    items: controler.list_notification,
-                    onChanged: (String? newvalue) {
-                      controler.default_notification.value = newvalue!;
-                    },
-                  ),
-                ),
+            
                 Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: Text(
                     '  استلام الاشعارات',
                     style: TextStyle(
@@ -72,17 +85,19 @@ class _UserRegisterState extends State<UserRegister> {
             ),
             Center(
               child: IconButton(
-                  onPressed: () => (context) {},
+                  onPressed: () => controller.ShowImageSourceDialoge(context),
                   icon: Icon(Icons.camera_alt_outlined),
                   iconSize: 40),
             ),
-            Center(
-              child: controler.image != null
-                  ? Image.file(File(controler.image!.path), width: 150)
-                  : Text(
-                      "No image selected.",
-                      style: TextStyle(color: Colors.red),
-                    ),
+            Obx(
+              () => Center(
+                child: controller.image != null
+                    ? Image.file(File(controller.image_path.value), width: 150)
+                    : Text(
+                        "No image selected.",
+                        style: TextStyle(color: Colors.red),
+                      ),
+              ),
             ),
             Center(
               child: Padding(
@@ -92,7 +107,7 @@ class _UserRegisterState extends State<UserRegister> {
                     primary: Color.fromARGB(255, 255, 255, 255),
                     onPrimary: Color.fromARGB(255, 0, 0, 0),
                   ),
-                  onPressed: () => controler.DoRegister(),
+                  onPressed: () => controller.DoRegister(),
                   child: const Text(
                     'حفظ',
                     style: TextStyle(fontSize: 16),
@@ -105,14 +120,4 @@ class _UserRegisterState extends State<UserRegister> {
       ),
     );
   }
-}
-
-sendform(namecon, statuscon, image) {
-  Map data = {
-    'name': namecon,
-    'status': statuscon,
-    'image': image,
-  };
-
-  return data;
 }
