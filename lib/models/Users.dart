@@ -1,23 +1,29 @@
 import 'dart:io';
 
 class UserModel {
-  int? id;
+  String? name;
   File? image;
-  int? sender;
-  
-  int? room_id;
-  String? text;
-  String? addtime;
+  int? id;
+  bool? newUser;
+  String? token;
 
-  UserModel({this.id, this.sender,this.image, this.room_id, this.text, this.addtime});
+  UserModel({this.name, this.image, this.id, this.newUser, this.token});
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
-      id: json['id'],
-      sender: json['sender'],
-      room_id: json['room_id'],
-      text: json['text'],
-      addtime: json['addtime'],
-    );
+  UserModel.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    image = json['image'];
+    id = json['id'];
+    newUser = json['new_user'];
+    token = json['token'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['image'] = this.image;
+    data['id'] = this.id;
+    data['new_user'] = this.newUser;
+    data['token'] = this.token;
+    return data;
   }
 }

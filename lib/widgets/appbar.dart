@@ -2,7 +2,7 @@ import 'package:chatapp/screens/friends_requests.dart';
 import 'package:chatapp/screens/friends_requests.dart';
 import 'package:chatapp/screens/notification.dart';
 import 'package:chatapp/screens/user_setting.dart';
-import 'package:chatapp/widgets/utils.dart';
+import 'package:chatapp/widgets/dialogs.dart';
 import 'package:chatapp/screens/rooms.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

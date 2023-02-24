@@ -14,19 +14,14 @@ import '../screens/user_view.dart';
 
 app_routes() {
   return [
-    GetPage(
-      name: '/userregister',
-      page: () => UserRegister(),
-      // binding: RegisterBinding(),
-    ),
     GetPage(name: '/splash', page: () => SplashScreen()),
+    GetPage(name: '/userregister', page: () => UserRegister()),
     GetPage(name: '/usersetting', page: () => UserSetting()),
     GetPage(name: '/userview', page: () => UserView()),
     GetPage(name: '/rooms', page: () => RoomsList()),
     GetPage(name: '/notification', page: () => NotifyList()),
     GetPage(name: '/frindlist', page: () => FriendsList()),
     GetPage(name: '/friendrequests', page: () => FriendsRequests()),
-    GetPage(name: '/', page: () => UserRegister()),
     GetPage(name: '/get1', page: () => GETX1()),
     GetPage(name: '/get2', page: () => GETX2()),
   ];

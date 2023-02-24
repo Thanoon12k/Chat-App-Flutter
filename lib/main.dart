@@ -1,6 +1,6 @@
 import 'package:chatapp/bindings/routes.dart';
 
-import 'package:chatapp/widgets/utils.dart';
+import 'package:chatapp/widgets/dialogs.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: '/',
+        initialRoute: '/userregister',
         getPages: app_routes());
   }
 }

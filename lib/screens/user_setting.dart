@@ -3,8 +3,6 @@ import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../widgets/datepicker.dart';
-
 class UserSetting extends StatefulWidget {
   const UserSetting({Key? key}) : super(key: key);
 
@@ -95,7 +93,6 @@ class _UserSettingState extends State<UserSetting> {
             ),
           ),
           ////////////////birthday input
-          DatePicker(),
           //////////////image input
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

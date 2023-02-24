@@ -4,21 +4,21 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-const String url = 'https://iraqchatapp.pythonanywhere.com/api/';
+const String url = 'https://iraqchatapp.pythonanywhere.com/';
 var client = http.Client();
 
-Future PostUserData(data, String endpoint) async {
+Future PostUserRegister(Map data, String endpoint) async {
   final dio = Dio();
   var full_url = url + endpoint;
 
-  String filename = data['image'].path.split('/').last;
-  String filepath = data['image'].path;
+  String? filename = data['image']!.path.split('/').last;
+  String? filepath = data['image']!.path;
 
   final formData = FormData.fromMap({
     'name': data['name'],
     'notification': data['notification'],
     'status': data['status'],
-    'image': await MultipartFile.fromFile(filepath, filename: filename),
+    'image': await MultipartFile.fromFile(filepath!, filename: filename),
   });
   debugPrint('request is sending sir .. ');
 
@@ -32,8 +32,11 @@ Future PostUserData(data, String endpoint) async {
       },
     ),
   );
-  print('response ${response.statusCode}');
-  return response;
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    return response;
+  } else {
+    return null;
+  }
 }
 
 Future PostMessage(data, String endpoint) async {

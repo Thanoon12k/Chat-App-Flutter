@@ -1,5 +1,6 @@
 // TODO Implement this library.import 'package:chatapp/rooms.dart';
 import 'package:chatapp/screens/user_register.dart';
+import 'package:chatapp/serivces/preference.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chatapp/screens/rooms.dart';
@@ -59,8 +60,10 @@ MyPrivacyDialog(context) {
                   padding: const EdgeInsets.fromLTRB(0, 14, 0, 12),
                   child: ElevatedButton(
                     onPressed: () {
-                      print(' to userinit');
-                      Get.to(() => UserRegister());
+                      if (retrieveKey('token') == null)
+                        Get.to(() => UserRegister());
+                      else
+                        Get.to(() => RoomsList());
                     },
                     child: Text(
                       'اوافق',
@@ -85,4 +88,3 @@ MyPrivacyDialog(context) {
     },
   );
 }
-

@@ -6,10 +6,9 @@ import 'package:chatapp/controllers/register_controller.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../serivces/POSTs.dart';
-import '../widgets/buttons.dart';
-import '../widgets/textinputs.dart';
 
 class UserRegister extends StatefulWidget {
   const UserRegister({Key? key}) : super(key: key);
@@ -69,7 +68,15 @@ class _UserRegisterState extends State<UserRegister> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-            
+                Obx(
+                  () => DropdownButton<String>(
+                    value: controller.selected_notification.value,
+                    items: controller.list_notification,
+                    onChanged: (String? newvalue) {
+                      controller.selected_notification.value = newvalue!;
+                    },
+                  ),
+                ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: Text(
@@ -83,22 +90,65 @@ class _UserRegisterState extends State<UserRegister> {
                 ),
               ],
             ),
+            Obx(
+              () => Visibility(
+                visible: controller.show_dialoge.value,
+                child: AlertDialog(
+                  content: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Get.back();
+                          controller.show_dialoge.value = false;
+                          controller.getImage(ImageSource.gallery);
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.image),
+                            Text('From Gallery'),
+                          ],
+                        ),
+                      ),
+                      ElevatedButton(
+                        //if user click this button. user can upload image from camera
+                        onPressed: () {
+                          Get.back();
+                          controller.show_dialoge.value = false;
+                          controller.getImage(ImageSource.camera);
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.camera),
+                            Text('From Camera'),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             Center(
               child: IconButton(
-                  onPressed: () => controller.ShowImageSourceDialoge(context),
+                  onPressed: () => {
+                        controller.show_dialoge.value =
+                            !controller.show_dialoge.value,
+                        print(controller.show_dialoge.isTrue)
+                      },
                   icon: Icon(Icons.camera_alt_outlined),
                   iconSize: 40),
             ),
-            Obx(
-              () => Center(
-                child: controller.image != null
-                    ? Image.file(File(controller.image_path.value), width: 150)
-                    : Text(
-                        "No image selected.",
-                        style: TextStyle(color: Colors.red),
-                      ),
-              ),
-            ),
+            Obx(() => Center(
+                  child: controller.image.value != null
+                      ? Image.file(File(controller.image.value!.path),
+                          width: 150)
+                      : Text(
+                          "No image selected.",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                )),
             Center(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
