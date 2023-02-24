@@ -9,7 +9,7 @@ from api.usersapi.views import *
 from api.authapi.views import *
 
 AuthUrls=[
-      path('users/user_init',UserInit.as_view(),name='create-new-account') ,
+      path('users/user_register',UserRegister.as_view(),name='create-new-account') ,
         ]
 RoomsUrls=[
     path('rooms/',ListRooms.as_view(),name='list-rooms') ,
@@ -32,7 +32,7 @@ UsersUrls=[
 
 DocsUrls=[
 
-      path('docs/',include_docs_urls(title='IRAQ CHAT APP')),
+      path('docs',include_docs_urls(title='IRAQ CHAT APP')),
       path('swagger',get_swagger_view(title='IRAQ CHAT APP')),
       path('shema',get_schema_view(title='IRAQ CHAT APP', description='api for iraq chat app website', version='1.0.0',)
                                            ,name='Schema')

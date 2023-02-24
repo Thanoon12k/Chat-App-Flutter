@@ -6,10 +6,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['iraqchatapp.pythonanywhere.com','127.0.0.1']
 INSTALLED_APPS = [
-    # 'daphne',
-    # 'channels',
-    # 'jazzmin',
-
+   
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -17,7 +14,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
      'roomsapp',
-    'asgiapp',
     'usersapp',
     'rest_framework',
     'rest_framework.authtoken',
@@ -65,17 +61,8 @@ TEMPLATES = [
 ]
 
 
-# ASGI_APPLICATION = "chat.asgi.application"
 WSGI_APPLICATION = 'chat.wsgi.application'
 
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [("127.0.0.1", 6379)],
-#         },
-#     },
-# }
 ROOT_URLCONF = 'chat.urls'
 
 DATABASES = {

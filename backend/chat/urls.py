@@ -7,12 +7,9 @@ from django.conf import settings
 # from jazmin_admin_dashboard.urls import urlpatterns as jazmin_admin_urls
 
 urlpatterns = [
-    #  path('admin/', include(jazmin_admin_urls)),
-    # path('admin/', admin.site.urls),
-        path('admin/', admin.site.urls),
+     path('admin/', admin.site.urls),
 
-    path('api/', include('api.urls')),
-    path('asgi/', include('asgiapp.urls')),
+    path('', include('api.urls')),
     
   
 
