@@ -1,0 +1,73 @@
+
+get http://127.0.0.1:8000/rooms-live HTTP/1.1
+content-type: application/x-www-form-urlencoded
+
+&pharmacy_name= be beauty 
+###
+POST http://127.0.0.1:8000/api/users/user_init HTTP/1.1
+content-type: application/x-www-form-urlencoded
+#   fields=['id','name','status','notification','image']
+
+&name= ahmad23
+&status= be beauty 
+&notification= False 
+&image= be beauty 
+
+###
+POST http://127.0.0.1:8000/rooms/4/ban_member/5 HTTP/1.1
+content-type: application/x-www-form-urlencoded
+
+&pharmacy_name= be beauty 
+&text= forth message
+&room_id=5
+###
+Delete  http://127.0.0.1:8000/notify_destroy/1 HTTP/1.1
+content-type: application/x-www-form-urlencoded
+Authorization: token 98ca7ccbe04374cb5981b7e2c2c88280e89c1109
+
+&is_read=False
+&name= iraqi 15
+&pharmacy_name= be beauty 
+&email=ddd
+&image=iamgey
+
+###
+post http://127.0.0.1:8000/usercart/send_menu/1 HTTP/1.1
+content-type: application/x-www-form-urlencoded
+Authorization: token 4ce82a3b1a1d33d99c289fea661fcfb2703ad3ba
+
+###
+post http://127.0.0.1:8000/repository/send_request HTTP/1.1
+content-type: application/x-www-form-urlencoded
+
+&repository_id=1
+###
+POST http://127.0.0.1:8000/register/99 HTTP/1.1
+content-type: application/x-www-form-urlencoded
+
+&username=ahamd
+&address=baker2
+&pharmacy_name=rosana2
+&latitude=22
+&longitude=33
+
+###
+POST http://127.0.0.1:8000/register HTTP/1.1
+content-type: application/x-www-form-urlencoded
+
+mobile=99
+###
+POST http://127.0.0.1:8000/login HTTP/1.1
+content-type: application/x-www-form-urlencoded
+
+mobile=770
+
+###
+
+# Core i7 الجيل ال 6
+# Ram 32
+# كارت شاشه كوادرو
+
+# Core i5 الجيل ال 8
+# Ram 16
+# كارت شاشه Gtx 1060
