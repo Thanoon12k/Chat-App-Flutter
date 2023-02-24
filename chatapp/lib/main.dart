@@ -1,14 +1,5 @@
 import 'package:chatapp/bindings/routes.dart';
-import 'package:chatapp/screens/friends_list.dart';
-import 'package:chatapp/screens/friends_requests.dart';
-import 'package:chatapp/screens/get1.dart';
-import 'package:chatapp/screens/get2.dart';
-import 'package:chatapp/screens/messages.dart';
-import 'package:chatapp/screens/notification.dart';
-import 'package:chatapp/screens/rooms.dart';
-import 'package:chatapp/screens/user_register.dart';
-import 'package:chatapp/screens/user_setting.dart';
-import 'package:chatapp/screens/user_view.dart';
+
 import 'package:chatapp/widgets/utils.dart';
 
 import 'package:flutter/material.dart';

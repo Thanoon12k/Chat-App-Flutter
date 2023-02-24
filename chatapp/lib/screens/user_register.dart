@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:chatapp/controllers/register_controller.dart';
 import 'package:chatapp/screens/rooms.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:chatapp/widgets/droplists.dart';
@@ -17,53 +18,100 @@ class UserRegister extends StatefulWidget {
   const UserRegister({Key? key}) : super(key: key);
 
   @override
-  State<UserRegister> createState() => _UserInitState();
+  State<UserRegister> createState() => _UserRegisterState();
 }
 
-class _UserInitState extends State<UserRegister> {
-  final _formKey = GlobalKey<FormState>();
-
-  TextEditingController namecontroller = TextEditingController();
-  TextEditingController statuscontroller = TextEditingController();
-  final ImageInputs _imageInputs = Get.put(ImageInputs());
+class _UserRegisterState extends State<UserRegister> {
+  final RegisterController controler =
+      Get.put<RegisterController>(RegisterController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: const Color.fromARGB(255, 228, 211, 211),
-        appBar: AppBar_init(),
-        body: Form(
-          key: _formKey,
-          child: Column(
-            textDirection: TextDirection.rtl,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextInputs(hint: ' اكتب اسمك هنا ', controller: namecontroller)
-                  .TextInput1(),
-              TextInputs(
-                      hint: 'اكتب الحالة هنا (اختياري *)',
-                      controller: statuscontroller)
-                  .TextInput1(),
-              // DropDownLists().droplist(),
-              GetBuilder<ImageInputs>(
-                init: _imageInputs,
-                builder: (_) {
-                  return _imageInputs.imagewidget(context);
-                },
+      resizeToAvoidBottomInset: false,
+      backgroundColor: const Color.fromARGB(255, 228, 211, 211),
+      appBar: AppBar_init(),
+      body: Form(
+        key: controler.registerformkey,
+        child: Column(
+          textDirection: TextDirection.rtl,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextInputs(
+                    hint: ' اكتب اسمك هنا ',
+                    controller: controler.namecontroller)
+                .TextInput1(),
+            TextInputs(
+                    hint: 'اكتب الحالة هنا (اختياري *)',
+                    controller: controler.statuscontroller)
+                .TextInput1(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Obx(
+                  () => DropdownButton<String>(
+                    value: controler.default_notification.value,
+                    items: controler.list_notification,
+                    onChanged: (String? newvalue) {
+                      controler.default_notification.value = newvalue!;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                  child: Text(
+                    '  استلام الاشعارات',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                      color: Color.fromARGB(255, 12, 12, 12),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Center(
+              child: IconButton(
+                  onPressed: () => (context) {},
+                  icon: Icon(Icons.camera_alt_outlined),
+                  iconSize: 40),
+            ),
+            Center(
+              child: controler.image != null
+                  ? Image.file(File(controler.image!.path), width: 150)
+                  : Text(
+                      "No image selected.",
+                      style: TextStyle(color: Colors.red),
+                    ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Color.fromARGB(255, 255, 255, 255),
+                    onPrimary: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                  onPressed: () => controler.DoRegister(),
+                  child: const Text(
+                    'حفظ',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
               ),
-              // savebutton(sendform(namecontroller.text, statuscontroller.text, _imageInputs.image.path)),
-            ],
-          ),
-        ));
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
-sendform(namecon,statuscon,image) {
- Map data = {
-    'name':namecon,
-    'status':statuscon,
-    'image':image,
+sendform(namecon, statuscon, image) {
+  Map data = {
+    'name': namecon,
+    'status': statuscon,
+    'image': image,
   };
 
   return data;

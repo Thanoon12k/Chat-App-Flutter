@@ -15,9 +15,10 @@ import '../screens/user_view.dart';
 app_routes() {
   return [
     GetPage(
-        name: '/userregister',
-        page: () => UserRegister(),
-        binding: RegisterBinding()),
+      name: '/userregister',
+      page: () => UserRegister(),
+      // binding: RegisterBinding(),
+    ),
     GetPage(name: '/splash', page: () => SplashScreen()),
     GetPage(name: '/usersetting', page: () => UserSetting()),
     GetPage(name: '/userview', page: () => UserView()),
