@@ -11,6 +11,14 @@ import '../screens/rooms.dart';
 import '../screens/user_register.dart';
 import '../screens/user_setting.dart';
 import '../screens/user_view.dart';
+import '../serivces/preference.dart';
+
+get_initial_route() {
+  if (retrieveKey('token') == null)
+    return '/userregister';
+  else
+    return '/rooms';
+}
 
 app_routes() {
   return [

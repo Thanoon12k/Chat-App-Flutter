@@ -52,7 +52,7 @@ class RegisterController extends GetxController {
       waiting_response.value = true;
       dynamic resp = await PostUserRegister(data, 'users/user_register');
       waiting_response.value = false;
-      print('resp: ${resp.statusCode}');
+      
       if (resp.statusCode == 422) {
         user_exist.value = true;
       } else {

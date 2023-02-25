@@ -1,5 +1,6 @@
 // import 'package:chatapp/screens/profile_view.dart';
 import 'dart:convert';
+import 'package:chatapp/controllers/rooms_controller.dart';
 import 'package:chatapp/models/Rooms.dart';
 import 'package:chatapp/screens/messages.dart';
 import 'package:flutter/material.dart';
@@ -7,71 +8,45 @@ import 'package:get/get.dart';
 import '../serivces/GEts.dart';
 import '../widgets/appbar.dart';
 
-class RoomsList extends StatefulWidget {
-  const RoomsList({Key? key}) : super(key: key);
+class RoomsList extends StatelessWidget {
+  final RoomsController controller =
+      Get.put<RoomsController>(RoomsController());
 
-  @override
-  State<RoomsList> createState() => _RoomsListState();
-}
-
-class _RoomsListState extends State<RoomsList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 228, 211, 211),
       endDrawer: mydrawer(),
       appBar: myappbar(),
-      body: listbuilser(),
-    );
-  }
-}
-
-//
-class listbuilser extends StatelessWidget {
-  listbuilser({Key? key}) : super(key: key);
-
-  Future<dynamic> getjson() async {
-    var jsonrooms = await Get_rooms_list('rooms');
-    return jsonrooms;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getjson(),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) {
-          List<RoomModel> roomslist =
-              (jsonDecode(snapshot.data) as List<dynamic>)
-                  .map((dynamic item) =>
-                      RoomModel.fromJson(item as Map<String, dynamic>))
-                  .toList();
-
-          return ListView.builder(
-              itemCount: roomslist.length,
-              itemBuilder: ((context, index) {
-                if (index.isEven && index != (roomslist.length) - 1) {
-                  return Row(children: [
-                    RoomCard(context, roomslist, index),
-                    RoomCard(context, roomslist, index + 1)
-                  ]);
-                } else if ((roomslist.length).isOdd &&
-                    index == (roomslist.length) - 1) {
-                  return Row(children: [
-                    RoomCard(context, roomslist, index),
-                    Container()
-                  ]);
-                } else {
-                  return Container();
-                }
-              }));
-        } else {
-          return Center(
-              child: CircularProgressIndicator(
-            color: Colors.red,
-          ));
-        }
-      },
+      body: Obx(
+        () => Container(
+          child: controller.roomslist.isNotEmpty
+              ? ListView.builder(
+                  itemCount: controller.roomslist.length,
+                  itemBuilder: ((context, index) {
+                    if (index.isEven &&
+                        index != (controller.roomslist.length) - 1) {
+                      return Row(children: [
+                        RoomCard(context, controller.roomslist, index),
+                        RoomCard(context, controller.roomslist, index + 1),
+                      ]);
+                    } else if ((controller.roomslist.length).isOdd &&
+                        index == (controller.roomslist.length) - 1) {
+                      return Row(children: [
+                        RoomCard(context, controller.roomslist, index),
+                        Container()
+                      ]);
+                    } else {
+                      return Container();
+                    }
+                  }))
+              : Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.red,
+                  ),
+                ),
+        ),
+      ),
     );
   }
 }
@@ -128,7 +103,7 @@ RoomCard(context, roomslist, index) {
                             color: Color.fromARGB(255, 243, 243, 243),
                             size: 25),
                         Text(
-                          roomslist![index].users_count.toString(),
+                          roomslist[index].usersCount.toString(),
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w800,

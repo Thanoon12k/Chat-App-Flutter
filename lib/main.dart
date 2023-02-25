@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: '/userregister',
+        initialRoute:get_initial_route(),
         getPages: app_routes());
   }
 }
@@ -27,6 +27,7 @@ class SplashScreen extends StatefulWidget {
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
+
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
