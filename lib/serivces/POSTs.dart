@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 const String url = 'https://iraqchatapp.pythonanywhere.com/';
+
 var client = http.Client();
 
 Future PostUserRegister(Map data, String endpoint) async {
@@ -32,11 +33,7 @@ Future PostUserRegister(Map data, String endpoint) async {
       },
     ),
   );
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    return response;
-  } else {
-    return null;
-  }
+  return response;
 }
 
 Future PostMessage(data, String endpoint) async {

@@ -142,8 +142,11 @@ class _UserRegisterState extends State<UserRegister> {
             ),
             Obx(() => Center(
                   child: controller.image.value != null
-                      ? Image.file(File(controller.image.value!.path),
-                          width: 150)
+                      ? Image.file(
+                          File(controller.image.value!.path),
+                          width: 150,
+                          height: 150,
+                        )
                       : Text(
                           "No image selected.",
                           style: TextStyle(color: Colors.red),
@@ -163,6 +166,29 @@ class _UserRegisterState extends State<UserRegister> {
                     style: TextStyle(fontSize: 16),
                   ),
                 ),
+              ),
+            ),
+            Obx(
+              () => Center(
+                child: controller.user_exist.value
+                    ? Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: Text(
+                          'الاسم مستخدم الرجاء ادخال اسم اخر',
+                          style: TextStyle(color: Colors.red),
+                        ))
+                    : Text(''),
+              ),
+            ),
+            Obx(
+              () => Center(
+                child: controller.waiting_response.value
+                    ? Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                        child: CircularProgressIndicator(
+                          color: Colors.red,
+                        ))
+                    : Text(''),
               ),
             ),
           ],

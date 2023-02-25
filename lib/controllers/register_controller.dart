@@ -20,7 +20,10 @@ class RegisterController extends GetxController {
 
   var selected_notification = 'icon_image'.obs;
   var image_path = ''.obs;
+
   Rx<bool> show_dialoge = false.obs;
+  Rx<bool> user_exist = false.obs;
+  Rx<bool> waiting_response = false.obs;
 
   List<DropdownMenuItem<String>> list_notification = [
     DropdownMenuItem(child: Text("ايقونة وصورة"), value: "icon_image"),
@@ -37,6 +40,8 @@ class RegisterController extends GetxController {
   }
 
   DoRegister() async {
+    user_exist.value = false;
+    print('user exist : $user_exist');
     if (registerformkey.currentState!.validate() && image.value != null) {
       var data = {
         'name': namecontroller.text,
@@ -44,10 +49,17 @@ class RegisterController extends GetxController {
         'notification': selected_notification,
         'image': image.value
       };
+      waiting_response.value = true;
       dynamic resp = await PostUserRegister(data, 'users/user_register');
-      var user = UserModel.fromJson(resp.data);
-      storeKey('token', user.token);
-      print('usertoken ${user.token}');
+      waiting_response.value = false;
+      print('resp: ${resp.statusCode}');
+      if (resp.statusCode == 422) {
+        user_exist.value = true;
+      } else {
+        var user = UserModel.fromJson(resp.data);
+        storeKey('token', user.token);
+        print('usertoken ${user.token}');
+      }
     } else
       print('not valid or no image');
   }
