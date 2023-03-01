@@ -1,9 +1,6 @@
-import 'dart:convert';
 
 import 'package:chatapp/models/Rooms.dart';
-import 'package:chatapp/screens/rooms.dart';
 import 'package:get/get.dart';
-
 import '../serivces/GEts.dart';
 
 class RoomsController extends GetxController {

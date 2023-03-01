@@ -11,23 +11,23 @@ import '../serivces/GEts.dart';
 
 bool postmessagecomplete = false;
 
-class MessagesList extends StatefulWidget {
+class MessagesScreen extends StatefulWidget {
   final int roomid;
-  MessagesList({Key? key, required this.roomid}) : super(key: key);
+  MessagesScreen({Key? key, required this.roomid}) : super(key: key);
 
   @override
-  State<MessagesList> createState() => _MessagesListState();
+  State<MessagesScreen> createState() => _MessagesScreenState();
 }
 
-class _MessagesListState extends State<MessagesList> {
+class _MessagesScreenState extends State<MessagesScreen> {
   TextEditingController msgcontroller = TextEditingController();
-  Future<List<MessgesModel>> getJson() async {
+  Future<List<MessagesModel>> getJson() async {
     var jsonmsgs = await Get_messages_list('rooms/${widget.roomid}/messages');
 
     final List<dynamic> jsonList = jsonDecode(jsonmsgs);
-    final List<MessgesModel> msgslist = jsonList
+    final List<MessagesModel> msgslist = jsonList
         .map((dynamic item) =>
-            MessgesModel.fromJson(item as Map<String, dynamic>))
+            MessagesModel.fromJson(item as Map<String, dynamic>))
         .toList();
     return msgslist;
   }
@@ -45,12 +45,12 @@ class _MessagesListState extends State<MessagesList> {
       appBar: myappbar(),
       body: Directionality(
         textDirection: TextDirection.rtl,
-        child: FutureBuilder<List<MessgesModel>>(
+        child: FutureBuilder<List<MessagesModel>>(
           future: getJson(),
           builder: (BuildContext context,
-              AsyncSnapshot<List<MessgesModel>> snapshot) {
+              AsyncSnapshot<List<MessagesModel>> snapshot) {
             if (snapshot.hasData) {
-              final List<MessgesModel> msgslist = snapshot.data!;
+              final List<MessagesModel> msgslist = snapshot.data!;
               return Column(
                 children: [
                   Expanded(
@@ -67,7 +67,7 @@ class _MessagesListState extends State<MessagesList> {
 
                         return MessageRow(
                           context,
-                          msgslist[index].sender_name,
+                          msgslist[index].sender,
                           msgslist[index].text,
                           msgslist[index].addtime,
                           colorsarray[Random().nextInt(colorsarray.length)],

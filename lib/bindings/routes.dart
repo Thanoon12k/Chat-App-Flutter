@@ -1,23 +1,18 @@
-import 'package:chatapp/bindings/register.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 
-import '../main.dart';
 import '../screens/friends_list.dart';
 import '../screens/friends_requests.dart';
 import '../screens/get1.dart';
 import '../screens/get2.dart';
 import '../screens/notification.dart';
 import '../screens/rooms.dart';
+import '../screens/splashscreen.dart';
 import '../screens/user_register.dart';
 import '../screens/user_setting.dart';
 import '../screens/user_view.dart';
-import '../serivces/preference.dart';
 
 get_initial_route() {
-  if (retrieveKey('token') == null)
-    return '/userregister';
-  else
-    return '/rooms';
+    return '/splash';
 }
 
 app_routes() {

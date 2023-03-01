@@ -1,12 +1,9 @@
-import 'dart:convert';
-import 'dart:io';
+
 
 import 'package:chatapp/models/Users.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../serivces/POSTs.dart';
 import '../serivces/preference.dart';
@@ -40,8 +37,9 @@ class RegisterController extends GetxController {
   }
 
   DoRegister() async {
+    // await write_data();
+    // await read_data(UserID: '5');
     user_exist.value = false;
-    print('user exist : $user_exist');
     if (registerformkey.currentState!.validate() && image.value != null) {
       var data = {
         'name': namecontroller.text,
@@ -52,12 +50,14 @@ class RegisterController extends GetxController {
       waiting_response.value = true;
       dynamic resp = await PostUserRegister(data, 'users/user_register');
       waiting_response.value = false;
-      
+
       if (resp.statusCode == 422) {
         user_exist.value = true;
       } else {
         var user = UserModel.fromJson(resp.data);
         storeKey('token', user.token);
+        storeKey('name', user.name);
+        storeInt('id', user.id);
         print('usertoken ${user.token}');
       }
     } else

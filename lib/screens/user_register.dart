@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:chatapp/controllers/register_controller.dart';
 import 'package:chatapp/widgets/appbar.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,6 +21,7 @@ class UserRegister extends StatefulWidget {
 class _UserRegisterState extends State<UserRegister> {
   final RegisterController controller =
       Get.put<RegisterController>(RegisterController());
+  final Future<FirebaseApp> _future = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +102,7 @@ class _UserRegisterState extends State<UserRegister> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          Get.back();
+                          // Get.back();
                           controller.show_dialoge.value = false;
                           controller.getImage(ImageSource.gallery);
                         },
@@ -114,7 +116,7 @@ class _UserRegisterState extends State<UserRegister> {
                       ElevatedButton(
                         //if user click this button. user can upload image from camera
                         onPressed: () {
-                          Get.back();
+                          // Get.back();
                           controller.show_dialoge.value = false;
                           controller.getImage(ImageSource.camera);
                         },

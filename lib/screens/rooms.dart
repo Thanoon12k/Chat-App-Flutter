@@ -1,14 +1,19 @@
 // import 'package:chatapp/screens/profile_view.dart';
-import 'dart:convert';
 import 'package:chatapp/controllers/rooms_controller.dart';
 import 'package:chatapp/models/Rooms.dart';
+import 'package:chatapp/screens/firedata.dart';
 import 'package:chatapp/screens/messages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../serivces/GEts.dart';
 import '../widgets/appbar.dart';
 
-class RoomsList extends StatelessWidget {
+class RoomsList extends StatefulWidget {
+  @override
+  State<RoomsList> createState() => _RoomsListState();
+}
+
+class _RoomsListState extends State<RoomsList> {
   final RoomsController controller =
       Get.put<RoomsController>(RoomsController());
 
@@ -20,7 +25,7 @@ class RoomsList extends StatelessWidget {
       appBar: myappbar(),
       body: Obx(
         () => Container(
-          child: controller.roomslist.isNotEmpty
+          child: controller.roomslist.isEmpty
               ? ListView.builder(
                   itemCount: controller.roomslist.length,
                   itemBuilder: ((context, index) {
@@ -40,10 +45,26 @@ class RoomsList extends StatelessWidget {
                       return Container();
                     }
                   }))
-              : Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.red,
-                  ),
+              : Column(
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          Get.to(FireMessages());
+                          // Get_messages_list('text');
+                        },
+                        icon: Icon(Icons.chat_outlined)),
+                    SizedBox(height: 35),
+                    Text('data'),
+                    SizedBox(height: 35),
+                    Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.red,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 35,
+                    ),
+                  ],
                 ),
         ),
       ),
@@ -57,7 +78,7 @@ RoomCard(context, roomslist, index) {
     padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
     child: GestureDetector(
       onTap: () {
-        Get.to(() => MessagesList(
+        Get.to(() => MessagesScreen(
               roomid: roomslist[index].id,
             ));
       },

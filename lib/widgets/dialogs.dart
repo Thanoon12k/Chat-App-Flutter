@@ -60,10 +60,7 @@ MyPrivacyDialog(context) {
                   padding: const EdgeInsets.fromLTRB(0, 14, 0, 12),
                   child: ElevatedButton(
                     onPressed: () {
-                      if (retrieveKey('token') == null)
-                        Get.to(() => UserRegister());
-                      else
-                        Get.to(() => RoomsList());
+                      Get.to(() => UserRegister());
                     },
                     child: Text(
                       'اوافق',
