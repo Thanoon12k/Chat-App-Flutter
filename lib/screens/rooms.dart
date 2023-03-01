@@ -25,7 +25,7 @@ class _RoomsListState extends State<RoomsList> {
       appBar: myappbar(),
       body: Obx(
         () => Container(
-          child: controller.roomslist.isEmpty
+          child: controller.roomslist.isNotEmpty
               ? ListView.builder(
                   itemCount: controller.roomslist.length,
                   itemBuilder: ((context, index) {
@@ -45,27 +45,28 @@ class _RoomsListState extends State<RoomsList> {
                       return Container();
                     }
                   }))
-              : Column(
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          Get.to(FireMessages());
-                          // Get_messages_list('text');
-                        },
-                        icon: Icon(Icons.chat_outlined)),
-                    SizedBox(height: 35),
-                    Text('data'),
-                    SizedBox(height: 35),
-                    Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.red,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 35,
-                    ),
-                  ],
+              :
+              // Column(
+              //     children: [
+              //       IconButton(
+              //           onPressed: () {
+              //             Get.to(FireMessages());
+              //             // Get_messages_list('text');
+              //           },
+              //           icon: Icon(Icons.chat_outlined)),
+              //       SizedBox(height: 35),
+              //       Text('data'),
+              //       SizedBox(height: 35),
+              Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.red,
+                  ),
                 ),
+          //   SizedBox(
+          //     height: 35,
+          //   ),
+          // ],
+          // ),
         ),
       ),
     );
@@ -73,7 +74,6 @@ class _RoomsListState extends State<RoomsList> {
 }
 
 RoomCard(context, roomslist, index) {
-  //}, myicondata, changeicon) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
     child: GestureDetector(

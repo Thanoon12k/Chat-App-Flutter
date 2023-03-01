@@ -5,7 +5,7 @@ import '../serivces/firebase.dart';
 
 class FireMessages extends StatelessWidget {
   FireMessages({Key? key}) : super(key: key);
-  final GetMessages controller = Get.put(GetMessages());
+  final MessageController controller = Get.put(MessageController());
   @override
   Widget build(BuildContext context) {
     controller.getData();

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:chatapp/serivces/POSTs.dart';
 import 'package:chatapp/screens/user_view.dart';
+import 'package:chatapp/serivces/firebase.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,31 +12,12 @@ import '../serivces/GEts.dart';
 
 bool postmessagecomplete = false;
 
-class MessagesScreen extends StatefulWidget {
+class MessagesScreen extends StatelessWidget {
   final int roomid;
   MessagesScreen({Key? key, required this.roomid}) : super(key: key);
 
-  @override
-  State<MessagesScreen> createState() => _MessagesScreenState();
-}
-
-class _MessagesScreenState extends State<MessagesScreen> {
   TextEditingController msgcontroller = TextEditingController();
-  Future<List<MessagesModel>> getJson() async {
-    var jsonmsgs = await Get_messages_list('rooms/${widget.roomid}/messages');
-
-    final List<dynamic> jsonList = jsonDecode(jsonmsgs);
-    final List<MessagesModel> msgslist = jsonList
-        .map((dynamic item) =>
-            MessagesModel.fromJson(item as Map<String, dynamic>))
-        .toList();
-    return msgslist;
-  }
-
-  void refresh() {
-    print('iam refreshed >>>>>');
-    setState(() {});
-  }
+  final MessageController controller = Get.put(MessageController());
 
   @override
   Widget build(BuildContext context) {
@@ -45,46 +27,34 @@ class _MessagesScreenState extends State<MessagesScreen> {
       appBar: myappbar(),
       body: Directionality(
         textDirection: TextDirection.rtl,
-        child: FutureBuilder<List<MessagesModel>>(
-          future: getJson(),
-          builder: (BuildContext context,
-              AsyncSnapshot<List<MessagesModel>> snapshot) {
-            if (snapshot.hasData) {
-              final List<MessagesModel> msgslist = snapshot.data!;
-              return Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: msgslist.length,
-                      itemBuilder: ((context, index) {
-                        Color msgcolor;
-                        List<Color> colorsarray = [
-                          Color.fromARGB(255, 233, 232, 186),
-                          Color.fromARGB(255, 186, 233, 221),
-                          Color.fromARGB(255, 225, 186, 233),
-                          Color.fromARGB(255, 190, 233, 186),
-                        ];
+        child: Column(
+          children: [
+            Expanded(
+              child: Obx(
+                () => ListView.builder(
+                    itemCount: controller.messagesList.length,
+                    itemBuilder: (context, index) {
+                      final item = controller.messagesList[index];
+                      Color msgcolor;
+                      List<Color> colorsarray = [
+                        Color.fromARGB(255, 233, 232, 186),
+                        Color.fromARGB(255, 186, 233, 221),
+                        Color.fromARGB(255, 225, 186, 233),
+                        Color.fromARGB(255, 190, 233, 186),
+                      ];
 
-                        return MessageRow(
-                          context,
-                          msgslist[index].sender,
-                          msgslist[index].text,
-                          msgslist[index].addtime,
-                          colorsarray[Random().nextInt(colorsarray.length)],
-                        );
-                      }),
-                    ),
-                  ),
-                  MyTextInput(widget.roomid, msgcontroller, context, refresh),
-                ],
-              );
-            } else {
-              return Center(
-                  child: CircularProgressIndicator(
-                color: Colors.red,
-              ));
-            }
-          },
+                      return MessageRow(
+                        context,
+                        item['sender_name'],
+                        item['text'],
+                        item['addtime'],
+                        colorsarray[Random().nextInt(colorsarray.length)],
+                      );
+                    }),
+              ),
+            ),
+            MyTextInput(roomid, msgcontroller, context),
+          ],
         ),
       ),
     );
@@ -126,7 +96,7 @@ MessageRow(context, sender, text, addtime, msgcolor) {
                       Expanded(child: Text('')),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0, 10, 10, 5),
-                        child: Text(addtime),
+                        child: Text(addtime.toString()),
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(2, 10, 0, 5),
@@ -148,7 +118,7 @@ MessageRow(context, sender, text, addtime, msgcolor) {
   );
 }
 
-MyTextInput(int roomid, msgcontroller, context, refresh) {
+MyTextInput(int roomid, msgcontroller, context) {
   return Stack(
     children: <Widget>[
       Align(
@@ -196,9 +166,13 @@ MyTextInput(int roomid, msgcontroller, context, refresh) {
                   var data = {
                     'text': msgcontroller.text,
                     'room_id': roomid,
+                    'sender': 1,
+                    'sender_name': 'thanoon1',
+                    'atachment': 'null',
+                    'addtime': '1/3/2023',
+
                     // 'addtime':
                   };
-                  refresh();
                   if (msgcontroller.text != '') {
                     PostMessage(data, 'rooms/$roomid/messages/new');
                     msgcontroller.text = '';
