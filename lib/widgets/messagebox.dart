@@ -1,9 +1,9 @@
 import 'package:chatapp/screens/user_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:bubble/bubble.dart';
 
 MessageRow(context, sender_name, text, sendtime, msgcolor) {
-
   return GestureDetector(
     onLongPress: () {
       print('row : $sender_name , $text $sendtime ');
@@ -22,13 +22,21 @@ MessageRow(context, sender_name, text, sendtime, msgcolor) {
             ),
           ),
         ),
-        Card(
+        SizedBox(
+          height: 30,
+        ),
+        Bubble(
+          nipOffset: 25,
+          nipHeight: 10,
+          nipWidth: 12,
+          margin: BubbleEdges.only(top: 10),
+          nip: BubbleNip.rightTop,
           color: msgcolor,
           child: Wrap(
             alignment: WrapAlignment.end,
             children: <Widget>[
               Container(
-                width: 200,
+                width: 250,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
