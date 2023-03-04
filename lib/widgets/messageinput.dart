@@ -1,3 +1,4 @@
+import 'package:chatapp/serivces/preference.dart';
 import 'package:flutter/material.dart';
 
 import '../serivces/POSTs.dart';
@@ -49,16 +50,20 @@ messsageinput1(int roomid, msgcontroller, context) {
               ),
               FloatingActionButton(
                 heroTag: 'btn3',
-                onPressed: () {
+                onPressed: () async {
+                  int? userid = await rereint('id');
+                  String? username = await retiriveString('name');
+
+                  print('user id :::: $userid  username : $username');
                   var data = {
                     'text': msgcontroller.text,
                     'room_id': roomid,
-                    'sender': 1,
-                    'sender_name': 'thanoon1',
+                    'sender': userid,
+                    'sender_name': username,
                     'atachment': 'null',
-                    'addtime': DateTime.now().toString(),
+                    'sendtime': DateTime.now().toString(),
 
-                    // 'addtime':
+                    // 'sendtime':
                   };
                   if (msgcontroller.text != '') {
                     PostMessage(data, 'rooms/$roomid/messages/new');

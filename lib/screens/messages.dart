@@ -12,15 +12,15 @@ bool postmessagecomplete = false;
 
 // ignore: must_be_immutable
 class MessagesScreen extends StatelessWidget {
-  final int roomid;
-  MessagesScreen({Key? key, required this.roomid}) : super(key: key);
+  final int room_id;
+  MessagesScreen({Key? key, required this.room_id}) : super(key: key);
 
   TextEditingController msgcontroller = TextEditingController();
   final MessageGetter controller = Get.put(MessageGetter());
 
   @override
   Widget build(BuildContext context) {
-    controller.getData();
+    controller.getData(room_id);
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 228, 211, 211),
       endDrawer: mydrawer(),
@@ -48,7 +48,7 @@ class MessagesScreen extends StatelessWidget {
                           context,
                           item['sender_name'],
                           item['text'],
-                          item['addtime'],
+                          item['sendtime'],
                           colorsarray[Random().nextInt(colorsarray.length)],
                         );
                       } else {
@@ -57,7 +57,7 @@ class MessagesScreen extends StatelessWidget {
                     }),
               ),
             ),
-            messsageinput1(roomid, msgcontroller, context),
+            messsageinput1(room_id, msgcontroller, context),
           ],
         ),
       ),

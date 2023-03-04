@@ -23,14 +23,10 @@ class SplashScreen extends StatelessWidget {
 
 Future next_screen(context) async {
   await Future.delayed(Duration(seconds: 2));
+  
   if (await retiriveBool('is_user_registered')) {
     Get.to(RoomsList());
   } else {
     return MyPrivacyDialog(context);
   }
 }
-
-//  print('is_reg : ${await retiriveBool('is_user_registered')}');
-//     print('name : ${await retiriveString('name')}');
-//     print('token : ${await retiriveString('token')}');
-//     print('id : ${await retiriveString('id')}');````````

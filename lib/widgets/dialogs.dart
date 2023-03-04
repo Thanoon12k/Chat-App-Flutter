@@ -1,5 +1,6 @@
 import 'package:chatapp/screens/messages.dart';
 import 'package:chatapp/screens/user_register.dart';
+import 'package:chatapp/serivces/preference.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chatapp/screens/rooms.dart';
@@ -123,10 +124,11 @@ class MyRoomPasswordDialoge extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           child: ElevatedButton(
             child: Text('انضمام'),
-            onPressed: () {
-              if (inputpass.text == password && correct_password.value) {
+            onPressed: () async {
+              if (inputpass.text == password || password == '0') {
+                storeBoolen(room_id.toString(), true);
                 Get.to(() => MessagesScreen(
-                      roomid: room_id,
+                      room_id: room_id,
                     ));
               } else {
                 correct_password.value = false;

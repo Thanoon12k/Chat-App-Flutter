@@ -2,11 +2,11 @@ import 'package:chatapp/screens/user_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-MessageRow(context, sender_name, text, addtime, msgcolor) {
+MessageRow(context, sender_name, text, sendtime, msgcolor) {
 
   return GestureDetector(
     onLongPress: () {
-      print('row : $sender_name , $text $addtime ');
+      print('row : $sender_name , $text $sendtime ');
     },
     child: Row(
       children: [
@@ -42,7 +42,7 @@ MessageRow(context, sender_name, text, addtime, msgcolor) {
                         Expanded(child: Text('')),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 10, 10, 5),
-                          child: Text(addtime.toString()),
+                          child: Text(sendtime.toString()),
                         ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(2, 10, 0, 5),

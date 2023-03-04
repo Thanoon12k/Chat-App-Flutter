@@ -6,12 +6,14 @@ class MessageGetter extends GetxController {
   final DatabaseReference ref = FirebaseDatabase.instance.ref('messages');
   final messagesList = [].obs;
 
-  void getData() async {
+  void getData(int room_id) async {
     print('getting messages');
     ref.onValue.listen((event) {
       messagesList.clear(); // clear the existing list before adding new values
       event.snapshot.children.forEach((element) {
-        messagesList.add(element.value!);
+        if (element.child('room_id').value == room_id) {
+          messagesList.add(element.value!);
+        }
       });
     });
   }

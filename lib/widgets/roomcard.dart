@@ -1,21 +1,27 @@
+import 'package:chatapp/serivces/preference.dart';
 import 'package:chatapp/widgets/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../screens/messages.dart';
 
-RoomCard(context, room_id, room_name, room_usersCount, room_password) {
-  print('index');
+RoomCard(context, int? room_id, room_name, room_usersCount, room_password) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
     child: GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return MyRoomPasswordDialoge(room_id, room_password);
-          },
-        );
+      onTap: () async {
+        if (await retiriveBool(room_id.toString())) {
+          Get.to(() => MessagesScreen(
+                room_id: room_id!,
+              ));
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return MyRoomPasswordDialoge(room_id!, room_password);
+            },
+          );
+        }
       },
       child: SizedBox(
         width: (MediaQuery.of(context).size.width) * 0.42,
