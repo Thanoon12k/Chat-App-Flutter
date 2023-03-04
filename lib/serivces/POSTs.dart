@@ -38,9 +38,6 @@ Future PostUserRegister(Map data, String endpoint) async {
 
 Future PostMessage(data, String endpoint) async {
   var full_url = url + endpoint;
-  print('mesesage to : $data');
-  print('mesesage : ${data['text']}');
-  print('url ${full_url}');
 
   final response = await http.post(
     Uri.parse(full_url),

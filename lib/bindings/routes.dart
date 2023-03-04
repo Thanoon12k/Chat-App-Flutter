@@ -2,8 +2,7 @@ import 'package:get/get_navigation/src/routes/get_route.dart';
 
 import '../screens/friends_list.dart';
 import '../screens/friends_requests.dart';
-import '../screens/get1.dart';
-import '../screens/get2.dart';
+
 import '../screens/notification.dart';
 import '../screens/rooms.dart';
 import '../screens/splashscreen.dart';
@@ -12,7 +11,7 @@ import '../screens/user_setting.dart';
 import '../screens/user_view.dart';
 
 get_initial_route() {
-    return '/splash';
+  return '/splash';
 }
 
 app_routes() {
@@ -25,7 +24,5 @@ app_routes() {
     GetPage(name: '/notification', page: () => NotifyList()),
     GetPage(name: '/frindlist', page: () => FriendsList()),
     GetPage(name: '/friendrequests', page: () => FriendsRequests()),
-    GetPage(name: '/get1', page: () => GETX1()),
-    GetPage(name: '/get2', page: () => GETX2()),
   ];
 }

@@ -18,18 +18,24 @@ class RoomsModel {
     this.usersCount,
     this.image,
     this.addtime,
+    this.password,
+    this.admins_password,
   });
 
   int? id;
   String? name;
+  String? password;
+  String? admins_password;
   int? owner;
   int? usersCount;
-  dynamic? image;
+  dynamic image;
   DateTime? addtime;
 
   factory RoomsModel.fromJson(Map<String, dynamic> json) => RoomsModel(
         id: json["id"],
         name: json["name"],
+        password: json["password"],
+        admins_password: json["admins_password"],
         owner: json["owner"],
         usersCount: json["users_count"],
         image: json["image"],
@@ -39,6 +45,8 @@ class RoomsModel {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "password": password,
+        "admins_password": admins_password,
         "owner": owner,
         "users_count": usersCount,
         "image": image,

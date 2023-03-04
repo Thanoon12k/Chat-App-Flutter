@@ -22,6 +22,7 @@ dependencies:
   cloud_firestore: ^4.4.3
   firebase_database: ^10.0.14
   firebase_core: ^2.7.0
+  google_fonts: ^4.0.3
  
   
 dev_dependencies:
@@ -32,4 +33,12 @@ flutter:
   uses-material-design: true
   assets:
          - assets/
-        
+  fonts:
+  - family: Cairo
+    fonts:
+      - asset: assets/fonts/cairo/Cairo-Black.ttf
+  - family: arabic
+    fonts:
+      - asset: assets/fonts/arabtype.ttf
+
+ 

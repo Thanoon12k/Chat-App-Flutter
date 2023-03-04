@@ -1,6 +1,5 @@
-
-
 import 'package:chatapp/models/Users.dart';
+import 'package:chatapp/screens/rooms.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -58,7 +57,9 @@ class RegisterController extends GetxController {
         storeKey('token', user.token);
         storeKey('name', user.name);
         storeInt('id', user.id);
+        storeBoolen('is_user_registered', true);
         print('usertoken ${user.token}');
+        Get.offAll(RoomsList());
       }
     } else
       print('not valid or no image');

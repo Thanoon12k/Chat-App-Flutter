@@ -1,4 +1,3 @@
-import 'package:chatapp/screens/messages.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 

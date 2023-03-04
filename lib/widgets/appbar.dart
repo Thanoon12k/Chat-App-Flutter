@@ -1,6 +1,5 @@
 import 'package:chatapp/screens/friends_requests.dart';
-import 'package:chatapp/screens/friends_requests.dart';
-import 'package:chatapp/screens/notification.dart';
+
 import 'package:chatapp/screens/user_setting.dart';
 import 'package:chatapp/widgets/dialogs.dart';
 import 'package:chatapp/screens/rooms.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../screens/friends_list.dart';
-import '../screens/get1.dart';
 
 class myappbar extends StatelessWidget implements PreferredSizeWidget {
   const myappbar({Key? key}) : super(key: key);
@@ -37,7 +35,7 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
             padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
             child: GestureDetector(
               onTap: () {
-          Get.to(() => UserSetting());
+                Get.to(() => UserSetting());
               },
               child: CircleAvatar(
                 backgroundImage: AssetImage('assets/girl.jpg'),
@@ -53,15 +51,10 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
               ),
               width: 40,
               height: 40,
-              child: GestureDetector(
-                onTap: () {
-                  Get.to(() => GETX1());
-                },
-                child: Icon(
-                  Icons.notifications,
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  size: 30,
-                ),
+              child: Icon(
+                Icons.notifications,
+                color: Color.fromARGB(255, 255, 255, 255),
+                size: 30,
               ),
             ),
           ),
@@ -115,7 +108,7 @@ class AppBar_init extends StatelessWidget implements PreferredSizeWidget {
             padding: EdgeInsets.all(0),
             child: GestureDetector(
               onTap: () {
-          Get.to(() => RoomsList());
+                Get.to(() => RoomsList());
               },
               child: Image(
                 image: AssetImage('assets/girl.jpg'),

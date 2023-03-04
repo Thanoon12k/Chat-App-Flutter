@@ -1,6 +1,5 @@
-// TODO Implement this library.import 'package:chatapp/rooms.dart';
+import 'package:chatapp/screens/messages.dart';
 import 'package:chatapp/screens/user_register.dart';
-import 'package:chatapp/serivces/preference.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chatapp/screens/rooms.dart';
@@ -84,4 +83,58 @@ MyPrivacyDialog(context) {
       );
     },
   );
+}
+
+class MyRoomPasswordDialoge extends StatelessWidget {
+  final RxBool correct_password = true.obs;
+  final TextEditingController inputpass = TextEditingController();
+  final int room_id;
+  final String password;
+
+  MyRoomPasswordDialoge(
+    this.room_id,
+    this.password,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      actionsAlignment: MainAxisAlignment.start,
+      actions: <Widget>[
+        Text('ادخل رمز الغرفة '),
+        TextField(
+          controller: inputpass,
+          decoration: InputDecoration(
+            icon: Icon(Icons.vpn_key_sharp),
+          ),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        Obx(() => Visibility(
+              visible: !correct_password
+                  .value, // Use Obx to listen to changes in correct_password variable
+              child: Text(
+                'رمز الغرفة خطأ',
+                style: TextStyle(color: Colors.red),
+              ),
+            )),
+        Container(
+          alignment: Alignment.bottomCenter,
+          child: ElevatedButton(
+            child: Text('انضمام'),
+            onPressed: () {
+              if (inputpass.text == password && correct_password.value) {
+                Get.to(() => MessagesScreen(
+                      roomid: room_id,
+                    ));
+              } else {
+                correct_password.value = false;
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
 }

@@ -1,15 +1,12 @@
 import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
 
 import 'package:chatapp/controllers/register_controller.dart';
+import 'package:chatapp/screens/rooms.dart';
+import 'package:chatapp/serivces/preference.dart';
 import 'package:chatapp/widgets/appbar.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../serivces/POSTs.dart';
 
 class UserRegister extends StatefulWidget {
   const UserRegister({Key? key}) : super(key: key);
@@ -21,7 +18,6 @@ class UserRegister extends StatefulWidget {
 class _UserRegisterState extends State<UserRegister> {
   final RegisterController controller =
       Get.put<RegisterController>(RegisterController());
-  final Future<FirebaseApp> _future = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +158,12 @@ class _UserRegisterState extends State<UserRegister> {
                     primary: Color.fromARGB(255, 255, 255, 255),
                     onPrimary: Color.fromARGB(255, 0, 0, 0),
                   ),
-                  onPressed: () => controller.DoRegister(),
+                  onPressed: () {
+                    controller.DoRegister();
+                    if (retiriveBool('is_user_register') == true) {
+                      Get.to(RoomsList());
+                    }
+                  },
                   child: const Text(
                     'حفظ',
                     style: TextStyle(fontSize: 16),

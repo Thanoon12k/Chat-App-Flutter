@@ -1,4 +1,3 @@
-// somewhere in your code
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> storeKey(String? key, String? value) async {
@@ -11,7 +10,22 @@ Future<void> storeInt(String? key, int? value) async {
   await prefs.setInt(key!, value!);
 }
 
-Future<String?> retrieveKey(String key) async {
+Future<void> storeBoolen(String Key, bool is_user_registered) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setBool(Key, is_user_registered);
+}
+
+Future<int?> rereint(String key) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getInt('id');
+}
+
+Future<String?> retiriveString(String key) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getString(key) ?? null;
+}
+
+Future<bool> retiriveBool(String key) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool(key) ?? false;
 }
