@@ -46,9 +46,9 @@ class MessagesScreen extends StatelessWidget {
                       if (item['text'] != null) {
                         return MessageRow(
                           context,
-                          item['sender_name'],
                           item['text'],
-                          item['image'],
+                          item['sender_name'],
+                          item['sender_image'],
                           item['sendtime'],
                           colorsarray[Random().nextInt(colorsarray.length)],
                         );
