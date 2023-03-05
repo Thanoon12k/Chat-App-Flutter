@@ -1,31 +1,35 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:async/async.dart';
+
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
 const String url = 'https://iraqchatapp.pythonanywhere.com/';
+Map<String, dynamic> jsonheaders = {
+  'Content-Type': 'application/json',
+};
+Map<String, dynamic> formheaders = {
+  'Content-Type': 'application/json',
+};
 
 var client = http.Client();
+final dio = Dio();
 
-Future<dynamic> PostUserRegister(Map data, String endpoint) async {
-  final dio = Dio();
+Future<dynamic> PostUserRegister(
+    Map<String, dynamic> data, String endpoint) async {
   final fullUrl = url + endpoint;
   final imageFile = data['image'] as XFile;
   final imageName = imageFile.path.split('/').last;
-  final formData = FormData.fromMap({
-    'name': data['name'],
-    'notification': data['notification'],
-    'status': data['status'],
-    'image': await MultipartFile.fromFile(imageFile.path, filename: imageName),
-  });
+  data['image'] =
+      await MultipartFile.fromFile(imageFile.path, filename: imageName);
+  final formData = FormData.fromMap(data);
   print('request sending sir ...');
   try {
     final response = await dio.post(fullUrl, data: formData);
     return response.data;
   } on DioError catch (e) {
+    print('eroor :  ${e.response}  ${e.response!.statusCode}');
+
     if (e.response != null) {
       if (e.response!.statusCode == 400) {
         return 'user_exist';
@@ -37,16 +41,43 @@ Future<dynamic> PostUserRegister(Map data, String endpoint) async {
   return 'respp';
 }
 
-Future PostMessage(data, String endpoint) async {
-  var full_url = url + endpoint;
+Future PostMessage(Map<String, dynamic> data, String endpoint) async {
+  final formData;
+  final response;
+  final fullUrl = url + endpoint;
+  bool have_image = data['image'] != null;
+  if (have_image) {
+    print('not null');
+    final imageFile = data['image'] as XFile;
+    final imageName = imageFile.path.split('/').last;
+    data['image'] =
+        await MultipartFile.fromFile(imageFile.path, filename: imageName);
+    formData = FormData.fromMap(data);
+  } else {
+    data.remove('image');
+    print(' null $data');
+    formData = '';
+  }
+  try {
+    print('request sending sir');
+    if (have_image) {
+      response = await dio.post(fullUrl, data: formData);
+    } else {
+      response = await dio.post(fullUrl,
+          data: data, options: Options(headers: jsonheaders));
+    }
+    print('request sent sir :  ${response.data}');
 
-  final response = await http.post(
-    Uri.parse(full_url),
-    body: jsonEncode(data),
-    headers: {'Content-Type': 'application/json'},
-  );
-
-  print('mesesage sent ${response.body}');
-
-  return response;
+    return response.statusCode;
+  } on DioError catch (e) {
+    print('eroor :  ${e.response}  ${e.response!.statusCode}');
+    if (e.response != null) {
+      if (e.response!.statusCode == 400) {
+        return 'user_exist';
+      }
+    } else {
+      return 'server_error';
+    }
+  }
+  return 'respp';
 }
