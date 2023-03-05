@@ -34,15 +34,17 @@ class _RoomsListState extends State<RoomsList> {
                           context,
                           controller.roomslist[index].id,
                           controller.roomslist[index].name,
-                          controller.roomslist[index].usersCount,
+                          controller.roomslist[index].users_count,
                           controller.roomslist[index].password,
+                          controller.roomslist[index].image,
                         ),
                         RoomCard(
                           context,
                           controller.roomslist[index + 1].id,
                           controller.roomslist[index + 1].name,
-                          controller.roomslist[index + 1].usersCount,
+                          controller.roomslist[index + 1].users_count,
                           controller.roomslist[index + 1].password,
+                          controller.roomslist[index + 1].image,
                         ),
                       ]);
                     } else if ((controller.roomslist.length).isOdd &&
@@ -52,8 +54,9 @@ class _RoomsListState extends State<RoomsList> {
                           context,
                           controller.roomslist[index].id,
                           controller.roomslist[index].name,
-                          controller.roomslist[index].usersCount,
+                          controller.roomslist[index].users_count,
                           controller.roomslist[index].password,
+                          controller.roomslist[index].image,
                         ),
                         Container()
                       ]);

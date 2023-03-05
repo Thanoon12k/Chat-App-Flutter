@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:chatapp/screens/friends_requests.dart';
 
 import 'package:chatapp/screens/user_setting.dart';
+import 'package:chatapp/serivces/preference.dart';
 import 'package:chatapp/widgets/dialogs.dart';
 import 'package:chatapp/screens/rooms.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +12,7 @@ import 'package:get/get.dart';
 import '../screens/friends_list.dart';
 
 class myappbar extends StatelessWidget implements PreferredSizeWidget {
-  const myappbar({Key? key}) : super(key: key);
+  myappbar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +41,8 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
                 Get.to(() => UserSetting());
               },
               child: CircleAvatar(
-                backgroundImage: AssetImage('assets/girl.jpg'),
+                backgroundImage: FileImage(File(
+                    '/data/user/0/com.example.chatapp/app_flutter/user_image.png')),
               ),
             ),
           ),

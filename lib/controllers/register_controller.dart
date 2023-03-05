@@ -2,22 +2,18 @@ import 'package:chatapp/models/Users.dart';
 import 'package:chatapp/screens/rooms.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../serivces/POSTs.dart';
+import '../serivces/media_manager.dart';
 import '../serivces/preference.dart';
 
 class RegisterController extends GetxController {
   final registerformkey = GlobalKey<FormState>();
   late TextEditingController namecontroller = TextEditingController();
   late TextEditingController statuscontroller = TextEditingController();
-  final Rx<XFile?> image = Rx<XFile?>(null);
-  final ImagePicker picker = ImagePicker();
 
   var selected_notification = 'icon_image'.obs;
-  var image_path = ''.obs;
 
-  Rx<bool> show_dialoge = false.obs;
   Rx<bool> user_exist = false.obs;
   Rx<bool> waiting_response = false.obs;
 
@@ -35,38 +31,40 @@ class RegisterController extends GetxController {
     }
   }
 
-  DoRegister() async {
-    // await write_data();
-    // await read_data(UserID: '5');
+  DoRegister(_image) async {
     user_exist.value = false;
-    if (registerformkey.currentState!.validate() && image.value != null) {
+    if (registerformkey.currentState!.validate() && _image.value != null) {
       var data = {
         'name': namecontroller.text,
         'status': statuscontroller.text,
         'notification': selected_notification,
-        'image': image.value
+        'image': _image.value
       };
       waiting_response.value = true;
       dynamic resp = await PostUserRegister(data, 'users/user_register');
       waiting_response.value = false;
 
-      if (resp.statusCode == 422) {
+      if (resp == 'server_error' || resp == null) {
+        print(' response : $resp');
+      } else if (resp == 'user_exist') {
+        print(' response : $resp');
+
         user_exist.value = true;
       } else {
-        var user = UserModel.fromJson(resp.data);
+        print('data ok : ${resp}');
+        var user = UserModel.fromJson(resp);
+        await SaveLocalImage(_image.value, 'user_image.jpg');
+
         storeKey('token', user.token);
         storeKey('name', user.name);
+        storeKey('imagelink', user.image);
         storeInt('id', user.id);
         storeBoolen('is_user_registered', true);
         print('usertoken ${user.token}');
+
         Get.offAll(RoomsList());
       }
     } else
       print('not valid or no image');
-  }
-
-  Future getImage(ImageSource media) async {
-    image.value = await picker.pickImage(source: media);
-    image_path.value = image.value!.path;
   }
 }

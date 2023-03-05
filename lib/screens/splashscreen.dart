@@ -1,4 +1,5 @@
 import 'package:chatapp/screens/rooms.dart';
+import 'package:chatapp/screens/user_register.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -22,11 +23,11 @@ class SplashScreen extends StatelessWidget {
 }
 
 Future next_screen(context) async {
-  await Future.delayed(Duration(seconds: 2));
-  
+  await Future.delayed(Duration(seconds: 1));
+  await remove_all_userdata();
   if (await retiriveBool('is_user_registered')) {
-    Get.to(RoomsList());
+    Get.to(()=>RoomsList());
   } else {
-    return MyPrivacyDialog(context);
+    Get.to(()=>UserRegister());
   }
 }

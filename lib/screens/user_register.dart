@@ -4,6 +4,7 @@ import 'package:chatapp/controllers/register_controller.dart';
 import 'package:chatapp/screens/rooms.dart';
 import 'package:chatapp/serivces/preference.dart';
 import 'package:chatapp/widgets/appbar.dart';
+import 'package:chatapp/serivces/media_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,6 +19,7 @@ class UserRegister extends StatefulWidget {
 class _UserRegisterState extends State<UserRegister> {
   final RegisterController controller =
       Get.put<RegisterController>(RegisterController());
+  Rx<XFile?> _image = Rx<XFile?>(null);
 
   @override
   Widget build(BuildContext context) {
@@ -88,60 +90,18 @@ class _UserRegisterState extends State<UserRegister> {
                 ),
               ],
             ),
-            Obx(
-              () => Visibility(
-                visible: controller.show_dialoge.value,
-                child: AlertDialog(
-                  content: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          // Get.back();
-                          controller.show_dialoge.value = false;
-                          controller.getImage(ImageSource.gallery);
-                        },
-                        child: Row(
-                          children: [
-                            Icon(Icons.image),
-                            Text('From Gallery'),
-                          ],
-                        ),
-                      ),
-                      ElevatedButton(
-                        //if user click this button. user can upload image from camera
-                        onPressed: () {
-                          // Get.back();
-                          controller.show_dialoge.value = false;
-                          controller.getImage(ImageSource.camera);
-                        },
-                        child: Row(
-                          children: [
-                            Icon(Icons.camera),
-                            Text('From Camera'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
             Center(
               child: IconButton(
-                  onPressed: () => {
-                        controller.show_dialoge.value =
-                            !controller.show_dialoge.value,
-                        print(controller.show_dialoge.isTrue)
-                      },
+                  onPressed: () async {
+                    _image.value = await GetLocalImage(context);               
+                  },
                   icon: Icon(Icons.camera_alt_outlined),
                   iconSize: 40),
             ),
             Obx(() => Center(
-                  child: controller.image.value != null
+                  child: _image.value != null
                       ? Image.file(
-                          File(controller.image.value!.path),
+                          File(_image.value!.path),
                           width: 150,
                           height: 150,
                         )
@@ -159,9 +119,9 @@ class _UserRegisterState extends State<UserRegister> {
                     onPrimary: Color.fromARGB(255, 0, 0, 0),
                   ),
                   onPressed: () {
-                    controller.DoRegister();
+                    controller.DoRegister(_image);
                     if (retiriveBool('is_user_register') == true) {
-                      Get.to(RoomsList());
+                      Get.to(()=>RoomsList());
                     }
                   },
                   child: const Text(

@@ -2,7 +2,7 @@ import 'dart:io';
 
 class UserModel {
   String? name;
-  File? image;
+  String? image;
   int? id;
   bool? newUser;
   String? token;

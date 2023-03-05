@@ -15,7 +15,7 @@ class RoomsModel {
     this.id,
     this.name,
     this.owner,
-    this.usersCount,
+    this.users_count,
     this.image,
     this.addtime,
     this.password,
@@ -27,7 +27,7 @@ class RoomsModel {
   String? password;
   String? admins_password;
   int? owner;
-  int? usersCount;
+  int? users_count;
   dynamic image;
   DateTime? addtime;
 
@@ -37,7 +37,7 @@ class RoomsModel {
         password: json["password"],
         admins_password: json["admins_password"],
         owner: json["owner"],
-        usersCount: json["users_count"],
+        users_count: json["users_count"],
         image: json["image"],
         addtime: DateTime.parse(json["addtime"]),
       );
@@ -48,7 +48,7 @@ class RoomsModel {
         "password": password,
         "admins_password": admins_password,
         "owner": owner,
-        "users_count": usersCount,
+        "users_count": users_count,
         "image": image,
         "addtime": addtime.toString(),
       };

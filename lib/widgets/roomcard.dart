@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 import '../screens/messages.dart';
 
-RoomCard(context, int? room_id, room_name, room_usersCount, room_password) {
+RoomCard(context, int? room_id, room_name, users_count, room_password, image) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
     child: GestureDetector(
@@ -33,7 +33,7 @@ RoomCard(context, int? room_id, room_name, room_usersCount, room_password) {
             child: Stack(
               children: [
                 Image(
-                  image: AssetImage('assets/sq2.png'),
+                  image: AssetImage('assets/wall.jpg'),
                 ),
                 Center(
                   child: Padding(
@@ -44,10 +44,7 @@ RoomCard(context, int? room_id, room_name, room_usersCount, room_password) {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: AssetImage(
-                            'assets/girl.png',
-                          ),
-                        ),
+                            image: NetworkImage(image), fit: BoxFit.fill),
                       ),
                     ),
                   ),
@@ -65,7 +62,7 @@ RoomCard(context, int? room_id, room_name, room_usersCount, room_password) {
                             color: Color.fromARGB(255, 243, 243, 243),
                             size: 25),
                         Text(
-                          room_usersCount.toString(),
+                          users_count.toString(),
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w800,
@@ -100,7 +97,7 @@ RoomCard(context, int? room_id, room_name, room_usersCount, room_password) {
                       room_name,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: Color.fromARGB(255, 0, 0, 0),
+                          color: Color.fromARGB(255, 255, 255, 255),
                           fontSize: 24,
                           fontWeight: FontWeight.w600),
                     ),

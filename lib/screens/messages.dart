@@ -48,6 +48,7 @@ class MessagesScreen extends StatelessWidget {
                           context,
                           item['sender_name'],
                           item['text'],
+                          item['image'],
                           item['sendtime'],
                           colorsarray[Random().nextInt(colorsarray.length)],
                         );
