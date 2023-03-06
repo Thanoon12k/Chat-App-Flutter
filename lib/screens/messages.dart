@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:chatapp/controllers/message_controller.dart';
 import 'package:chatapp/serivces/firebase.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
@@ -8,15 +9,13 @@ import '../serivces/firebase.dart';
 import '../widgets/messagebox.dart';
 import '../widgets/messageinput.dart';
 
-bool postmessagecomplete = false;
-
 // ignore: must_be_immutable
 class MessagesScreen extends StatelessWidget {
   final int room_id;
   MessagesScreen({Key? key, required this.room_id}) : super(key: key);
 
-  TextEditingController msgcontroller = TextEditingController();
   final MessageGetter controller = Get.put(MessageGetter());
+  final MessageController msgcontroller = Get.put(MessageController());
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +32,7 @@ class MessagesScreen extends StatelessWidget {
               child: Obx(
                 () => ListView.builder(
                     itemCount: controller.messagesList.length,
+                    controller: controller.scrollController,
                     itemBuilder: (context, index) {
                       final item = controller.messagesList[index];
 

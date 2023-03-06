@@ -47,7 +47,6 @@ Future PostMessage(Map<String, dynamic> data, String endpoint) async {
   final fullUrl = url + endpoint;
   bool have_image = data['image'] != null;
   if (have_image) {
-    print('not null');
     final imageFile = data['image'] as XFile;
     final imageName = imageFile.path.split('/').last;
     data['image'] =
@@ -55,7 +54,6 @@ Future PostMessage(Map<String, dynamic> data, String endpoint) async {
     formData = FormData.fromMap(data);
   } else {
     data.remove('image');
-    print(' null $data');
     formData = '';
   }
   try {
@@ -66,7 +64,6 @@ Future PostMessage(Map<String, dynamic> data, String endpoint) async {
       response = await dio.post(fullUrl,
           data: data, options: Options(headers: jsonheaders));
     }
-    print('request sent sir :  ${response.data}');
 
     return response.statusCode;
   } on DioError catch (e) {

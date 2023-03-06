@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:flutter/foundation.dart' as foundation;
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -79,4 +80,45 @@ Future<XFile?> GetLocalImage(context) async {
 Future<XFile?> pickimage(ImageSource media) async {
   XFile? _image = await picker.pickImage(source: media);
   return _image;
+}
+
+void EmojiPiker() {
+  bool showEmojiPicker = false;
+  FocusNode focusNode = FocusNode();
+  TextEditingController textcon = TextEditingController();
+
+  EmojiPicker(
+    onEmojiSelected: (Category category, Emoji emoji) {
+      // Do something when emoji is tapped (optional)
+    },
+    config: Config(
+      columns: 7,
+      emojiSizeMax: 32 *
+          (foundation.defaultTargetPlatform == TargetPlatform.iOS
+              ? 1.30
+              : 1.0), // Issue: https://github.com/flutter/flutter/issues/28894
+      verticalSpacing: 0,
+      horizontalSpacing: 0,
+      gridPadding: EdgeInsets.zero,
+      initCategory: Category.RECENT,
+      bgColor: Color(0xFFF2F2F2),
+      indicatorColor: Colors.blue,
+      iconColor: Colors.grey,
+      iconColorSelected: Colors.blue,
+      backspaceColor: Colors.blue,
+      skinToneDialogBgColor: Colors.white,
+      skinToneIndicatorColor: Colors.grey,
+      enableSkinTones: true,
+      showRecentsTab: true,
+      recentsLimit: 28,
+      noRecents: const Text(
+        'No Recents',
+        style: TextStyle(fontSize: 20, color: Colors.black26),
+        textAlign: TextAlign.center,
+      ), // Needs to be const Widget
+      tabIndicatorAnimDuration: kTabScrollDuration,
+      categoryIcons: const CategoryIcons(),
+      buttonMode: ButtonMode.MATERIAL,
+    ),
+  );
 }

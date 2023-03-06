@@ -93,7 +93,7 @@ class _UserRegisterState extends State<UserRegister> {
             Center(
               child: IconButton(
                   onPressed: () async {
-                    _image.value = await GetLocalImage(context);               
+                    _image.value = await GetLocalImage(context);
                   },
                   icon: Icon(Icons.camera_alt_outlined),
                   iconSize: 40),
@@ -121,7 +121,7 @@ class _UserRegisterState extends State<UserRegister> {
                   onPressed: () {
                     controller.DoRegister(_image);
                     if (retiriveBool('is_user_register') == true) {
-                      Get.to(()=>RoomsList());
+                      Get.to(() => RoomsList());
                     }
                   },
                   child: const Text(

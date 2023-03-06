@@ -45,13 +45,10 @@ class RegisterController extends GetxController {
       waiting_response.value = false;
 
       if (resp == 'server_error' || resp == null) {
-        print(' response : $resp');
       } else if (resp == 'user_exist') {
-        print(' response : $resp');
 
         user_exist.value = true;
       } else {
-        print('data ok : ${resp}');
         var user = UserModel.fromJson(resp);
         await SaveLocalImage(_image.value, 'user_image.jpg');
 
@@ -60,7 +57,6 @@ class RegisterController extends GetxController {
         storeKey('imagelink', user.image);
         storeInt('id', user.id);
         storeBoolen('is_user_registered', true);
-        print('usertoken ${user.token}');
 
         Get.offAll(RoomsList());
       }
