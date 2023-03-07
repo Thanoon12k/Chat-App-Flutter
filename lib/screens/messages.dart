@@ -19,6 +19,7 @@ class MessagesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    controller.scorlltodown();
     controller.getData(room_id);
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 228, 211, 211),
@@ -32,7 +33,7 @@ class MessagesScreen extends StatelessWidget {
               child: Obx(
                 () => ListView.builder(
                     itemCount: controller.messagesList.length,
-                    controller: controller.scrollController,
+                    controller: controller.scorlcon,
                     itemBuilder: (context, index) {
                       final item = controller.messagesList[index];
 

@@ -46,11 +46,9 @@ class RegisterController extends GetxController {
 
       if (resp == 'server_error' || resp == null) {
       } else if (resp == 'user_exist') {
-
         user_exist.value = true;
       } else {
         var user = UserModel.fromJson(resp);
-        await SaveLocalImage(_image.value, 'user_image.jpg');
 
         storeKey('token', user.token);
         storeKey('name', user.name);

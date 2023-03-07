@@ -9,20 +9,20 @@ import 'package:image_picker/image_picker.dart';
 
 final ImagePicker picker = ImagePicker();
 
-Future<String> SaveLocalImage(XFile? _image, String image_name) async {
-  if (_image == null) {
-    return 'null image ${_image}';
-  }
-  print('iam to save image :${File(_image.path).existsSync()} ${_image.path}');
+// Future<String> SaveLocalImage(XFile? _image, String image_name) async {
+//   if (_image == null) {
+//     return 'null image ${_image}';
+//   }
+//   print('iam to save image :${File(_image.path).existsSync()} ${_image.path}');
 
-  final Directory extDir = await getApplicationDocumentsDirectory();
-  String app_path = extDir.path;
-  final String copypath = '$app_path/$image_name';
+//   final Directory extDir = await getApplicationDocumentsDirectory();
+//   String app_path = extDir.path;
+//   final String copypath = '$app_path/$image_name';
 
-  final File localImage = await File(_image.path).copy(copypath);
-  print('image saved sir $localImage');
-  return 'image saved';
-}
+//   final File localImage = await File(_image.path).copy(copypath);
+//   print('image saved sir $localImage');
+//   return 'image saved';
+// }
 
 Future<XFile?> GetLocalImage(context) async {
   final Rx<XFile?> _image = Rx<XFile?>(null);

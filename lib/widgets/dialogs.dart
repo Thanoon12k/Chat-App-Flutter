@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:chatapp/screens/rooms.dart';
 import 'package:get/get.dart';
 
+import '../serivces/urls_redirect.dart';
+
 String privacy_text =
     """Clients on Demand, LLC, (“Clients on Demand,” “we,” “us,” “our”) is committed to protecting both the personal as well as business  information you share and/or store with us. This Privacy Policy   applies to transactions and activities and data gathered through the  Clients on Demand Website and interaction you may have with its  related Social Media accounts. Please review this Privacy Policy   periodically as we may revise it without notice.""";
 
@@ -16,12 +18,8 @@ MyRatingDialog(context) {
     actions: <Widget>[
       ElevatedButton(
         child: Text('نعم'),
-        onPressed: () {
-          // final uri =
-          //     Uri.parse('https://www.youtube.com/watch?v=1tGBCpx4gEU');
-          // launchUrl(uri);
-          Get.to(() => RoomsList());
-        },
+        onPressed: () =>
+            Go_to_url(Uri.parse('https://www.youtube.com/watch?v=dQw4w9WgXcQ')),
       ),
       ElevatedButton(
         child: Text('لا'),

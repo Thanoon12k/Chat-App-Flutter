@@ -5,12 +5,7 @@ import 'package:get/get.dart';
 class MessageGetter extends GetxController {
   final DatabaseReference ref = FirebaseDatabase.instance.ref('messages');
   final messagesList = [].obs;
-  final ScrollController scrollController = ScrollController();
-
-  @override
-  void onClose() {
-    scrollController.dispose();
-  }
+  ScrollController scorlcon = new ScrollController();
 
   void getData(int room_id) async {
     ref.onValue.listen((event) {
@@ -26,8 +21,8 @@ class MessageGetter extends GetxController {
 
   scorlltodown() {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      scrollController.animateTo(
-        scrollController.position.maxScrollExtent,
+      scorlcon.animateTo(
+        scorlcon.position.maxScrollExtent,
         duration: Duration(milliseconds: 1),
         curve: Curves.easeOut,
       );

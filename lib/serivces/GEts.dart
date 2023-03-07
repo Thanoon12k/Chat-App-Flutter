@@ -6,12 +6,16 @@ var dio = Dio();
 
 Future GetRooms(String endpoint) async {
   var full_url = Uri.parse(url + endpoint);
-  var response = await dio.getUri(
-    full_url,
-  );
-  if (response.statusCode == 200) {
-    return json.encode(response.data);
-  } else {
-    return null;
+  try {
+    var response = await dio.getUri(
+      full_url,
+    );
+    if (response.statusCode == 200) {
+      return json.encode(response.data);
+    } else {
+      return null;
+    }
+  } on DioError catch (e) {
+    print('error getiing rooms !! $e');
   }
 }

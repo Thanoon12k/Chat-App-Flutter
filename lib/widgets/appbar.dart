@@ -1,19 +1,14 @@
-import 'dart:io';
-
 import 'package:chatapp/screens/friends_requests.dart';
-
 import 'package:chatapp/screens/user_setting.dart';
 import 'package:chatapp/serivces/preference.dart';
 import 'package:chatapp/widgets/dialogs.dart';
 import 'package:chatapp/screens/rooms.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../screens/friends_list.dart';
+import '../screens/notification.dart';
 
 class myappbar extends StatelessWidget implements PreferredSizeWidget {
-  myappbar({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -21,7 +16,7 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
       child: AppBar(
         toolbarHeight: 50,
         backgroundColor: Color.fromARGB(255, 228, 211, 211),
-        leading: Padding(
+        leading: Container(
           padding: EdgeInsets.all(0),
           child: GestureDetector(
             onTap: () {
@@ -34,58 +29,62 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
         actions: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
-            child: GestureDetector(
-              onTap: () {
-                Get.to(() => UserSetting());
-              },
-              child: CircleAvatar(
-                backgroundImage: FileImage(File(
-                    '/data/user/0/com.example.chatapp/app_flutter/user_image.png')),
-              ),
-            ),
+          GestureDetector(
+            onTap: () {
+              Get.to(() => UserSetting());
+            },
+            child: FutureBuilder<String?>(
+                future: retiriveString('imagelink'),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircleAvatar(
+                        backgroundImage: AssetImage('assets/wall.jpg'));
+                  } else {
+                    return CircleAvatar(
+                        backgroundImage: NetworkImage(snapshot.data!));
+                  }
+                }),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+          SizedBox(width: 5),
+          GestureDetector(
+            onTap: () {
+              Get.to(() => NotifyList());
+            },
             child: Container(
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              width: 40,
+              height: 40,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.red,
               ),
-              width: 40,
-              height: 40,
-              child: Icon(
-                Icons.notifications,
-                color: Color.fromARGB(255, 255, 255, 255),
-                size: 30,
-              ),
+              child: Icon(Icons.notifications, color: Colors.white, size: 30),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-            child: GestureDetector(
-              onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return MyRatingDialog(context);
-                    });
-              },
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.red,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 3, 5, 0),
-                  child: Text(
-                    'تقييم الجات',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 70, 66, 66),
-                    ),
+          SizedBox(width: 3),
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return MyRatingDialog(context);
+                  });
+            },
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.red,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                child: Text(
+                  'تقييم الجات',
+                  style: TextStyle(
+                    fontFamily: 'Cairo',
+                    fontSize: 12,
+                    color: Color.fromARGB(255, 255, 255, 255),
                   ),
                 ),
               ),
