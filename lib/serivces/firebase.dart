@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -28,4 +29,10 @@ class MessageGetter extends GetxController {
       );
     });
   }
+}
+
+Future<String?> get_fcm_token() async {
+  final fcmtoken = await FirebaseMessaging.instance.getToken();
+  print('fcmtoken: $fcmtoken');
+  return fcmtoken;
 }

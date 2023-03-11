@@ -31,7 +31,7 @@ MyRatingDialog(context) {
   );
 }
 
-MyPrivacyDialog(context) {
+MyPrivacyDialog(context, next) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -58,7 +58,11 @@ MyPrivacyDialog(context) {
                   padding: const EdgeInsets.fromLTRB(0, 14, 0, 12),
                   child: ElevatedButton(
                     onPressed: () {
-                      Get.to(() => UserRegister());
+                      if (next == 'user_setting') {
+                        Get.back();
+                      } else {
+                        Get.to(() => UserRegister());
+                      }
                     },
                     child: Text(
                       'اوافق',

@@ -1,10 +1,11 @@
 import 'dart:io';
 
-import 'package:chatapp/controllers/register_controller.dart';
+import 'package:chatapp/controllers/user_rgister_controller.dart';
 import 'package:chatapp/screens/rooms.dart';
 import 'package:chatapp/serivces/preference.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:chatapp/serivces/media_manager.dart';
+import 'package:chatapp/widgets/textformfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -33,37 +34,15 @@ class _UserRegisterState extends State<UserRegister> {
           textDirection: TextDirection.rtl,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-              child: TextFormField(
-                controller: controller.namecontroller,
-                validator: (v) => controller.TextValidator(v),
-                textDirection: TextDirection.rtl,
-                textAlign: TextAlign.right,
-                decoration: InputDecoration(
-                  hintText: 'اكتب اسمك هنا ',
-                  prefixIcon: Icon(
-                    Icons.person,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
+            MyTextFormField(
+              controller: controller.namecontroller,
+              validator: (v) => controller.TextValidator(v),
+              field_hint: 'الاسم',
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-              child: TextFormField(
-                controller: controller.statuscontroller,
-                validator: (v) => controller.TextValidator(v),
-                textDirection: TextDirection.rtl,
-                textAlign: TextAlign.right,
-                decoration: InputDecoration(
-                  hintText: 'اكتب الحالة هنا ',
-                  prefixIcon: Icon(
-                    Icons.person,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
+            MyTextFormField(
+              controller: controller.statuscontroller,
+              validator: (v) => controller.TextValidator(v),
+              field_hint: 'الحالة',
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

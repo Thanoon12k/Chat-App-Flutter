@@ -173,7 +173,7 @@ class _mydrawerState extends State<mydrawer> {
               title: const Text('سياسة الخصوصية'),
               onTap: () {
                 Dialog(
-                  child: MyPrivacyDialog(context),
+                  child: MyPrivacyDialog(context, ''),
                 );
               },
             ),
