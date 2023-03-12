@@ -19,3 +19,21 @@ Future GetRooms(String endpoint) async {
     print('error getiing rooms !! $e');
   }
 }
+
+Future GetUserData(endpoint) async {
+  var full_url = Uri.parse(url + endpoint);
+  print('sending to $full_url ...');
+
+  try {
+    var response = await dio.getUri(
+      full_url,
+    );
+    if (response.statusCode == 200) {
+      return json.encode(response.data);
+    } else {
+      return null;
+    }
+  } on DioError catch (e) {
+    print('error getiing rooms !! $e');
+  }
+}

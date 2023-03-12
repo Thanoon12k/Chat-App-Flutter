@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:chatapp/models/Users.dart';
 import 'package:chatapp/screens/rooms.dart';
+import 'package:chatapp/serivces/GEts.dart';
 import 'package:chatapp/serivces/PUTs.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,36 +12,15 @@ import '../serivces/POSTs.dart';
 import '../serivces/preference.dart';
 
 class UserSettingController extends GetxController {
-  final usersettingform = GlobalKey<FormState>();
-  late TextEditingController namecontroller = TextEditingController();
-  late TextEditingController statuscontroller = TextEditingController();
-  var selected_notification = 'icon_image'.obs;
-  var selected_gender = 'male'.obs;
-  var selected_comment = 'allow'.obs;
-  var selected_private = 'allow'.obs;
+  final userupdateformkey = GlobalKey<FormState>();
 
-  RxString birthdaytext = ''.obs;
+  Rx<UserModel?> user = Rx<UserModel?>(null);
+
+  final TextEditingController namecontroller = TextEditingController();
+  final TextEditingController statuscontroller = TextEditingController();
+
   Rx<bool> waiting_response = false.obs;
-
-  List<DropdownMenuItem<String>> list_notification = [
-    DropdownMenuItem(child: Text("ايقونة وصورة"), value: "icon_image"),
-    DropdownMenuItem(child: Text("ايقونة فقط "), value: "just_icon"),
-    DropdownMenuItem(child: Text("بدون اشعار"), value: "no_alert"),
-  ];
-
-  List<DropdownMenuItem<String>> list_gender = [
-    DropdownMenuItem(child: Text("ذكر"), value: "male"),
-    DropdownMenuItem(child: Text("انثى"), value: "famle"),
-  ];
-  List<DropdownMenuItem<String>> list_comments = [
-    DropdownMenuItem(child: Text("السماح للجميع بالتعليق"), value: "allow"),
-    DropdownMenuItem(child: Text("لا تسمح"), value: "disallow"),
-  ];
-  List<DropdownMenuItem<String>> list_private = [
-    DropdownMenuItem(child: Text("السماح  بالخاص"), value: "allow"),
-    DropdownMenuItem(child: Text("لا تسمح"), value: "disallow"),
-  ];
-
+  Rx<bool> name_exist = false.obs;
   TextValidator(String? v) {
     if (v == '' || v == ' ') {
       return 'please enter some text';
@@ -47,40 +29,37 @@ class UserSettingController extends GetxController {
     }
   }
 
-  UpdateUserData(_image) async {
-    if (usersettingform.currentState!.validate() && _image.value != null) {
-      var selected_notification = 'icon_image'.obs;
-   
-      var data = {
-        'name': namecontroller.text,
-        'status': statuscontroller.text,
-        'gender': selected_gender,
-        'comments': selected_comment,
-        'private': selected_private,
-        'notification': selected_notification,
-        'image': _image.value
-      };
-      waiting_response.value = true;
-      dynamic resp = await PutUpdateUser(data, 'users/user_register');
-      waiting_response.value = false;
-
-      if (resp == 'server_error' || resp == null) {
-      } else {
-        var user = UserModel.fromJson(resp);
-      }
-    } else
-      print('not valid or no image');
+  Future<UserModel> fetchuser() async {
+    String resp = await GetUserData('users/32/user_ret_update');
+    return UserModel.fromJson(jsonDecode(resp));
   }
 
-  void selectDate(context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime(1999),
-      firstDate: DateTime(1960),
-      lastDate: DateTime(2025),
-    );
-    if (pickedDate != null) {
-      birthdaytext.value = DateFormat('dd-MM- yyyy').format(pickedDate);
+  Future UpdateNow(_image) async {
+    var userid = 32;
+    var data = {
+      'name': namecontroller.text,
+      'status': statuscontroller.text,
+      'gender': user.value!.gender,
+      'birthdate': user.value!.birthdate,
+      'private': user.value!.private,
+      'comments': user.value!.comments,
+      'notification': user.value!.notification,
+      'image': _image.value
+    };
+    waiting_response.value = true;
+    dynamic resp = await PutUpdateUser(data, 'users/$userid/user_ret_update');
+    waiting_response.value = false;
+    if (userupdateformkey.currentState!.validate() && _image.value != null) {
+      if (resp == 'server_error' || resp == null) {
+      } else if (resp == 'name_exist') {
+        name_exist.value = true;
+      } else {
+        user.value = UserModel.fromJson(resp);
+        storeKey('name', user.value!.name);
+        storeKey('imagelink', user.value!.image);
+      }
+    } else {
+      print('not valid or no image');
     }
   }
 }
