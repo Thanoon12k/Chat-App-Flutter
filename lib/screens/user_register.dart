@@ -37,12 +37,12 @@ class _UserRegisterState extends State<UserRegister> {
             MyTextFormField(
               controller: controller.namecontroller,
               validator: (v) => controller.TextValidator(v),
-              field_hint: 'الاسم',
+              field_label: 'الاسم',
             ),
             MyTextFormField(
               controller: controller.statuscontroller,
               validator: (v) => controller.TextValidator(v),
-              field_hint: 'الحالة',
+              field_label: 'الحالة',
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

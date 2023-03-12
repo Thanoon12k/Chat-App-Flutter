@@ -6,12 +6,14 @@ class MyTextFormField extends StatelessWidget {
   final TextDirection? field_textDirection;
   final TextAlign? field_textAlign;
   final String? field_hint;
+  final String? field_label;
   final Icon? field_icon;
   final Color? field_color;
 
   MyTextFormField({
     required this.controller,
     required this.validator,
+    required this.field_label,
     this.field_textAlign,
     this.field_textDirection,
     this.field_hint,
@@ -29,6 +31,7 @@ class MyTextFormField extends StatelessWidget {
         textDirection: field_textDirection ?? TextDirection.rtl,
         textAlign: field_textAlign ?? TextAlign.right,
         decoration: InputDecoration(
+          labelText:field_label ?? '',
           hintText: field_hint ?? '*',
           prefixIcon: Icon(
             Icons.person,

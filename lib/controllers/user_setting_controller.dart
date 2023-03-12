@@ -6,6 +6,7 @@ import 'package:chatapp/serivces/GEts.dart';
 import 'package:chatapp/serivces/PUTs.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../serivces/POSTs.dart';
@@ -13,14 +14,51 @@ import '../serivces/preference.dart';
 
 class UserSettingController extends GetxController {
   final userupdateformkey = GlobalKey<FormState>();
-
   Rx<UserModel?> user = Rx<UserModel?>(null);
 
-  final TextEditingController namecontroller = TextEditingController();
-  final TextEditingController statuscontroller = TextEditingController();
+  TextEditingController namecontroller = TextEditingController();
+  TextEditingController statuscontroller = TextEditingController();
 
-  Rx<bool> waiting_response = false.obs;
+   RxString selected_image_path=''.obs;
+  RxString selected_gender=''.obs;
+  RxString selected_birthdate=''.obs;
+  RxString selected_private=''.obs;
+  RxString selected_comments=''.obs;
+  RxString selected_notification=''.obs;
+
+  Rx<bool> waiting_response = true.obs;
+  Rx<bool> user_null = true.obs;
   Rx<bool> name_exist = false.obs;
+  @override
+  void onInit() async {
+    UserModel user1;
+    user1 = await fetchuser();
+    print('user1 : ${user1.id}');
+    if (user1.id != null) {
+      namecontroller.text = user1.name!;
+      statuscontroller.text = user1.status!;
+      selected_image_path.value = user1.image.toString();
+      selected_gender.value = user1.gender!;
+      selected_birthdate.value = user1.birthdate!;
+      selected_private.value = 'false';
+      selected_comments.value = 'false';
+      selected_notification.value = user1.notification!;
+      user_null.value = false;
+       super.onInit();
+
+   
+      print('user 1 updated not  null');
+    } else {
+      print('user 1 is null not updated');
+    }
+  }
+
+  @override
+  void onClose() {
+    //Get called when controller is removed from memory
+    super.onClose();
+  }
+
   TextValidator(String? v) {
     if (v == '' || v == ' ') {
       return 'please enter some text';

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../serivces/POSTs.dart';
-import '../serivces/media_manager.dart';
 import '../serivces/preference.dart';
 
 class RegisterController extends GetxController {
