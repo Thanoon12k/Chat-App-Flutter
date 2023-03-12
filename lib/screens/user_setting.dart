@@ -66,24 +66,56 @@ class MyUserSettingForm extends StatelessWidget {
             field_label: ' الحالة',
           ),
           GetBuilder<UserSettingController>(
-            id: 'gendermenu',
-            builder: (context) {
-              return MenuRow(
-                  context, ' : الجنس ', ListsManager().list_gender, 'm');
-            },
-          ),
-          MenuRow(context, ' : الخاص ', ListsManager().list_private, 'false'),
-          MenuRow(
-              context, ' : التعليقات ', ListsManager().list_comments, 'false'),
-          MenuRow(context, ' : الاشعارات ', ListsManager().list_notification,
-              'icon_image'),
+              id: 'gender_menu',
+              builder: (context) {
+                return MenuRow(
+                    context,
+                    'gender_menu',
+                    ' : الجنس ',
+                    ListsManager().list_gender,
+                    controller.selected_gender.value,
+                    controller.update_menus);
+              }),
+          GetBuilder<UserSettingController>(
+              id: 'private_menu',
+              builder: (context) {
+                return MenuRow(
+                    context,
+                    'private_menu',
+                    ' : الخاص ',
+                    ListsManager().list_private,
+                    controller.selected_private.value.toString(),
+                    controller.update_menus);
+              }),
+          GetBuilder<UserSettingController>(
+              id: 'comments_menu',
+              builder: (context) {
+                return MenuRow(
+                    context,
+                    'comments_menu',
+                    ' : التعليقات ',
+                    ListsManager().list_comments,
+                    controller.selected_comments.value.toString(),
+                    controller.update_menus);
+              }),
+          GetBuilder<UserSettingController>(
+              id: 'notification_menu',
+              builder: (context) {
+                return MenuRow(
+                    context,
+                    'notification_menu',
+                    ' : الاشعارات ',
+                    ListsManager().list_notification,
+                    controller.selected_notification.value,
+                    controller.update_menus);
+              })
         ],
       ),
     );
   }
 }
 
-MenuRow(context, row_label, menu_name, menu_value) {
+MenuRow(context, menu_id, row_label, menu_name, menu_value, update_fun) {
   return Container(
     padding: EdgeInsets.fromLTRB(0, 0, 12, 5),
     child: Row(
@@ -93,7 +125,7 @@ MenuRow(context, row_label, menu_name, menu_value) {
           value: menu_value,
           items: menu_name,
           onChanged: (String? val) {
-            // controller.selected_notification.value = val!;
+            update_fun(menu_id, val);
           },
         ),
         SizedBox(
