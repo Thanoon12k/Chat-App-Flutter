@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../controllers/user_setting_controller.dart';
 import '../serivces/media_manager.dart';
+import '../widgets/dialogs.dart';
 
 class UserSetting extends StatefulWidget {
   const UserSetting({Key? key}) : super(key: key);
@@ -62,6 +63,20 @@ class MyUserSettingForm extends StatelessWidget {
             validator: (v) => controller.TextValidator(v),
             field_label: ' الاسم',
           ),
+          GetBuilder<UserSettingController>(
+            id: 'name_exist_widget',
+            builder: (UserSettingController controller) {
+              return controller.name_exist.value
+                  ? Container(
+                      padding: EdgeInsets.only(right: 10),
+                      child: Text(
+                        'الاسم مستخدم الرجاء ادخال اسم اخر',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    )
+                  : SizedBox(width: 0);
+            },
+          ),
           MyTextFormField(
             controller: controller.statuscontroller,
             validator: (v) => controller.TextValidator(v),
@@ -105,14 +120,82 @@ class MyUserSettingForm extends StatelessWidget {
                 );
               }),
           GetBuilder<UserSettingController>(
-              id: 'notification_menu',
-              builder: (context) {
-                return MenuRow(
-                  controller,
-                  ' : الاشعارات ',
-                  'notification_list',
-                );
-              })
+            id: 'notification_menu',
+            builder: (context) {
+              return MenuRow(
+                controller,
+                ' : الاشعارات ',
+                'notification_list',
+              );
+            },
+          ),
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  child: ElevatedButton(
+                    key: Key('updatedata'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 255, 255, 255),
+                      onPrimary: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                    onPressed: () {
+                      controller.SendNow();
+                    },
+                    child: const Text(
+                      'حفظ',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  child: ElevatedButton(
+                    key: Key('userimages'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 255, 255, 255),
+                      onPrimary: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                    onPressed: () {},
+                    child: const Text(
+                      'الملف الشخصي / الصور',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                child: GestureDetector(
+                  child: Text('تسجيل الخروج'),
+                  onTap: () {
+                    Dialog(
+                      child: MyPrivacyDialog(context, 'user_setting'),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Container(
+                child: GestureDetector(
+                  child: Text('سياسة الخصوصية'),
+                  onTap: () {
+                    Dialog(
+                      child: MyPrivacyDialog(context, 'user_setting'),
+                    );
+                  },
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );
@@ -147,7 +230,6 @@ MenuRow(
   }
 
   return Container(
-    padding: EdgeInsets.fromLTRB(0, 0, 0, 3),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -219,50 +301,36 @@ birthdate_row(context, controller) {
 
 image_rows(context, controller) {
   String _path = controller.selected_image_path.value;
-  return Column(
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Center(
-        child: _path != null && _path != '' && _path.contains('https://')
-            ? Image.network(
-                _path,
-                width: 150,
-                height: 150,
-              )
-            : _path != null && _path != '' && !_path.contains('https://')
-                ? Image.file(
-                    File(_path),
-                    width: 150,
-                    height: 150,
-                  )
-                : SizedBox(
-                    width: 1,
-                  ),
-      ),
-      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        IconButton(
-          onPressed: () {
-            controller.selected_image_path.value = '';
-            print('path updated ${_path}');
+      IconButton(
+          onPressed: () async {
+            var _picked = await GetLocalImage(context);
+            _path = _picked!.path;
+            controller.realimage.value = _picked;
+            controller.selected_image_path.value = _path;
 
+            print('path updated ${_path}');
             controller.update(['image_widget']);
           },
-          icon: Icon(
-            Icons.delete_forever_outlined,
-            color: Color.fromARGB(255, 236, 98, 98),
-          ),
-          iconSize: 30,
-        ),
-        IconButton(
-            onPressed: () async {
-              var _picked = await GetLocalImage(context);
-              _path = _picked!.path;
-              controller.selected_image_path.value = _path;
-              print('path updated ${_path}');
-              controller.update(['image_widget']);
-            },
-            icon: Icon(Icons.camera_alt_outlined),
-            iconSize: 35)
-      ]),
+          icon: Icon(Icons.camera_alt_outlined),
+          iconSize: 35),
+      _path != null && _path != '' && _path.contains('https://')
+          ? Image.network(
+              _path,
+              width: 150,
+              height: 150,
+            )
+          : _path != null && _path != '' && !_path.contains('https://')
+              ? Image.file(
+                  File(_path),
+                  width: 150,
+                  height: 150,
+                )
+              : SizedBox(
+                  width: 1,
+                ),
     ],
   );
 }
