@@ -67,7 +67,7 @@ class myappbar extends StatelessWidget implements PreferredSizeWidget {
               showDialog(
                   context: context,
                   builder: (context) {
-                    return MyRatingDialog(context);
+                    return MyRatingDialog(context,'هل اعجبك التطبيق قيمنا الان 😍😍😍؟');
                   });
             },
             child: Container(

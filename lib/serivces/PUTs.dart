@@ -1,9 +1,10 @@
 import 'dart:io';
 
+import 'package:chatapp/screens/splashscreen.dart';
+import 'package:chatapp/serivces/preference.dart';
 import 'package:dio/dio.dart';
+import 'package:get/get.dart' as gg;
 import 'package:http/http.dart' as http;
-
-import 'package:image_picker/image_picker.dart';
 
 const String url = 'https://iraqchatapp.pythonanywhere.com/';
 Map<String, dynamic> jsonheaders = {
@@ -53,5 +54,33 @@ Future<dynamic> PutUpdateUser(
     return 'respp';
   } catch (e) {
     print('error sending request sir $e');
+  }
+}
+
+Future<dynamic> LogoutUser(String endpoint) async {
+  try {
+    final fullUrl = url + endpoint;
+    var _data = {'is_active': false};
+    print('logout sending to  $fullUrl');
+    final response = await dio.put(fullUrl,
+        data: _data, options: Options(headers: jsonheaders));
+    print('responsecode ${response.statusCode}');
+
+    removeKey('is_user_registered');
+    gg.Get.offAll(() => SplashScreen());
+    return response;
+  } on DioError catch (e) {
+    print(
+        'eroor :    ${e.response!.statusCode} ${e.response!.statusMessage} ${e.response!}');
+
+    if (e.response != null) {
+      if (e.response!.statusCode == 400) {
+        return 'name_exist';
+      }
+    } else {
+      return 'server_error';
+    }
+  } catch (e) {
+    print('error in logout $e');
   }
 }

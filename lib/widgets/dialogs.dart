@@ -6,25 +6,33 @@ import 'package:flutter/material.dart';
 import 'package:chatapp/screens/rooms.dart';
 import 'package:get/get.dart';
 
+import '../serivces/PUTs.dart';
 import '../serivces/urls_redirect.dart';
 
 String privacy_text =
     """Clients on Demand, LLC, (“Clients on Demand,” “we,” “us,” “our”) is committed to protecting both the personal as well as business  information you share and/or store with us. This Privacy Policy   applies to transactions and activities and data gathered through the  Clients on Demand Website and interaction you may have with its  related Social Media accounts. Please review this Privacy Policy   periodically as we may revise it without notice.""";
 
-MyRatingDialog(context) {
+MyRatingDialog(context, text) {
   return AlertDialog(
-    title: Text('هل اعجبك التطبيق قيمنا الان 😍😍😍؟'),
+    title: Text(text),
     actionsAlignment: MainAxisAlignment.start,
     actions: <Widget>[
       ElevatedButton(
-        child: Text('نعم'),
-        onPressed: () =>
-            Go_to_url(Uri.parse('https://www.youtube.com/watch?v=dQw4w9WgXcQ')),
-      ),
+          child: Text('نعم'),
+          onPressed: () async {
+            if (text == 'هل اعجبك التطبيق قيمنا الان 😍😍😍؟') {
+              Go_to_url(
+                  Uri.parse('https://www.youtube.com/watch?v=dQw4w9WgXcQ'));
+            } else {
+              Get.back();
+              var userid = await rereint('id');
+              await LogoutUser('users/$userid/user_logout');
+            }
+          }),
       ElevatedButton(
         child: Text('لا'),
         onPressed: () {
-          Get.to(() => RoomsList());
+          Get.back();
         },
       ),
     ],

@@ -173,13 +173,13 @@ class MyUserSettingForm extends StatelessWidget {
             children: [
               Container(
                 child: GestureDetector(
-                  child: Text('تسجيل الخروج'),
-                  onTap: () {
-                    Dialog(
-                      child: MyPrivacyDialog(context, 'user_setting'),
-                    );
-                  },
-                ),
+                    child: Text('تسجيل الخروج'),
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => MyRatingDialog(
+                              context, ' 💔💔   هل تريد حقا تسجيل الخروج'));
+                    }),
               ),
               SizedBox(
                 width: 10,
@@ -268,8 +268,6 @@ process_circle() {
     ),
   );
 }
-
-image_frame() {}
 
 birthdate_row(context, controller) {
   return Row(
