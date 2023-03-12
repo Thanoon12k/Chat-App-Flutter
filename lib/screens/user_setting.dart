@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:chatapp/widgets/lists.dart';
 import 'package:chatapp/widgets/textformfield.dart';
@@ -7,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../controllers/user_setting_controller.dart';
+import '../serivces/media_manager.dart';
 
 class UserSetting extends StatefulWidget {
   const UserSetting({Key? key}) : super(key: key);
@@ -18,7 +21,6 @@ class UserSetting extends StatefulWidget {
 class _UserSettingState extends State<UserSetting> {
   final UserSettingController controller =
       Get.put<UserSettingController>(UserSettingController());
-  Rx<XFile?> _image = Rx<XFile?>(null);
   @override
   Widget build(BuildContext context) {
     if (controller.user_null == true) {
@@ -66,48 +68,50 @@ class MyUserSettingForm extends StatelessWidget {
             field_label: ' الحالة',
           ),
           GetBuilder<UserSettingController>(
+              id: 'birthdate_widget',
+              builder: (UserSettingController controller) {
+                return birthdate_row(context, controller);
+              }),
+          GetBuilder<UserSettingController>(
+              id: 'image_widget',
+              builder: (UserSettingController controller) {
+                return image_rows(context, controller);
+              }),
+          GetBuilder<UserSettingController>(
               id: 'gender_menu',
               builder: (context) {
                 return MenuRow(
-                    context,
-                    'gender_menu',
-                    ' : الجنس ',
-                    ListsManager().list_gender,
-                    controller.selected_gender.value,
-                    controller.update_menus);
+                  controller,
+                  ' : الجنس ',
+                  'gender_list',
+                );
               }),
           GetBuilder<UserSettingController>(
               id: 'private_menu',
               builder: (context) {
                 return MenuRow(
-                    context,
-                    'private_menu',
-                    ' : الخاص ',
-                    ListsManager().list_private,
-                    controller.selected_private.value.toString(),
-                    controller.update_menus);
+                  controller,
+                  ' : الخاص ',
+                  'private_list',
+                );
               }),
           GetBuilder<UserSettingController>(
               id: 'comments_menu',
               builder: (context) {
                 return MenuRow(
-                    context,
-                    'comments_menu',
-                    ' : التعليقات ',
-                    ListsManager().list_comments,
-                    controller.selected_comments.value.toString(),
-                    controller.update_menus);
+                  controller,
+                  ' : التعليقات ',
+                  'comments_list',
+                );
               }),
           GetBuilder<UserSettingController>(
               id: 'notification_menu',
               builder: (context) {
                 return MenuRow(
-                    context,
-                    'notification_menu',
-                    ' : الاشعارات ',
-                    ListsManager().list_notification,
-                    controller.selected_notification.value,
-                    controller.update_menus);
+                  controller,
+                  ' : الاشعارات ',
+                  'notification_list',
+                );
               })
         ],
       ),
@@ -115,21 +119,57 @@ class MyUserSettingForm extends StatelessWidget {
   }
 }
 
-MenuRow(context, menu_id, row_label, menu_name, menu_value, update_fun) {
+MenuRow(
+  controller,
+  row_label,
+  list_name,
+) {
+  var _items;
+  var _sel_value;
+  var _controller_item;
+  String _widget_id = '';
+  if (list_name == 'gender_list') {
+    _items = ListsManager().list_gender;
+    _sel_value = controller.selected_gender.value;
+    _widget_id = 'gender_menu';
+  } else if (list_name == 'private_list') {
+    _items = ListsManager().list_private;
+    _sel_value = controller.selected_private.value;
+    _widget_id = 'private_menu';
+  } else if (list_name == 'comments_list') {
+    _items = ListsManager().list_comments;
+    _sel_value = controller.selected_comments.value;
+    _widget_id = 'comments_menu';
+  } else if (list_name == 'notification_list') {
+    _items = ListsManager().list_notification;
+    _sel_value = controller.selected_notification.value;
+    _widget_id = 'notification_menu';
+  }
+
   return Container(
-    padding: EdgeInsets.fromLTRB(0, 0, 12, 5),
+    padding: EdgeInsets.fromLTRB(0, 0, 0, 3),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         DropdownButton<String>(
-          value: menu_value,
-          items: menu_name,
+          value: _sel_value,
+          items: _items,
           onChanged: (String? val) {
-            update_fun(menu_id, val);
+            if (_widget_id == 'gender_menu')
+              controller.selected_gender.value = val;
+            else if (_widget_id == 'private_menu')
+              controller.selected_private.value = val;
+            else if (_widget_id == 'comments_menu')
+              controller.selected_comments.value = val;
+            else if (_widget_id == 'notification_menu')
+              controller.selected_notification.value = val;
+
+            print(' update now $_widget_id with $val');
+            controller.update([_widget_id]);
           },
         ),
         SizedBox(
-          width: 40,
+          width: 10,
         ),
         MyTextFormLabel(label_text: row_label),
       ],
@@ -148,3 +188,81 @@ process_circle() {
 }
 
 image_frame() {}
+
+birthdate_row(context, controller) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+      MyTextFormLabel(label_text: controller.selected_birthdate.value),
+      IconButton(
+        onPressed: () async {
+          final DateTime? _val = await showDatePicker(
+              context: context,
+              initialDate: DateTime(1999),
+              firstDate: DateTime(1960),
+              lastDate: DateTime(2025),
+              locale: Locale('ar'));
+          controller.selected_birthdate.value =
+              _val.toString().substring(0, 10);
+          controller.update(['birthdate_widget']);
+          print('data changed : ${_val.toString().substring(0, 10)}');
+        },
+        icon: Icon(
+          Icons.date_range,
+          color: Color.fromARGB(255, 77, 75, 75),
+        ),
+      ),
+      MyTextFormLabel(label_text: ':تاريخ الميلاد'),
+    ],
+  );
+}
+
+image_rows(context, controller) {
+  String _path = controller.selected_image_path.value;
+  return Column(
+    children: [
+      Center(
+        child: _path != null && _path != '' && _path.contains('https://')
+            ? Image.network(
+                _path,
+                width: 150,
+                height: 150,
+              )
+            : _path != null && _path != '' && !_path.contains('https://')
+                ? Image.file(
+                    File(_path),
+                    width: 150,
+                    height: 150,
+                  )
+                : SizedBox(
+                    width: 1,
+                  ),
+      ),
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        IconButton(
+          onPressed: () {
+            controller.selected_image_path.value = '';
+            print('path updated ${_path}');
+
+            controller.update(['image_widget']);
+          },
+          icon: Icon(
+            Icons.delete_forever_outlined,
+            color: Color.fromARGB(255, 236, 98, 98),
+          ),
+          iconSize: 30,
+        ),
+        IconButton(
+            onPressed: () async {
+              var _picked = await GetLocalImage(context);
+              _path = _picked!.path;
+              controller.selected_image_path.value = _path;
+              print('path updated ${_path}');
+              controller.update(['image_widget']);
+            },
+            icon: Icon(Icons.camera_alt_outlined),
+            iconSize: 35)
+      ]),
+    ],
+  );
+}

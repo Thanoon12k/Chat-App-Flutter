@@ -29,19 +29,7 @@ class UserSettingController extends GetxController {
   Rx<bool> waiting_response = true.obs;
   Rx<bool> user_null = true.obs;
   Rx<bool> name_exist = false.obs;
-  void update_menus(String menu_id, new_val) {
-    if (menu_id == 'gender_menu') {
-      selected_gender.value = new_val;
-    } else if (menu_id == 'private_menu') {
-      selected_private.value = new_val;
-    } else if (menu_id == 'comments_menu') {
-      selected_comments.value = new_val;
-    } else if (menu_id == 'notification_menu') {
-      selected_notification.value = new_val;
-    }
-    print(' update now $menu_id with $new_val');
-    update([menu_id]);
-  }
+ 
 
   @override
   void onInit() async {
