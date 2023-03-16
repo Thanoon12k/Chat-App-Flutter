@@ -1,60 +1,68 @@
+import 'package:chatapp/controllers/user_view_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../widgets/appbar.dart';
 
 class UserView extends StatelessWidget {
-  const UserView({Key? key}) : super(key: key);
-
+  UserView({Key? key}) : super(key: key);
+  final UserViewController controller =
+      Get.put<UserViewController>(UserViewController());
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Color.fromARGB(255, 228, 211, 211),
-        endDrawer: mydrawer(),
-        appBar: myappbar(),
-        body: Directionality(
-          textDirection: TextDirection.rtl,
-          child: Column(
-            children: [
-              Stack(children: [
-                Image(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.4,
-                  image: AssetImage('assets/avatar.jpg'),
-                  fit: BoxFit.cover,
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  child: Icon(
-                    Icons.star,
-                    color: Colors.yellow,
-                    size: 40,
-                  ),
-                ),
-                Positioned(
-                  left: 40,
-                  bottom: 10,
-                  child: Text(
-                    '15',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ]),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      // MessageRow(context),
-                      // MessageRow(context),
-                    ],
-                  ),
-                ),
-              ),
-              MyTextInput1()
-            ],
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 228, 211, 211),
+      endDrawer: mydrawer(),
+      appBar: myappbar(),
+      body: Column(
+        children: [
+          Visibility(
+            visible: controller.user.value.image != '',
+            replacement: CircularProgressIndicator(),
+            child: GetBuilder<UserViewController>(
+                id: 'image_widget',
+                builder: (UserViewController controller) {
+                  return Stack(children: [
+                    Image(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      image: NetworkImage(controller.user.value.image!),
+                      fit: BoxFit.cover,
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      child: Icon(
+                        Icons.star,
+                        color: Color.fromARGB(255, 211, 209, 196),
+                        size: 30,
+                      ),
+                    ),
+                    Positioned(
+                      left: 30,
+                      bottom: 0,
+                      child: Text(
+                        (controller.user.value.stars).toString(),
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ]);
+                }),
           ),
-        ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  // MessageRow(context),
+                  // MessageRow(context),
+                ],
+              ),
+            ),
+          ),
+          MyTextInput1()
+        ],
       ),
     );
   }

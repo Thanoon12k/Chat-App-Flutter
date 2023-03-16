@@ -32,7 +32,7 @@ class MyTextFormField extends StatelessWidget {
         textAlign: field_textAlign ?? TextAlign.right,
         decoration: InputDecoration(
           labelText:field_label ?? '',
-          hintText: field_hint ?? '*',
+          hintText: field_hint ?? '',
           prefixIcon: Icon(
             Icons.person,
             color: field_color ?? Colors.black,

@@ -16,6 +16,7 @@ Map<String, dynamic> formheaders = {
 
 var client = http.Client();
 final dio = Dio();
+
 Future<dynamic> PutUpdateUser(
     Map<String, dynamic> data, String endpoint) async {
   try {
@@ -82,5 +83,17 @@ Future<dynamic> LogoutUser(String endpoint) async {
     }
   } catch (e) {
     print('error in logout $e');
+  }
+}
+
+Future<dynamic> PUTStar(int stars, String endpoint) async {
+  final fullUrl = url + endpoint;
+  var _data = {'stars': stars};
+  try {
+    print('star sending to  $fullUrl');
+    final response = await http.patch(Uri.parse(fullUrl), body: _data);
+    print('starsresponse: ${response}');
+  } catch (e) {
+    print('error in seding star : ${e}');
   }
 }

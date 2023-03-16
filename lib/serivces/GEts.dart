@@ -22,7 +22,7 @@ Future GetRooms(String endpoint) async {
 
 Future GetUserData(endpoint) async {
   var full_url = Uri.parse(url + endpoint);
-  print('sending to $full_url ...');
+  print('getting user data  $full_url ...');
 
   try {
     var response = await dio.getUri(
@@ -37,3 +37,5 @@ Future GetUserData(endpoint) async {
     print('error getiing rooms !! $e');
   }
 }
+
+

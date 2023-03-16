@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chatapp/screens/user_view.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:chatapp/widgets/lists.dart';
 import 'package:chatapp/widgets/textformfield.dart';
@@ -52,6 +53,7 @@ class MyUserSettingForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+   
     return Form(
       key: controller.userupdateformkey,
       child: Column(
@@ -158,7 +160,10 @@ class MyUserSettingForm extends StatelessWidget {
                       primary: Color.fromARGB(255, 255, 255, 255),
                       onPrimary: Color.fromARGB(255, 0, 0, 0),
                     ),
-                    onPressed: () {},
+                    onPressed: () => Get.off(() => UserView(
+                    
+                    
+                    )),
                     child: const Text(
                       'الملف الشخصي / الصور',
                       style: TextStyle(fontSize: 16),

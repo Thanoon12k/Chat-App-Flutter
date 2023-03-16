@@ -77,3 +77,43 @@ Future PostMessage(Map<String, dynamic> data, String endpoint) async {
   }
   return 'respp';
 }
+
+
+
+Future POSTcomment(Map<String, dynamic> data, String endpoint) async {
+  final formData;
+  final response;
+  final fullUrl = url + endpoint;
+  bool have_image = data['image'] != null;
+  if (have_image) {
+    final imageFile = data['image'] as XFile;
+    final imageName = imageFile.path.split('/').last;
+    data['image'] =
+        await MultipartFile.fromFile(imageFile.path, filename: imageName);
+    formData = FormData.fromMap(data);
+  } else {
+    data.remove('image');
+    formData = '';
+  }
+  try {
+    print('request sending sir');
+    if (have_image) {
+      response = await dio.post(fullUrl, data: formData);
+    } else {
+      response = await dio.post(fullUrl,
+          data: data, options: Options(headers: jsonheaders));
+    }
+
+    return response.statusCode;
+  } on DioError catch (e) {
+    print('eroor :  ${e.response}  ${e.response!.statusCode}');
+    if (e.response != null) {
+      if (e.response!.statusCode == 400) {
+        return 'user_exist';
+      }
+    } else {
+      return 'server_error';
+    }
+  }
+  return 'respp';
+}

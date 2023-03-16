@@ -14,7 +14,7 @@ MessageRow(context, text, sender_name, sender_image, message_image, sendtime,
         Row(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(5, 10, 10, 0),
+              padding: const EdgeInsets.only(right: 5),
               child: GestureDetector(
                   onTap: () {
                     Get.to(() => UserView());
@@ -33,7 +33,7 @@ MessageRow(context, text, sender_name, sender_image, message_image, sendtime,
                         )),
             ),
             SizedBox(
-              height: 30,
+              height: 10,
             ),
             Bubble(
               nipOffset: 25,
@@ -46,7 +46,7 @@ MessageRow(context, text, sender_name, sender_image, message_image, sendtime,
                 alignment: WrapAlignment.end,
                 children: <Widget>[
                   Container(
-                    width: 250,
+                    width: 300,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,17 +54,20 @@ MessageRow(context, text, sender_name, sender_image, message_image, sendtime,
                         Row(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 10, 10, 5),
+                              padding: const EdgeInsets.only(right: 5),
                               child: Text(sender_name.toString()),
                             ),
                             Expanded(child: Text('')),
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 10, 10, 5),
+                              padding: const EdgeInsets.only(right: 5),
                               child: Text(sendtime.toString()),
                             ),
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(2, 10, 0, 5),
-                              child: Icon(Icons.not_interested_rounded),
+                              padding: const EdgeInsets.only(right: 5),
+                              child: Icon(
+                                Icons.not_interested_rounded,
+                                size: 20,
+                              ),
                             ),
                           ],
                         ),

@@ -1,5 +1,6 @@
 
-import 'dart:ffi';
+
+import 'package:chatapp/models/Comments.dart';
 
 class UserModel {
   String? name;
@@ -11,9 +12,11 @@ bool? private;
 bool? comments;
  String? image;
  int? id;
+int? stars;
 String? token;
+ List<CommentsModel>? userComments;
 
-  UserModel({this.name, this.image, this.id,  this.token});
+  UserModel({this.name, this.image, this.id,  this.token, this.userComments});
 
   UserModel.fromJson(Map<String, dynamic> json) {
 
@@ -29,6 +32,13 @@ String? token;
     comments = json['comments'];
     private = json['private'];
     notification = json['notification'];
+stars = json['stars'];
+  if (json['user_comments'] != null) {
+      userComments = <CommentsModel>[];
+      json['user_comments'].forEach((v) {
+        userComments!.add(new CommentsModel.fromJson(v));
+      });
+    }
 
 
 
@@ -47,6 +57,12 @@ String? token;
     data['comments'] = this.comments;
     data['private'] = this.private;
     data['notification'] = this.notification;
+    data['stars'] = this.stars;
+     if (this.userComments != null) {
+      data['user_comments'] =
+          this.userComments!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
+

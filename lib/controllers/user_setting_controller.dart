@@ -2,15 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:chatapp/models/Users.dart';
-import 'package:chatapp/screens/rooms.dart';
 import 'package:chatapp/serivces/GEts.dart';
 import 'package:chatapp/serivces/PUTs.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 
-import '../serivces/POSTs.dart';
 import '../serivces/preference.dart';
 
 class UserSettingController extends GetxController {
@@ -25,7 +22,7 @@ class UserSettingController extends GetxController {
   RxString selected_private = ''.obs;
   RxString selected_comments = ''.obs;
   RxString selected_notification = ''.obs;
-
+  RxInt uesr_stars = 0.obs;
   Rx<XFile?> realimage = Rx<XFile?>(null);
   Rx<bool> waiting_response = true.obs;
   Rx<bool> user_null = true.obs;
@@ -58,13 +55,13 @@ class UserSettingController extends GetxController {
   }
 
   Future<UserModel> fetchuser() async {
-    String resp = await GetUserData('users/32/user_ret_update');
+    var _userid = await rereint('id');
+    String resp = await GetUserData('users/$_userid/user_ret_update');
     return UserModel.fromJson(jsonDecode(resp));
   }
 
   Future SendNow() async {
-    var _userid = 32;
-    File _imagefile;
+    var _userid = await rereint('id');
     var data = {
       'name': namecontroller.text,
       'status': statuscontroller.text,
@@ -88,7 +85,6 @@ class UserSettingController extends GetxController {
         name_exist.value = false;
         update(['name_exist_widget']);
         _user = UserModel.fromJson(resp);
-        print('nameok :${_user.name} image ${_user.image}');
         storeKey('name', _user.name);
         storeKey('imagelink', _user.image);
       }
