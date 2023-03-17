@@ -11,46 +11,47 @@ import '../serivces/POSTs.dart';
 
 class UserViewController extends GetxController {
   TextEditingController textcontroller = TextEditingController();
-
-Rx<UserModel> user = Rx<UserModel>(UserModel()); 
+  Rx<Color> starcolor = Colors.white.obs;
+  final RxInt starnumber = 0.obs;
+  Rx<UserModel> user = Rx<UserModel>(UserModel());
   @override
   void onInit() async {
-    super.onInit();  
-    var _userid = await rereint('id');
-    var resp =  await GetUserData('users/$_userid/user_ret_update');
-    user.value=  UserModel.fromJson(jsonDecode(resp));
+    super.onInit();
 
-    if (user.value.stars != null && user.value.image != null) {
-      print('userstars${user.value.stars}');
-      update(['stars_numbers', 'image_widget']);
+    user.value = await getUser();
+    starnumber.value = user.value.stars ?? 0;
+    var sharedcolor = await retiriveString('starcolor_${user.value.id}');
+    if (sharedcolor != null) {
+      starcolor.value = Colors.yellow;
     }
   }
 
+  Future<UserModel> getUser() async {
+    var _userid = await rereint('id');
+    var resp = await GetUserData('users/$_userid/user_ret_update');
+    return UserModel.fromJson(jsonDecode(resp));
+  }
+
+  Future updateStars() async {
+    var _userid = user.value.id;
+    if (starcolor.value == Colors.white) {
+      starcolor.value = Color.fromARGB(255, 255, 226, 59);
+      starnumber.value++;
+      await PUTStar(starnumber.value++, 'users/$_userid/stars_update');
+      await storeKey('starcolor_$_userid', 'yellow');
+      print('added ${starnumber.value++}');
+    } else {
+      starcolor.value = Colors.white;
+      starnumber.value--;
+      await PUTStar(starnumber.value--, 'users/$_userid/stars_update');
+      await removeKey('starcolor_$_userid');
+      print('removed ${starnumber.value--}');
+    }
+
+    // await PUTStar(user_stars + 1, 'users/$sender_id/stars_update');
+  }
+
+  Future SendComment(sender_data) async {
+    await POSTcomment(sender_data, 'users/add_comment');
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-  Future SendStar(sender_id, user_stars) async {
-    await PUTStar(user_stars + 1, 'users/$sender_id/stars_update');
-    
-  }
-
-Future RemoveStar(sender_id, user_stars) async {
-   await PUTStar(user_stars - 1, 'users/$sender_id/stars_update');
-        
-  }
-
-Future SendComment(sender_data) async {
- await POSTcomment(sender_data, 'users/add_comment');
-  }
-Future RemoveComment(sender_data) async {
-   await POSTcomment(sender_data, 'users/add_comment');
-  }

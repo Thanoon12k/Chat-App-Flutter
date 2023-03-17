@@ -6,7 +6,10 @@ class RoomsController extends GetxController {
   RxList<RoomsModel> roomslist = RxList<RoomsModel>([]);
   Future fetchrooms() async {
     var resp = await GetRooms('rooms');
-    roomslist.value = roomsModelFromJson(resp);
+    if (resp != null) {
+      roomslist.value = roomsModelFromJson(resp);
+    } else {
+      print('response null sir $resp');
+    }
   }
-
 }

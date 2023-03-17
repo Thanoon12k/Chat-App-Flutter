@@ -11,6 +11,7 @@ class RoomsList extends StatefulWidget {
 }
 
 class _RoomsListState extends State<RoomsList> {
+  
   final RoomsController controller =
       Get.put<RoomsController>(RoomsController());
 

@@ -92,4 +92,11 @@ class UserSettingController extends GetxController {
       print('not valid form');
     }
   }
+
+  @override
+  void onClose() {
+    namecontroller.dispose();
+    statuscontroller.dispose();
+    super.onClose();
+  }
 }

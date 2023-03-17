@@ -1,9 +1,7 @@
-
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
-const String url = 'https://iraqchatapp.pythonanywhere.com/';
 Map<String, dynamic> jsonheaders = {
   'Content-Type': 'application/json',
 };
@@ -11,39 +9,45 @@ Map<String, dynamic> formheaders = {
   'Content-Type': 'application/json',
 };
 
+const String root_url = 'http://38.242.140.198/';
 var client = http.Client();
 final dio = Dio();
 
 Future<dynamic> PostUserRegister(
     Map<String, dynamic> data, String endpoint) async {
-  final fullUrl = url + endpoint;
-  final imageFile = data['image'] as XFile;
-  final imageName = imageFile.path.split('/').last;
-  data['image'] =
-      await MultipartFile.fromFile(imageFile.path, filename: imageName);
-  final formData = FormData.fromMap(data);
-  print('request sending sir ...');
   try {
-    final response = await dio.post(fullUrl, data: formData);
-    return response.data;
-  } on DioError catch (e) {
-    print('eroor :  ${e.response}  ${e.response!.statusCode}');
+    final fullUrl = root_url + endpoint;
+    final imageFile = data['image'] as XFile;
+    final imageName = imageFile.path.split('/').last;
+    data['image'] =
+        await MultipartFile.fromFile(imageFile.path, filename: imageName);
+    final formData = FormData.fromMap(data);
+    print('userdata sending sir ...$fullUrl');
+    try {
+      final response = await dio.post(fullUrl, data: formData);
+      print('reqquest send done()$response');
+      return response.data;
+    } on DioError catch (e) {
+      print('eroor :  ${e.response}  ${e.response!.statusCode}');
 
-    if (e.response != null) {
-      if (e.response!.statusCode == 400) {
-        return 'user_exist';
+      if (e.response != null) {
+        if (e.response!.statusCode == 400) {
+          return 'user_exist';
+        }
+      } else {
+        return 'server_error';
       }
-    } else {
-      return 'server_error';
     }
+    return 'respp';
+  } catch (e) {
+    print('post user error:$e');
   }
-  return 'respp';
 }
 
 Future PostMessage(Map<String, dynamic> data, String endpoint) async {
   final formData;
   final response;
-  final fullUrl = url + endpoint;
+  final fullUrl = root_url + endpoint;
   bool have_image = data['image'] != null;
   if (have_image) {
     final imageFile = data['image'] as XFile;
@@ -78,12 +82,10 @@ Future PostMessage(Map<String, dynamic> data, String endpoint) async {
   return 'respp';
 }
 
-
-
 Future POSTcomment(Map<String, dynamic> data, String endpoint) async {
   final formData;
   final response;
-  final fullUrl = url + endpoint;
+  final fullUrl = root_url + endpoint;
   bool have_image = data['image'] != null;
   if (have_image) {
     final imageFile = data['image'] as XFile;

@@ -18,38 +18,43 @@ class UserView extends StatelessWidget {
           Visibility(
             visible: controller.user.value.image != '',
             replacement: CircularProgressIndicator(),
-            child: GetBuilder<UserViewController>(
-                id: 'image_widget',
-                builder: (UserViewController controller) {
-                  return Stack(children: [
-                    Image(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.4,
-                      image: NetworkImage(controller.user.value.image!),
-                      fit: BoxFit.cover,
+            child: Stack(children: [
+              Obx(
+                () => Image(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  image: NetworkImage(controller.user.value.image!),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                child: GestureDetector(
+                  onTap: () => controller.updateStars(),
+                  child: Obx(
+                    () => Icon(
+                      Icons.star,
+                      color: controller.starcolor.value,
+                      size: 30,
                     ),
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      child: Icon(
-                        Icons.star,
-                        color: Color.fromARGB(255, 211, 209, 196),
-                        size: 30,
-                      ),
-                    ),
-                    Positioned(
-                      left: 30,
-                      bottom: 0,
-                      child: Text(
-                        (controller.user.value.stars).toString(),
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                    ),
-                  ]);
-                }),
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 30,
+                bottom: 0,
+                child: Obx(
+                  () => Text(
+                    controller.starnumber.value.toString(),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                ),
+              ),
+            ]),
           ),
           Expanded(
             child: SingleChildScrollView(

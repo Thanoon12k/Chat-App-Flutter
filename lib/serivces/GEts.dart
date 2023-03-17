@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'dart:convert';
 
-const String url = 'https://iraqchatapp.pythonanywhere.com/';
+const String root_url = 'http://38.242.140.198/';
 var dio = Dio();
 
 Future GetRooms(String endpoint) async {
-  var full_url = Uri.parse(url + endpoint);
+  var full_url = Uri.parse(root_url + endpoint);
   try {
     var response = await dio.getUri(
       full_url,
@@ -21,7 +21,7 @@ Future GetRooms(String endpoint) async {
 }
 
 Future GetUserData(endpoint) async {
-  var full_url = Uri.parse(url + endpoint);
+  var full_url = Uri.parse(root_url + endpoint);
   print('getting user data  $full_url ...');
 
   try {
@@ -37,5 +37,3 @@ Future GetUserData(endpoint) async {
     print('error getiing rooms !! $e');
   }
 }
-
-

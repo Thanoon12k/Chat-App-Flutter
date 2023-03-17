@@ -1,5 +1,6 @@
 import 'package:chatapp/screens/rooms.dart';
 import 'package:chatapp/screens/user_register.dart';
+import 'package:chatapp/screens/user_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -25,7 +26,7 @@ Future next_screen(context) async {
   await Future.delayed(Duration(seconds: 1));
   // await remove_all_userdata();
   if (await retiriveBool('is_user_registered')) {
-    Get.offAll(() => RoomsList());
+    Get.offAll(() => UserView());
   } else {
     Get.offAll(() => UserRegister());
   }

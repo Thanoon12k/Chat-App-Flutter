@@ -7,7 +7,6 @@ import 'package:chatapp/widgets/textformfield.dart';
 import 'package:chatapp/widgets/textformlabel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../controllers/user_setting_controller.dart';
 import '../serivces/media_manager.dart';
@@ -25,12 +24,6 @@ class _UserSettingState extends State<UserSetting> {
       Get.put<UserSettingController>(UserSettingController());
   @override
   Widget build(BuildContext context) {
-    if (controller.user_null == true) {
-      print('iam in null ${controller.selected_notification}');
-    } else {
-      print('iam not null ${controller.selected_notification}');
-    }
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color.fromARGB(255, 228, 211, 211),
@@ -53,7 +46,6 @@ class MyUserSettingForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   
     return Form(
       key: controller.userupdateformkey,
       child: Column(
@@ -160,10 +152,7 @@ class MyUserSettingForm extends StatelessWidget {
                       primary: Color.fromARGB(255, 255, 255, 255),
                       onPrimary: Color.fromARGB(255, 0, 0, 0),
                     ),
-                    onPressed: () => Get.off(() => UserView(
-                    
-                    
-                    )),
+                    onPressed: () => Get.off(() => UserView()),
                     child: const Text(
                       'الملف الشخصي / الصور',
                       style: TextStyle(fontSize: 16),

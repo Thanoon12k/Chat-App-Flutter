@@ -1,12 +1,10 @@
-import 'dart:io';
-
 import 'package:chatapp/screens/splashscreen.dart';
 import 'package:chatapp/serivces/preference.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as gg;
 import 'package:http/http.dart' as http;
 
-const String url = 'https://iraqchatapp.pythonanywhere.com/';
+const String root_url = 'http://38.242.140.198/';
 Map<String, dynamic> jsonheaders = {
   'Content-Type': 'application/json',
 };
@@ -22,7 +20,7 @@ Future<dynamic> PutUpdateUser(
   try {
     var _headers;
     var formData;
-    final fullUrl = url + endpoint;
+    final fullUrl = root_url + endpoint;
     if (!data['image'].path.toString().contains('https')) {
       _headers = formheaders;
       final imageFile = data['image'];
@@ -60,7 +58,7 @@ Future<dynamic> PutUpdateUser(
 
 Future<dynamic> LogoutUser(String endpoint) async {
   try {
-    final fullUrl = url + endpoint;
+    final fullUrl = root_url + endpoint;
     var _data = {'is_active': false};
     print('logout sending to  $fullUrl');
     final response = await dio.put(fullUrl,
@@ -87,13 +85,15 @@ Future<dynamic> LogoutUser(String endpoint) async {
 }
 
 Future<dynamic> PUTStar(int stars, String endpoint) async {
-  final fullUrl = url + endpoint;
-  var _data = {'stars': stars};
+  var response;
+  final fullUrl = root_url + endpoint;
+  var _data = {'stars': '15'};
   try {
-    print('star sending to  $fullUrl');
-    final response = await http.patch(Uri.parse(fullUrl), body: _data);
+    print('$stars star sending to  $fullUrl');
+    response = await http.put(Uri.parse(fullUrl), body: _data);
     print('starsresponse: ${response}');
   } catch (e) {
-    print('error in seding star : ${e}');
+    print('error in sending star : ${e}');
+    print('resp: ${response}');
   }
 }
