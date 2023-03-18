@@ -1,3 +1,4 @@
+import 'package:chatapp/controllers/userview_con.dart';
 import 'package:chatapp/serivces/media_manager.dart';
 import 'package:chatapp/serivces/preference.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
@@ -6,7 +7,7 @@ import 'package:get/get.dart';
 
 import '../serivces/POSTs.dart';
 
-messsageinput1(int roomid, controller, context) {
+messsageinput1(int roomid, controller, context, [reception_id, updateuser]) {
   return WillPopScope(
     child: Column(
       children: [
@@ -71,20 +72,34 @@ messsageinput1(int roomid, controller, context) {
                         String? username = await retiriveString('name');
 
                         print('user id :::: $userid  username : $username');
-                        var data = {
+                        Map<String, dynamic> data = {
                           'text': controller.textEditingController.text,
                           'room_id': roomid,
                           'sender': userid,
                           'sender_name': username,
                           'image': controller.msg_image.value,
                           'sendtime': DateTime.now().toString(),
-
-                          // 'sendtime':
                         };
                         if (controller.textEditingController.text != '') {
-                          PostMessage(data, 'rooms/$roomid/messages/new');
-                          controller.msg_image.value = null;
-                          controller.textEditingController.text = '';
+                          if (roomid == 0) {
+                            //cthis is comment not message
+                            data.remove('room_id');
+                            data['reception'] = reception_id;
+                            print('recptionid:$reception_id');
+                            await POSTcomment(data, 'users/add_comment');
+                            await UserViewController().fetchuser();
+
+                            controller.isEmojiVisible.value = false;
+                            controller.focusNode.unfocus();
+
+                            controller.msg_image.value = null;
+                            controller.textEditingController.text = '';
+                          } else {
+                            await PostMessage(
+                                data, 'rooms/$roomid/messages/new');
+                            controller.msg_image.value = null;
+                            controller.textEditingController.text = '';
+                          }
                         }
                       },
                       child: Icon(

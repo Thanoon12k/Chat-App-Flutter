@@ -8,7 +8,7 @@ import 'package:chatapp/widgets/textformlabel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../controllers/user_setting_controller.dart';
+import '../controllers/usersetting_con.dart';
 import '../serivces/media_manager.dart';
 import '../widgets/dialogs.dart';
 
@@ -240,7 +240,6 @@ MenuRow(
             else if (_widget_id == 'notification_menu')
               controller.selected_notification.value = val;
 
-            print(' update now $_widget_id with $val');
             controller.update([_widget_id]);
           },
         ),
@@ -279,7 +278,6 @@ birthdate_row(context, controller) {
           controller.selected_birthdate.value =
               _val.toString().substring(0, 10);
           controller.update(['birthdate_widget']);
-          print('data changed : ${_val.toString().substring(0, 10)}');
         },
         icon: Icon(
           Icons.date_range,
@@ -303,12 +301,11 @@ image_rows(context, controller) {
             controller.realimage.value = _picked;
             controller.selected_image_path.value = _path;
 
-            print('path updated ${_path}');
             controller.update(['image_widget']);
           },
           icon: Icon(Icons.camera_alt_outlined),
           iconSize: 35),
-      _path != null && _path != '' && _path.contains('https://')
+      _path != null && _path != '' && _path.contains('http://')
           ? Image.network(
               _path,
               width: 150,

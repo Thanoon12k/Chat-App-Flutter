@@ -85,15 +85,13 @@ Future<dynamic> LogoutUser(String endpoint) async {
 }
 
 Future<dynamic> PUTStar(int stars, String endpoint) async {
-  var response;
   final fullUrl = root_url + endpoint;
-  var _data = {'stars': '15'};
+  var _data = {'stars': stars.toString()};
   try {
-    print('$stars star sending to  $fullUrl');
-    response = await http.put(Uri.parse(fullUrl), body: _data);
-    print('starsresponse: ${response}');
+    print('sending stars $stars to $fullUrl');
+    var response = await http.put(Uri.parse(fullUrl), body: _data);
+    return true;
   } catch (e) {
-    print('error in sending star : ${e}');
-    print('resp: ${response}');
+    print('error in sending stars : ${e}');
   }
 }

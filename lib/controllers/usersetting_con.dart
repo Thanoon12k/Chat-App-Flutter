@@ -56,8 +56,10 @@ class UserSettingController extends GetxController {
 
   Future<UserModel> fetchuser() async {
     var _userid = await rereint('id');
-    String resp = await GetUserData('users/$_userid/user_ret_update');
-    return UserModel.fromJson(jsonDecode(resp));
+    var user = await GetUserData('users/$_userid/user_ret_update');
+
+    print('image ${user.image}');
+    return user;
   }
 
   Future SendNow() async {

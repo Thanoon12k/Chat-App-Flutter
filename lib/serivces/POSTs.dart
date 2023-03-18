@@ -60,17 +60,17 @@ Future PostMessage(Map<String, dynamic> data, String endpoint) async {
     formData = '';
   }
   try {
-    print('request sending sir');
+    print('message sending sir $fullUrl');
     if (have_image) {
       response = await dio.post(fullUrl, data: formData);
     } else {
       response = await dio.post(fullUrl,
           data: data, options: Options(headers: jsonheaders));
     }
-
+    print('messagestatus ${response.statusCode}');
     return response.statusCode;
   } on DioError catch (e) {
-    print('eroor :  ${e.response}  ${e.response!.statusCode}');
+    print('eroor in message :  ${e.response}  ${e}');
     if (e.response != null) {
       if (e.response!.statusCode == 400) {
         return 'user_exist';
@@ -87,6 +87,7 @@ Future POSTcomment(Map<String, dynamic> data, String endpoint) async {
   final response;
   final fullUrl = root_url + endpoint;
   bool have_image = data['image'] != null;
+  print('data$have_image: $data ');
   if (have_image) {
     final imageFile = data['image'] as XFile;
     final imageName = imageFile.path.split('/').last;
@@ -98,22 +99,21 @@ Future POSTcomment(Map<String, dynamic> data, String endpoint) async {
     formData = '';
   }
   try {
-    print('request sending sir');
+    print('comment sending sir $fullUrl');
     if (have_image) {
       response = await dio.post(fullUrl, data: formData);
+      print('commentstatus ${response.statusCode}');
     } else {
+      print('no image:$data');
       response = await dio.post(fullUrl,
           data: data, options: Options(headers: jsonheaders));
+      print('commentstatus ${response.statusCode}');
     }
 
     return response.statusCode;
   } on DioError catch (e) {
-    print('eroor :  ${e.response}  ${e.response!.statusCode}');
+    print('eroor in comment:  ${e.response}  ${e.response}');
     if (e.response != null) {
-      if (e.response!.statusCode == 400) {
-        return 'user_exist';
-      }
-    } else {
       return 'server_error';
     }
   }

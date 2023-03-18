@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:chatapp/controllers/message_controller.dart';
+import 'package:chatapp/controllers/messagegs_con.dart';
 import 'package:chatapp/serivces/firebase.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ class MessagesScreen extends StatelessWidget {
                     itemCount: controller.messagesList.length,
                     controller: controller.scorlcon,
                     itemBuilder: (context, index) {
-                      final item = controller.messagesList[index];
+                      var item = controller.messagesList[index];
 
                       List<Color> colorsarray = [
                         Color.fromARGB(255, 233, 232, 186),
@@ -47,6 +47,7 @@ class MessagesScreen extends StatelessWidget {
                       if (item['text'] != null) {
                         return MessageRow(
                           context,
+                          item['sender'],
                           item['text'],
                           item['sender_name'],
                           item['sender_image'],

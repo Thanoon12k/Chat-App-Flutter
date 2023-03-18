@@ -1,119 +1,91 @@
-import 'package:chatapp/controllers/user_view_controller.dart';
+import 'package:chatapp/controllers/userview_con.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/messagegs_con.dart';
 import '../widgets/appbar.dart';
+import '../widgets/messagebox.dart';
+import '../widgets/messageinput.dart';
 
 class UserView extends StatelessWidget {
-  UserView({Key? key}) : super(key: key);
+  final reception_id;
+  UserView({this.reception_id, Key? key}) : super(key: key);
   final UserViewController controller =
       Get.put<UserViewController>(UserViewController());
+  final MessageController commentcontroller = Get.put(MessageController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 228, 211, 211),
       endDrawer: mydrawer(),
       appBar: myappbar(),
-      body: Column(
-        children: [
-          Visibility(
-            visible: controller.user.value.image != '',
-            replacement: CircularProgressIndicator(),
-            child: Stack(children: [
-              Obx(
-                () => Image(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.4,
-                  image: NetworkImage(controller.user.value.image!),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                child: GestureDetector(
-                  onTap: () => controller.updateStars(),
-                  child: Obx(
-                    () => Icon(
-                      Icons.star,
-                      color: controller.starcolor.value,
-                      size: 30,
+      body: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Column(
+          children: [
+            Obx(
+              () => Visibility(
+                visible: controller.user_image.value != '',
+                replacement: Center(child: CircularProgressIndicator()),
+                child: Stack(children: [
+                  Image(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.4,
+                    image: NetworkImage(controller.user_image.value),
+                    fit: BoxFit.cover,
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    child: GestureDetector(
+                      onTap: () {
+                        controller.updateStars();
+                      },
+                      child: Icon(
+                        Icons.star,
+                        color: controller.starcolor.value,
+                        size: 30,
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Positioned(
-                left: 30,
-                bottom: 0,
-                child: Obx(
-                  () => Text(
-                    controller.starnumber.value.toString(),
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                  Positioned(
+                    left: 30,
+                    bottom: 0,
+                    child: Text(
+                      controller.stars_number.value.toString(),
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
                   ),
-                ),
-              ),
-            ]),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  // MessageRow(context),
-                  // MessageRow(context),
-                ],
+                ]),
               ),
             ),
-          ),
-          MyTextInput1()
-        ],
+            Obx(
+              () => Expanded(
+                child: ListView.builder(
+                    itemCount: controller.commentslist.length,
+                    itemBuilder: ((context, index) {
+                      var item = controller.commentslist[index];
+                      return MessageRow(
+                        context,
+                        reception_id,
+                        item.text,
+                        item.sender,
+                        item.senderImage,
+                        item.image,
+                        'date',
+                        Color.fromARGB(255, 233, 232, 186),
+                      );
+                    })),
+              ),
+            ),
+            messsageinput1(0, commentcontroller, context,
+                controller.user_id.value, controller.fetchuser()),
+          ],
+        ),
       ),
     );
   }
-}
-
-MyTextInput1() {
-  return Stack(
-    children: <Widget>[
-      Align(
-        alignment: Alignment.bottomLeft,
-        child: Container(
-          padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-          height: 60,
-          width: double.infinity,
-          color: Colors.white,
-          child: Row(
-            children: <Widget>[
-              SizedBox(
-                width: 15,
-              ),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                      hintText: " اكتب رسالة....",
-                      hintStyle: TextStyle(color: Colors.black54),
-                      border: InputBorder.none),
-                ),
-              ),
-              SizedBox(
-                width: 15,
-              ),
-              FloatingActionButton(
-                onPressed: () {},
-                child: Icon(
-                  Icons.send,
-                  color: Colors.white,
-                  size: 18,
-                  textDirection: TextDirection.rtl,
-                ),
-                backgroundColor: Color.fromARGB(255, 3, 244, 144),
-                elevation: 0,
-              ),
-            ],
-          ),
-        ),
-      ),
-    ],
-  );
 }

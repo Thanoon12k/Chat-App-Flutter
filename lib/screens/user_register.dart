@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:chatapp/controllers/user_rgister_controller.dart';
+import 'package:chatapp/controllers/userregister_con.dart';
 import 'package:chatapp/screens/rooms.dart';
 import 'package:chatapp/serivces/preference.dart';
 import 'package:chatapp/widgets/appbar.dart';

@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'dart:convert';
 
+import '../models/Users.dart';
+
 const String root_url = 'http://38.242.140.198/';
 var dio = Dio();
 
@@ -28,8 +30,11 @@ Future GetUserData(endpoint) async {
     var response = await dio.getUri(
       full_url,
     );
+
     if (response.statusCode == 200) {
-      return json.encode(response.data);
+      var user = UserModel.fromJson(response.data);
+
+      return user;
     } else {
       return null;
     }

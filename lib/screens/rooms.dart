@@ -1,5 +1,5 @@
 // import 'package:chatapp/screens/profile_view.dart';
-import 'package:chatapp/controllers/rooms_controller.dart';
+import 'package:chatapp/controllers/rooms_con.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../widgets/appbar.dart';
