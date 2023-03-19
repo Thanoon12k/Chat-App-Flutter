@@ -21,7 +21,7 @@ Future<dynamic> PutUpdateUser(
     var _headers;
     var formData;
     final fullUrl = root_url + endpoint;
-    if (!data['image'].path.toString().contains('https')) {
+    if (!data['image'].path.toString().contains('http')) {
       _headers = formheaders;
       final imageFile = data['image'];
       final imageName = imageFile.path.split('/').last;

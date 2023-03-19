@@ -1,7 +1,7 @@
-
 class CommentsModel {
   int? id;
   int? sender;
+  String? sender_name;
   int? reception;
   String? text;
   String? image;
@@ -12,6 +12,7 @@ class CommentsModel {
   CommentsModel(
       {this.id,
       this.sender,
+      this.sender_name,
       this.reception,
       this.text,
       this.image,
@@ -22,6 +23,7 @@ class CommentsModel {
   CommentsModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     sender = json['sender'];
+    sender_name = json['sender_name'];
     reception = json['reception'];
     text = json['text'];
     image = json['image'];
@@ -34,6 +36,7 @@ class CommentsModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['sender'] = this.sender;
+    data['sender_name'] = this.sender_name;
     data['reception'] = this.reception;
     data['text'] = this.text;
     data['image'] = this.image;

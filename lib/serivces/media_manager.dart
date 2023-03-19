@@ -94,7 +94,7 @@ void EmojiPiker() {
       emojiSizeMax: 32 *
           (foundation.defaultTargetPlatform == TargetPlatform.iOS
               ? 1.30
-              : 1.0), // Issue: https://github.com/flutter/flutter/issues/28894
+              : 1.0), // Issue: http://github.com/flutter/flutter/issues/28894
       verticalSpacing: 0,
       horizontalSpacing: 0,
       gridPadding: EdgeInsets.zero,

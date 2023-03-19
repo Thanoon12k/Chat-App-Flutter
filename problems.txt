@@ -1,0 +1,13 @@
+💛 1- save in user setting  
+💖 2- wrong user view redirected from messages
+💖  3- comment with emoji in user view
+
+sent request to getuser(id=msg_id) data from net
+reterive image and stars and comments render them
+
+
+
+
+   4- multi global key
+    5- scorldown errror in messages
+    4- ban user not work

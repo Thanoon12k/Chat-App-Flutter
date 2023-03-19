@@ -9,26 +9,22 @@ import '../serivces/GEts.dart';
 import '../serivces/POSTs.dart';
 
 class UserViewController extends GetxController {
+  UserViewController({this.userviewid});
+  final int? userviewid;
+
   TextEditingController textcontroller = TextEditingController();
   Rx<Color> starcolor = Colors.white.obs;
   RxString user_name = ''.obs;
   RxString user_status = ''.obs;
   RxString user_image = ''.obs;
+  RxInt stars_number = 0.obs;
   RxInt user_id = 0.obs;
   RxList<CommentsModel> commentslist = RxList<CommentsModel>([]);
 
-  final RxInt stars_number = 0.obs;
   Rx<UserModel> user = Rx<UserModel>(UserModel());
-
-  @override
-  void onInit() async {
-    await fetchuser();
-    super.onInit();
-  }
 
   Future updateStars() async {
     var _userid = user_id.value;
-
     if (starcolor.value == Colors.white) {
       stars_number.value++;
       starcolor.value = Color.fromARGB(255, 255, 226, 59);
@@ -47,9 +43,12 @@ class UserViewController extends GetxController {
 
   Future<void> fetchuser([id]) async {
     var _user;
+    print('beforid: $id');
+
     if (id == null) {
       id = await rereint('id');
     }
+    print('afterid: $id');
     _user = await GetUserData('users/$id/view');
     if (_user != null) {
       user_id.value = _user.id;

@@ -3,7 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class MessageGetter extends GetxController {
+class MessageController extends GetxController {
   final DatabaseReference ref = FirebaseDatabase.instance.ref('messages');
   final messagesList = [].obs;
   ScrollController scorlcon = new ScrollController();

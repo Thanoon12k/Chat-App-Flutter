@@ -3,8 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bubble/bubble.dart';
 
-MessageRow(context, sender_id, text, sender_name, sender_image, message_image,
-    sendtime, msgcolor) {
+MessageRow(
+    {required BuildContext context,
+    required int? sender_id,
+    required String? text,
+    required String? sender_name,
+    required String? sender_image,
+    required String? message_image,
+    required String? sendtime,
+    required Color msgcolor}) {
   return GestureDetector(
     onLongPress: () {
       print('row : $sender_name ,$sender_image $sendtime ');
@@ -17,7 +24,7 @@ MessageRow(context, sender_id, text, sender_name, sender_image, message_image,
               padding: const EdgeInsets.only(right: 5),
               child: GestureDetector(
                   onTap: () {
-                    Get.to(() => UserView(reception_id: sender_id));
+                    Get.to(() => UserView(userviewid: sender_id));
                   },
                   child: sender_image != null
                       ? Image(
@@ -46,7 +53,7 @@ MessageRow(context, sender_id, text, sender_name, sender_image, message_image,
                 alignment: WrapAlignment.end,
                 children: <Widget>[
                   Container(
-                    width: 300,
+                    width: MediaQuery.of(context).size.width * 0.6,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +80,7 @@ MessageRow(context, sender_id, text, sender_name, sender_image, message_image,
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(text),
+                          child: Text(text!),
                         ),
                       ],
                     ),

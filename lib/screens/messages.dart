@@ -1,11 +1,11 @@
 import 'dart:math';
-import 'package:chatapp/controllers/messagegs_con.dart';
-import 'package:chatapp/serivces/firebase.dart';
+import 'package:chatapp/controllers/keyboard_con.dart';
+import 'package:chatapp/controllers/messages_con.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../serivces/firebase.dart';
+import '../controllers/messages_con.dart';
 import '../widgets/messagebox.dart';
 import '../widgets/messageinput.dart';
 
@@ -14,8 +14,8 @@ class MessagesScreen extends StatelessWidget {
   final int room_id;
   MessagesScreen({Key? key, required this.room_id}) : super(key: key);
 
-  final MessageGetter controller = Get.put(MessageGetter());
-  final MessageController msgcontroller = Get.put(MessageController());
+  final MessageController controller = Get.put(MessageController());
+  final KeyboardController keyboardcon = Get.put(KeyboardController());
 
   @override
   Widget build(BuildContext context) {
@@ -46,14 +46,14 @@ class MessagesScreen extends StatelessWidget {
 
                       if (item['text'] != null) {
                         return MessageRow(
-                          context,
-                          item['sender'],
-                          item['text'],
-                          item['sender_name'],
-                          item['sender_image'],
-                          item['image'],
-                          item['sendtime'],
-                          colorsarray[Random().nextInt(colorsarray.length)],
+                          context: context,
+                          sender_id: item['sender'],
+                          text: item['text'],
+                          sender_name: item['sender_name'],
+                          sender_image: item['sender_image'],
+                          message_image: item['image'],
+                          sendtime: item['sendtime'],
+                          msgcolor: colorsarray[item['sender'] % 4],
                         );
                       } else {
                         return SizedBox();
@@ -61,7 +61,7 @@ class MessagesScreen extends StatelessWidget {
                     }),
               ),
             ),
-            messsageinput1(room_id, msgcontroller, context),
+            messsageinput1(room_id, keyboardcon, context),
           ],
         ),
       ),

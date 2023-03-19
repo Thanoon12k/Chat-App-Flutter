@@ -75,6 +75,7 @@ class UserSettingController extends GetxController {
       'image': File(selected_image_path.value)
     };
     waiting_response.value = true;
+    print('image to put :${selected_image_path.value}');
     dynamic resp = await PutUpdateUser(data, 'users/$_userid/user_ret_update');
     waiting_response.value = false;
     if (userupdateformkey.currentState!.validate()) {

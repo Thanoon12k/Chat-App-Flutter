@@ -135,8 +135,8 @@ class MyUserSettingForm extends StatelessWidget {
                       primary: Color.fromARGB(255, 255, 255, 255),
                       onPrimary: Color.fromARGB(255, 0, 0, 0),
                     ),
-                    onPressed: () {
-                      controller.SendNow();
+                    onPressed: () async {
+                      await controller.SendNow();
                     },
                     child: const Text(
                       'حفظ',
@@ -189,7 +189,10 @@ class MyUserSettingForm extends StatelessWidget {
                 ),
               ),
             ],
-          )
+          ),
+          Obx(() => Visibility(
+              visible: controller.waiting_response.value,
+              child: process_circle()))
         ],
       ),
     );
@@ -311,7 +314,7 @@ image_rows(context, controller) {
               width: 150,
               height: 150,
             )
-          : _path != null && _path != '' && !_path.contains('https://')
+          : _path != null && _path != '' && !_path.contains('http://')
               ? Image.file(
                   File(_path),
                   width: 150,

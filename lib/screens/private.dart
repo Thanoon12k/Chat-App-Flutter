@@ -1,16 +1,26 @@
+import 'dart:math';
+import 'package:chatapp/controllers/keyboard_con.dart';
+import 'package:chatapp/controllers/messages_con.dart';
 import 'package:chatapp/widgets/appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class Private extends StatefulWidget {
-  const Private({Key? key}) : super(key: key);
+import '../controllers/messages_con.dart';
+import '../widgets/messagebox.dart';
+import '../widgets/messageinput.dart';
 
-  @override
-  State<Private> createState() => _PrivateState();
-}
+// ignore: must_be_immutable
+class PrivateScreen extends StatelessWidget {
+  final int room_id;
+  PrivateScreen({Key? key, required this.room_id}) : super(key: key);
 
-class _PrivateState extends State<Private> {
+  final MessageController controller = Get.put(MessageController());
+  final KeyboardController msgcontroller = Get.put(KeyboardController());
+
   @override
   Widget build(BuildContext context) {
+    controller.scorlltodown();
+    controller.getData(room_id);
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 228, 211, 211),
       endDrawer: mydrawer(),
@@ -20,66 +30,41 @@ class _PrivateState extends State<Private> {
         child: Column(
           children: [
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    // MessageRow(context),
-                    // MessageRow(context),
-                    // MessageRow(context),
-                    // MessageRow(context),
-                  ],
-                ),
+              child: Obx(
+                () => ListView.builder(
+                    itemCount: controller.messagesList.length,
+                    controller: controller.scorlcon,
+                    itemBuilder: (context, index) {
+                      var item = controller.messagesList[index];
+
+                      List<Color> colorsarray = [
+                        Color.fromARGB(255, 233, 232, 186),
+                        Color.fromARGB(255, 186, 233, 221),
+                        Color.fromARGB(255, 225, 186, 233),
+                        Color.fromARGB(255, 190, 233, 186),
+                      ];
+
+                      if (item['text'] != null) {
+                        return MessageRow(
+                          context: context,
+                          sender_id: item['sender'],
+                          text: item['text'],
+                          sender_name: item['sender_name'],
+                          sender_image: item['sender_image'],
+                          message_image: item['image'],
+                          sendtime: item['sendtime'],
+                          msgcolor: colorsarray[item['sender'] % 4],
+                        );
+                      } else {
+                        return SizedBox();
+                      }
+                    }),
               ),
             ),
-            MyTextInput()
+            messsageinput1(room_id, msgcontroller, context),
           ],
         ),
       ),
     );
   }
-}
-
-MyTextInput() {
-  return Stack(
-    children: <Widget>[
-      Align(
-        alignment: Alignment.bottomLeft,
-        child: Container(
-          padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-          height: 60,
-          width: double.infinity,
-          color: Colors.white,
-          child: Row(
-            children: <Widget>[
-              SizedBox(
-                width: 15,
-              ),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                      hintText: " اكتب رسالة....",
-                      hintStyle: TextStyle(color: Colors.black54),
-                      border: InputBorder.none),
-                ),
-              ),
-              SizedBox(
-                width: 15,
-              ),
-              FloatingActionButton(
-                onPressed: () {},
-                child: Icon(
-                  Icons.send,
-                  color: Colors.white,
-                  size: 18,
-                  textDirection: TextDirection.rtl,
-                ),
-                backgroundColor: Color.fromARGB(255, 3, 244, 144),
-                elevation: 0,
-              ),
-            ],
-          ),
-        ),
-      ),
-    ],
-  );
 }
