@@ -1,16 +1,55 @@
-# chatapp
+# دردشة — Chat App
 
-A new Flutter project.
+A simple Arabic (RTL) chat app built with Flutter and Supabase.
 
-## Getting Started
+The home screen shows only what matters: your conversations, newest first, with unread badges.
+Everything else is one tap away:
 
-This project is a starting point for a Flutter application.
+- **＋ button** → private chat · browse rooms · create room
+- **Your avatar** (top corner) → your profile, edit, sign out
+- **Chat title** → the other person's profile, or the room's members / leave
 
-A few resources to get you started if this is your first Flutter project:
+## Features
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+- Email + password sign-in (Supabase Auth)
+- Public rooms, optionally locked with a password (hashed on the server)
+- Private 1:1 chats
+- Image messages (Supabase Storage, bucket `chat-media`)
+- Realtime messages and unread counts
+- Profiles with stars and comments
+- Light and dark themes, Cairo font
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Backend
+
+Supabase project `axncazensmjdqpczvzwf`. All tables use the `chat_` prefix and have row-level security:
+
+| Table | Purpose |
+|---|---|
+| `chat_profiles` | name, bio, avatar, stars count |
+| `chat_conversations` | rooms and direct chats, last message preview |
+| `chat_members` | who is in which chat, last read time |
+| `chat_messages` | text and/or image messages |
+| `chat_profile_stars` / `chat_profile_comments` | profile reactions |
+
+RPCs: `chat_my_conversations`, `chat_rooms_directory`, `chat_create_room`, `chat_join_room`,
+`chat_start_direct`, `chat_mark_read`. The full schema is in `supabase/schema.sql`.
+
+## Run
+
+```bash
+flutter pub get
+flutter run
+```
+
+To point at a different project:
+`flutter run --dart-define=SUPABASE_URL=... --dart-define=SUPABASE_KEY=sb_publishable_...`
+
+## Code layout
+
+```
+lib/
+  core/      config + theme
+  data/      models + Repo (every Supabase call)
+  screens/   auth, profile setup, home, chat, people, rooms, profile
+  widgets/   Avatar, EmptyState, helpers
+```

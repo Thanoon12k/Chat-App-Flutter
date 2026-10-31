@@ -1,33 +1,32 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
+import 'package:chatapp/data/models.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:chatapp/main.dart';
-
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget( MyApp());
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  test('ChatSummary parses RPC row', () {
+    final c = ChatSummary.fromJson({
+      'id': 'a',
+      'kind': 'room',
+      'title': 'عام',
+      'image_url': null,
+      'other_user': null,
+      'last_message': 'مرحبا',
+      'last_message_at': '2026-10-31T10:00:00Z',
+      'unread': 3,
+    });
+    expect(c.isRoom, isTrue);
+    expect(c.unread, 3);
+    expect(c.title, 'عام');
   });
-}
 
-class Profile {
+  test('Message parses image-only row', () {
+    final m = Message.fromJson({
+      'id': 1,
+      'sender_id': 'u',
+      'body': null,
+      'image_url': 'https://x/y.jpg',
+      'created_at': '2026-10-31T10:00:00Z',
+    });
+    expect(m.body, isNull);
+    expect(m.imageUrl, isNotNull);
+  });
 }
