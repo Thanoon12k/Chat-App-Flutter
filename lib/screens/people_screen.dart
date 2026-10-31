@@ -79,7 +79,8 @@ class _PeopleScreenState extends State<PeopleScreen> {
             ),
             onChanged: (q) {
               _debounce?.cancel();
-              _debounce = Timer(const Duration(milliseconds: 300), () => _search(q));
+              _debounce =
+                  Timer(const Duration(milliseconds: 300), () => _search(q));
             },
           ),
         ),
@@ -98,12 +99,14 @@ class _PeopleScreenState extends State<PeopleScreen> {
                         return ListTile(
                           leading: Avatar(name: p.name, url: p.avatarUrl),
                           title: Text(p.name,
-                              style: const TextStyle(fontWeight: FontWeight.w600)),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600)),
                           subtitle: p.bio.isEmpty
                               ? null
                               : Text(p.bio,
                                   maxLines: 1, overflow: TextOverflow.ellipsis),
-                          trailing: const Icon(Icons.chat_bubble_outline_rounded),
+                          trailing:
+                              const Icon(Icons.chat_bubble_outline_rounded),
                           onTap: () => _start(p),
                         );
                       },

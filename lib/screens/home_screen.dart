@@ -130,6 +130,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const Padding(
+          padding: EdgeInsetsDirectional.only(start: 12),
+          child: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/girl.jpg')),
+        ),
+        leadingWidth: 60,
         title: const Text('المحادثات'),
         actions: [
           Padding(
@@ -137,8 +143,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             child: InkWell(
               customBorder: const CircleBorder(),
               onTap: _openMe,
-              child: Avatar(
-                  name: _me?.name ?? '', url: _me?.avatarUrl, size: 38),
+              child:
+                  Avatar(name: _me?.name ?? '', url: _me?.avatarUrl, size: 38),
             ),
           ),
         ],
@@ -203,7 +209,8 @@ class _ChatTile extends StatelessWidget {
         name: chat.title,
         url: chat.imageUrl,
         size: 52,
-        icon: chat.isRoom && chat.imageUrl == null ? Icons.groups_rounded : null,
+        icon:
+            chat.isRoom && chat.imageUrl == null ? Icons.groups_rounded : null,
       ),
       title: Row(children: [
         Expanded(

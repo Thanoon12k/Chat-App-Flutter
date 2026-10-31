@@ -185,7 +185,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: ListView(
                     padding: const EdgeInsets.only(bottom: 16),
                     children: [
-                      Center(child: Avatar(name: p.name, url: p.avatarUrl, size: 112)),
+                      Center(
+                          child: Avatar(
+                              name: p.name, url: p.avatarUrl, size: 112)),
                       const SizedBox(height: 14),
                       Text(p.name,
                           textAlign: TextAlign.center,

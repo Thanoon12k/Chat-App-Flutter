@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../core/theme.dart';
 import '../data/models.dart';
 import '../data/repo.dart';
 import '../widgets/common.dart';
@@ -39,7 +40,8 @@ class _ChatScreenState extends State<ChatScreen> {
     if (msgs.isEmpty || msgs.first.id == _lastSeenId) return;
     _lastSeenId = msgs.first.id;
     Repo.i.markRead(widget.chat.id);
-    final unknown = msgs.map((m) => m.senderId).where((id) => !_people.containsKey(id));
+    final unknown =
+        msgs.map((m) => m.senderId).where((id) => !_people.containsKey(id));
     if (unknown.isNotEmpty) _loadPeople(unknown.toSet());
   }
 
@@ -91,7 +93,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _info() async {
     if (!widget.chat.isRoom) {
-      if (widget.chat.otherUserId != null) _openProfile(widget.chat.otherUserId!);
+      if (widget.chat.otherUserId != null) {
+        _openProfile(widget.chat.otherUserId!);
+      }
       return;
     }
     final leave = await showModalBottomSheet<bool>(
@@ -150,7 +154,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.normal,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant),
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
                   ],
                 ),
@@ -237,8 +242,10 @@ class _Bubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final bg = mine ? scheme.primary : scheme.surfaceContainerHighest;
-    final fg = mine ? scheme.onPrimary : scheme.onSurface;
+    final bg = mine
+        ? myBubbleColor
+        : bubbleColors[message.senderId.hashCode.abs() % bubbleColors.length];
+    const fg = Colors.black87;
     final maxW = MediaQuery.sizeOf(context).width * 0.75;
 
     final bubble = GestureDetector(
@@ -288,7 +295,8 @@ class _Bubble extends StatelessWidget {
                                 child: CircularProgressIndicator())),
                     errorBuilder: (_, __, ___) => const SizedBox(
                         height: 120,
-                        child: Center(child: Icon(Icons.broken_image_outlined))),
+                        child:
+                            Center(child: Icon(Icons.broken_image_outlined))),
                   ),
                 ),
               ),
@@ -305,8 +313,8 @@ class _Bubble extends StatelessWidget {
                   ? const EdgeInsets.fromLTRB(10, 2, 10, 4)
                   : EdgeInsets.zero,
               child: Text(clockTime(message.createdAt),
-                  style:
-                      TextStyle(color: fg.withValues(alpha: 0.65), fontSize: 11)),
+                  style: TextStyle(
+                      color: fg.withValues(alpha: 0.65), fontSize: 11)),
             ),
           ],
         ),
@@ -316,7 +324,8 @@ class _Bubble extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: showSender ? 10 : 3),
       child: Row(
-        mainAxisAlignment: mine ? MainAxisAlignment.start : MainAxisAlignment.end,
+        mainAxisAlignment:
+            mine ? MainAxisAlignment.start : MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (!mine && isRoom) ...[
@@ -349,8 +358,7 @@ class _Bubble extends StatelessWidget {
           backgroundColor: Colors.black,
           appBar: AppBar(
               backgroundColor: Colors.black, foregroundColor: Colors.white),
-          body: Center(
-              child: InteractiveViewer(child: Image.network(url))),
+          body: Center(child: InteractiveViewer(child: Image.network(url))),
         ),
       ),
     );
@@ -372,17 +380,19 @@ class _Composer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     return SafeArea(
       top: false,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
         child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          IconButton(
+          IconButton.filled(
             tooltip: 'إرسال صورة',
             onPressed: sending ? null : onImage,
-            icon: const Icon(Icons.image_outlined),
+            style: IconButton.styleFrom(
+                backgroundColor: Colors.black, foregroundColor: Colors.white),
+            icon: const Icon(Icons.image_rounded),
           ),
+          const SizedBox(width: 6),
           Expanded(
             child: TextField(
               controller: controller,
@@ -409,14 +419,18 @@ class _Composer extends StatelessWidget {
                 onPressed: can ? onSend : null,
                 style: IconButton.styleFrom(
                     minimumSize: const Size(48, 48),
-                    disabledBackgroundColor: scheme.surfaceContainerHighest),
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    disabledBackgroundColor: Colors.black38,
+                    disabledForegroundColor: Colors.white70),
                 icon: sending
                     ? const SizedBox(
                         width: 20,
                         height: 20,
                         child: CircularProgressIndicator(strokeWidth: 2))
                     // Arrow points "forward" in RTL
-                    : const Icon(Icons.send_rounded, textDirection: TextDirection.rtl),
+                    : const Icon(Icons.send_rounded,
+                        textDirection: TextDirection.rtl),
               );
             },
           ),

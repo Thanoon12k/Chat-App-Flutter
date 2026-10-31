@@ -50,7 +50,10 @@ class Repo {
         _cache[p.id] = p;
       }
     }
-    return {for (final id in ids) if (_cache[id] != null) id: _cache[id]!};
+    return {
+      for (final id in ids)
+        if (_cache[id] != null) id: _cache[id]!
+    };
   }
 
   Future<List<Profile>> searchPeople(String q) async {
@@ -116,9 +119,9 @@ class Repo {
     return rows.map(ProfileComment.fromJson).toList();
   }
 
-  Future<void> addComment(String profileId, String body) => _db
-      .from('chat_profile_comments')
-      .insert({'profile_id': profileId, 'author_id': myId, 'body': body.trim()});
+  Future<void> addComment(String profileId, String body) =>
+      _db.from('chat_profile_comments').insert(
+          {'profile_id': profileId, 'author_id': myId, 'body': body.trim()});
 
   Future<void> deleteComment(int id) =>
       _db.from('chat_profile_comments').delete().eq('id', id);
@@ -134,7 +137,8 @@ class Repo {
     return rows.cast<Map<String, dynamic>>().map(Room.fromJson).toList();
   }
 
-  Future<String> createRoom(String name, String description, String password) async =>
+  Future<String> createRoom(
+          String name, String description, String password) async =>
       await _db.rpc('chat_create_room', params: {
         'p_name': name.trim(),
         'p_description': description.trim(),
@@ -176,8 +180,7 @@ class Repo {
       .limit(200)
       .map((rows) => rows.map(Message.fromJson).toList());
 
-  Future<void> send(String conversationId,
-      {String? text, XFile? image}) async {
+  Future<void> send(String conversationId, {String? text, XFile? image}) async {
     String? imageUrl;
     if (image != null) imageUrl = await uploadImage(image, 'msg');
     await _db.from('chat_messages').insert({

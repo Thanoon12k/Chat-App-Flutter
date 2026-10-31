@@ -23,6 +23,14 @@ class Avatar extends StatelessWidget {
     ];
     final bg = palette[name.hashCode.abs() % palette.length];
     final initial = name.trim().isEmpty ? '?' : name.trim().characters.first;
+    // People without a photo get the original app's default avatar picture.
+    if (url == null && icon == null) {
+      return CircleAvatar(
+        radius: size / 2,
+        backgroundColor: const Color(0xFF9DBFE0),
+        backgroundImage: const AssetImage('assets/images/avatar.png'),
+      );
+    }
     return CircleAvatar(
       radius: size / 2,
       backgroundColor: bg,
@@ -112,8 +120,12 @@ String errorText(Object e) {
     final m = e.message.toLowerCase();
     if (m.contains('invalid login')) return 'البريد أو كلمة المرور غير صحيحة';
     if (m.contains('already registered')) return 'هذا البريد مسجّل مسبقاً';
-    if (m.contains('email not confirmed')) return 'يرجى تأكيد بريدك الإلكتروني أولاً';
-    if (m.contains('password')) return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+    if (m.contains('email not confirmed')) {
+      return 'يرجى تأكيد بريدك الإلكتروني أولاً';
+    }
+    if (m.contains('password')) {
+      return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+    }
     return e.message;
   }
   return 'حدث خطأ، تحقق من الاتصال وحاول مجدداً';

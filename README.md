@@ -17,7 +17,7 @@ Everything else is one tap away:
 - Image messages (Supabase Storage, bucket `chat-media`)
 - Realtime messages and unread counts
 - Profiles with stars and comments
-- Light and dark themes, Cairo font
+- The original look: pink background, red accents, pastel bubbles, girl-photo logo and icon, night-sky login, Cairo font
 
 ## Backend
 

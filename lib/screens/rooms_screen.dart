@@ -202,8 +202,8 @@ class _CreateRoomSheetState extends State<_CreateRoomSheet> {
     if (!_form.currentState!.validate()) return;
     setState(() => _busy = true);
     try {
-      final id = await Repo.i.createRoom(
-          _name.text, _desc.text, _locked ? _password.text : '');
+      final id = await Repo.i
+          .createRoom(_name.text, _desc.text, _locked ? _password.text : '');
       if (!mounted) return;
       Navigator.pop(
         context,
@@ -271,8 +271,9 @@ class _CreateRoomSheetState extends State<_CreateRoomSheet> {
                 decoration: const InputDecoration(
                     hintText: 'كلمة المرور',
                     prefixIcon: Icon(Icons.key_rounded)),
-                validator: (v) =>
-                    (_locked && (v == null || v.length < 3)) ? '3 أحرف على الأقل' : null,
+                validator: (v) => (_locked && (v == null || v.length < 3))
+                    ? '3 أحرف على الأقل'
+                    : null,
               ),
               const SizedBox(height: 12),
             ],

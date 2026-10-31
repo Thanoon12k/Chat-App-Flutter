@@ -41,7 +41,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     if (!_form.currentState!.validate()) return;
     setState(() => _busy = true);
     try {
-      await Repo.i.saveProfile(name: _name.text, bio: _bio.text, avatar: _avatar);
+      await Repo.i
+          .saveProfile(name: _name.text, bio: _bio.text, avatar: _avatar);
       if (!mounted) return;
       if (_editing) Navigator.pop(context, true);
       widget.onDone?.call();
@@ -144,7 +145,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                           ? const SizedBox(
                               width: 22,
                               height: 22,
-                              child: CircularProgressIndicator(strokeWidth: 2.5))
+                              child:
+                                  CircularProgressIndicator(strokeWidth: 2.5))
                           : Text(_editing ? 'حفظ' : 'ابدأ'),
                     ),
                   ],
