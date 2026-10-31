@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 const brand = Color(0xFF4F46E5);
 
 ThemeData buildTheme(Brightness brightness) {
-  final scheme = ColorScheme.fromSeed(seedColor: brand, brightness: brightness);
+  final scheme = ColorScheme.fromSeed(
+    seedColor: brand,
+    brightness: brightness,
+    // Keep the brand indigo vivid instead of the muted default tone.
+    dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
+  );
   final base = ThemeData(
     useMaterial3: true,
     colorScheme: scheme,
