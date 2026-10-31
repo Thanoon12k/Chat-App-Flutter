@@ -11,7 +11,7 @@ Everything else is one tap away:
 
 ## Features
 
-- Email + password sign-in (Supabase Auth)
+- Google sign-in and email + password (Supabase Auth)
 - Public rooms, optionally locked with a password (hashed on the server)
 - Private 1:1 chats
 - Image messages (Supabase Storage, bucket `chat-media`)

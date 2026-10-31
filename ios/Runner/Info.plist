@@ -10,6 +10,15 @@
 	<string>دردشة</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>لإرسال الصور في المحادثات وتعيين صورتك الشخصية</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.thanoon12k.chatapp</string>
+			</array>
+		</dict>
+	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>لالتقاط صورة وإرسالها في المحادثة</string>
 	<key>CFBundleExecutable</key>

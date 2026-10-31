@@ -12,5 +12,9 @@ class AppConfig {
   );
 
   static const appName = 'دردشة';
+
+  /// Where Google sign-in returns to the app (must be in Supabase Auth → URL
+  /// Configuration → Redirect URLs).
+  static const authRedirect = 'com.thanoon12k.chatapp://login-callback';
   static const mediaBucket = 'chat-media';
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -21,6 +22,27 @@ class Repo {
   Future<bool> signUp(String email, String password) async {
     final res = await _db.auth.signUp(email: email.trim(), password: password);
     return res.session != null;
+  }
+
+  /// Opens Google in the browser; the session arrives through the deep link
+  /// and AuthGate reacts to it.
+  Future<void> signInWithGoogle() async {
+    await _db.auth.signInWithOAuth(
+      OAuthProvider.google,
+      redirectTo: kIsWeb ? null : AppConfig.authRedirect,
+      queryParams: {'prompt': 'select_account'},
+    );
+  }
+
+  /// Name and photo from the Google account, used to prefill profile setup.
+  String? get providerName {
+    final m = _db.auth.currentUser?.userMetadata;
+    return (m?['full_name'] ?? m?['name']) as String?;
+  }
+
+  String? get providerAvatar {
+    final m = _db.auth.currentUser?.userMetadata;
+    return (m?['avatar_url'] ?? m?['picture']) as String?;
   }
 
   Future<void> signOut() => _db.auth.signOut();
@@ -65,8 +87,10 @@ class Repo {
 
   /// Creates or updates my profile. Throws [NameTakenException] on duplicates.
   Future<void> saveProfile(
-      {required String name, String bio = '', XFile? avatar}) async {
-    String? avatarUrl;
+      {required String name,
+      String bio = '',
+      XFile? avatar,
+      String? avatarUrl}) async {
     if (avatar != null) avatarUrl = await uploadImage(avatar, 'avatar');
     try {
       await _db.from('chat_profiles').upsert({

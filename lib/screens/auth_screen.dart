@@ -39,6 +39,17 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
+  Future<void> _google() async {
+    setState(() => _busy = true);
+    try {
+      await Repo.i.signInWithGoogle();
+    } catch (e) {
+      if (mounted) toast(context, errorText(e));
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,6 +100,42 @@ class _AuthScreenState extends State<AuthScreen> {
                         style: const TextStyle(color: Colors.white70),
                       ),
                       const SizedBox(height: 32),
+                      OutlinedButton(
+                        onPressed: _busy ? null : _google,
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: const Size.fromHeight(52),
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black87,
+                          side: BorderSide.none,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)),
+                          textStyle: const TextStyle(
+                              fontFamily: 'Cairo',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset('assets/images/google.png',
+                                width: 22, height: 22),
+                            const SizedBox(width: 12),
+                            const Text('المتابعة باستخدام Google'),
+                          ],
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 18),
+                        child: Row(children: [
+                          Expanded(child: Divider(color: Colors.white38)),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12),
+                            child: Text('أو بالبريد الإلكتروني',
+                                style: TextStyle(color: Colors.white70)),
+                          ),
+                          Expanded(child: Divider(color: Colors.white38)),
+                        ]),
+                      ),
                       TextFormField(
                         controller: _email,
                         keyboardType: TextInputType.emailAddress,

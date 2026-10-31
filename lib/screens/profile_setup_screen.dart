@@ -19,7 +19,8 @@ class ProfileSetupScreen extends StatefulWidget {
 
 class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final _form = GlobalKey<FormState>();
-  late final _name = TextEditingController(text: widget.existing?.name);
+  late final _name =
+      TextEditingController(text: widget.existing?.name ?? Repo.i.providerName);
   late final _bio = TextEditingController(text: widget.existing?.bio);
   XFile? _avatar;
   Uint8List? _avatarBytes;
@@ -41,8 +42,11 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     if (!_form.currentState!.validate()) return;
     setState(() => _busy = true);
     try {
-      await Repo.i
-          .saveProfile(name: _name.text, bio: _bio.text, avatar: _avatar);
+      await Repo.i.saveProfile(
+          name: _name.text,
+          bio: _bio.text,
+          avatar: _avatar,
+          avatarUrl: widget.existing == null ? Repo.i.providerAvatar : null);
       if (!mounted) return;
       if (_editing) Navigator.pop(context, true);
       widget.onDone?.call();
@@ -97,7 +101,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                                   backgroundImage: MemoryImage(_avatarBytes!))
                               : Avatar(
                                   name: _name.text,
-                                  url: widget.existing?.avatarUrl,
+                                  url: widget.existing?.avatarUrl ??
+                                      Repo.i.providerAvatar,
                                   size: 112,
                                   icon: widget.existing == null
                                       ? Icons.person_rounded
