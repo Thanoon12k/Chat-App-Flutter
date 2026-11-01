@@ -5,10 +5,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/config.dart';
 import 'core/theme.dart';
+import 'data/models.dart';
 import 'data/repo.dart';
 import 'screens/auth_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/profile_setup_screen.dart';
+import 'widgets/common.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,34 +65,55 @@ class _ProfileGate extends StatefulWidget {
 }
 
 class _ProfileGateState extends State<_ProfileGate> {
-  late Future<bool> _hasProfile = _check();
+  late Future<Profile?> _profile = _check();
 
-  Future<bool> _check() async => (await Repo.i.myProfile()) != null;
+  Future<Profile?> _check() => Repo.i.myProfile();
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
-      future: _hasProfile,
+    return FutureBuilder<Profile?>(
+      future: _profile,
       builder: (context, snap) {
         if (snap.hasError) {
           return Scaffold(
             body: Center(
               child: FilledButton.tonal(
-                onPressed: () => setState(() => _hasProfile = _check()),
+                onPressed: () => setState(() => _profile = _check()),
                 child: const Text('تعذر الاتصال — إعادة المحاولة'),
               ),
             ),
           );
         }
-        if (!snap.hasData) {
+        if (snap.connectionState != ConnectionState.done) {
           return const Scaffold(
               body: Center(child: CircularProgressIndicator()));
         }
-        if (snap.data!) return const HomeScreen();
-        return ProfileSetupScreen(
-          onDone: () => setState(() => _hasProfile = Future.value(true)),
-        );
+        final me = snap.data;
+        if (me == null) {
+          return ProfileSetupScreen(
+            onDone: () => setState(() => _profile = _check()),
+          );
+        }
+        if (me.banned) return const _BannedScreen();
+        return const HomeScreen();
       },
+    );
+  }
+}
+
+class _BannedScreen extends StatelessWidget {
+  const _BannedScreen();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: EmptyState(
+        icon: Icons.block_rounded,
+        title: 'تم إيقاف حسابك',
+        subtitle: 'تواصل مع إدارة التطبيق لمزيد من المعلومات.',
+        action: FilledButton.tonal(
+            onPressed: Repo.i.signOut, child: const Text('تسجيل الخروج')),
+      ),
     );
   }
 }

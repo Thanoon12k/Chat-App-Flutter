@@ -17,6 +17,11 @@ Everything else is one tap away:
 - Image messages (Supabase Storage, bucket `chat-media`)
 - Realtime messages and unread counts
 - Profiles with stars and comments
+- Live room delivery: every message in a room reaches all its members in realtime, with an
+  in-app alert (who, which room, "open") when you're on another screen
+- Manager announcements: broadcast to everyone or to one room's members; shown as a pop-up
+  and kept under the 📣 button on the home screen
+- Banned accounts see a "suspended" screen and can't send messages
 - The original look: pink background, red accents, pastel bubbles, girl-photo logo and icon, night-sky login, Cairo font
 
 ## Backend
@@ -31,8 +36,37 @@ Supabase project `axncazensmjdqpczvzwf`. All tables use the `chat_` prefix and h
 | `chat_messages` | text and/or image messages |
 | `chat_profile_stars` / `chat_profile_comments` | profile reactions |
 
+| `chat_admins` | who can use the admin dashboard |
+| `chat_broadcasts` | manager announcements (`room_id` null = everyone) |
+
 RPCs: `chat_my_conversations`, `chat_rooms_directory`, `chat_create_room`, `chat_join_room`,
-`chat_start_direct`, `chat_mark_read`. The full schema is in `supabase/schema.sql`.
+`chat_start_direct`, `chat_mark_read`. The full schema is in `supabase/schema.sql`; the admin/broadcast additions
+(including `chat_is_admin`, `chat_admin_stats` and the `banned` flag) are in `supabase/admin.sql`.
+
+## Admin dashboard
+
+`admin/index.html` is a single-file web dashboard (no build step):
+
+- **Overview**: user / room / message counts and the latest messages
+- **Users**: search, suspend / unsuspend, delete a profile (with its messages)
+- **Rooms**: create, rename, edit description, remove a password, delete, add / remove members
+- **Messages**: browse by conversation, search text, delete
+- **Broadcasts**: send an announcement to everyone or to one room, delete old ones
+
+Open it from any static host (GitHub Pages, Netlify) or locally:
+
+```bash
+cd admin && python3 -m http.server 8080
+```
+
+Only accounts listed in `chat_admins` see data; everyone else is signed out. Add an admin with SQL:
+
+```sql
+insert into public.chat_admins (user_id) select id from auth.users where email = 'someone@example.com';
+```
+
+For Google sign-in on the dashboard, add its URL (e.g. `http://localhost:8080/`) to
+Supabase Auth → URL Configuration → Redirect URLs.
 
 ## Run
 

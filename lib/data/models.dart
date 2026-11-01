@@ -7,6 +7,7 @@ class Profile {
   final String bio;
   final String? avatarUrl;
   final int stars;
+  final bool banned;
 
   const Profile({
     required this.id,
@@ -14,6 +15,7 @@ class Profile {
     this.bio = '',
     this.avatarUrl,
     this.stars = 0,
+    this.banned = false,
   });
 
   factory Profile.fromJson(Map<String, dynamic> j) => Profile(
@@ -22,6 +24,7 @@ class Profile {
         bio: (j['bio'] ?? '') as String,
         avatarUrl: j['avatar_url'] as String?,
         stars: (j['stars'] ?? 0) as int,
+        banned: (j['banned'] ?? false) as bool,
       );
 }
 
@@ -88,6 +91,7 @@ class Room {
 
 class Message {
   final int id;
+  final String conversationId;
   final String senderId;
   final String? body;
   final String? imageUrl;
@@ -95,6 +99,7 @@ class Message {
 
   const Message({
     required this.id,
+    required this.conversationId,
     required this.senderId,
     this.body,
     this.imageUrl,
@@ -103,6 +108,7 @@ class Message {
 
   factory Message.fromJson(Map<String, dynamic> j) => Message(
         id: j['id'] as int,
+        conversationId: (j['conversation_id'] ?? '') as String,
         senderId: j['sender_id'] as String,
         body: j['body'] as String?,
         imageUrl: j['image_url'] as String?,
@@ -127,6 +133,34 @@ class ProfileComment {
         id: j['id'] as int,
         author: Profile.fromJson(j['author'] as Map<String, dynamic>),
         body: j['body'] as String,
+        createdAt: _date(j['created_at']),
+      );
+}
+
+/// An announcement from the app managers, to everyone or to one room.
+class Broadcast {
+  final int id;
+  final String title;
+  final String body;
+  final String? roomId;
+  final String? roomName;
+  final DateTime createdAt;
+
+  const Broadcast({
+    required this.id,
+    required this.title,
+    required this.body,
+    this.roomId,
+    this.roomName,
+    required this.createdAt,
+  });
+
+  factory Broadcast.fromJson(Map<String, dynamic> j) => Broadcast(
+        id: j['id'] as int,
+        title: j['title'] as String,
+        body: j['body'] as String,
+        roomId: j['room_id'] as String?,
+        roomName: (j['room'] as Map<String, dynamic>?)?['name'] as String?,
         createdAt: _date(j['created_at']),
       );
 }

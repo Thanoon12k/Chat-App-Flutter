@@ -29,4 +29,22 @@ void main() {
     expect(m.body, isNull);
     expect(m.imageUrl, isNotNull);
   });
+
+  test('Broadcast parses row with room name', () {
+    final b = Broadcast.fromJson({
+      'id': 7,
+      'title': 'تنبيه',
+      'body': 'صيانة الليلة',
+      'room_id': 'r',
+      'created_at': '2026-11-01T10:00:00Z',
+      'room': {'name': 'عام'},
+    });
+    expect(b.roomName, 'عام');
+    expect(b.title, 'تنبيه');
+  });
+
+  test('Profile reads banned flag', () {
+    final p = Profile.fromJson({'id': 'u', 'name': 'سارة', 'banned': true});
+    expect(p.banned, isTrue);
+  });
 }

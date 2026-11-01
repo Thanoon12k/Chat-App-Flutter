@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>لوحة تحكم دردشة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+  :root {
+    --bg: #f6eeee; --card: #fff; --ink: #2b1f22; --muted: #7a6a6e; --line: #ead9dc;
+    --brand: #e53935; --brand-soft: #fde4e4; --ok: #2e7d32; --warn: #b26a00;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Cairo, system-ui, sans-serif; background: var(--bg); color: var(--ink); }
+  button, input, select, textarea { font: inherit; }
+  .hidden { display: none !important; }
+  header { display: flex; align-items: center; gap: 12px; padding: 12px 20px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 2; }
+  header h1 { font-size: 18px; margin: 0; flex: 1; }
+  nav { display: flex; gap: 4px; flex-wrap: wrap; padding: 12px 20px 0; }
+  nav button { border: 0; background: transparent; padding: 8px 14px; border-radius: 999px; cursor: pointer; color: var(--muted); font-weight: 600; }
+  nav button.active { background: var(--brand); color: #fff; }
+  main { padding: 16px 20px 40px; max-width: 1100px; margin: 0 auto; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px; margin-bottom: 16px; }
+  .card h2 { font-size: 16px; margin: 0 0 12px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+  .stat b { display: block; font-size: 26px; color: var(--brand); }
+  .stat span { color: var(--muted); font-size: 13px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+  input, select, textarea { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; background: #fff; min-width: 0; }
+  textarea { width: 100%; min-height: 90px; resize: vertical; }
+  .grow { flex: 1; }
+  .btn { border: 0; border-radius: 10px; padding: 8px 14px; cursor: pointer; background: var(--brand); color: #fff; font-weight: 600; }
+  .btn.ghost { background: var(--brand-soft); color: var(--brand); }
+  .btn.plain { background: #f1e7e9; color: var(--ink); }
+  .btn.sm { padding: 4px 10px; font-size: 13px; }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: start; padding: 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  th { color: var(--muted); font-weight: 600; font-size: 13px; }
+  td.actions { white-space: nowrap; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; background: #eee; }
+  .pill.red { background: var(--brand-soft); color: var(--brand); }
+  .pill.green { background: #e3f3e4; color: var(--ok); }
+  .av { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: var(--brand-soft); display: inline-grid; place-items: center; color: var(--brand); font-weight: 700; vertical-align: middle; margin-inline-end: 8px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .msg-body { max-width: 460px; overflow-wrap: anywhere; }
+  .msg-body img { max-width: 160px; border-radius: 8px; display: block; }
+  #login { max-width: 380px; margin: 10vh auto; }
+  #login .card { padding: 24px; }
+  #login input { width: 100%; margin-bottom: 10px; }
+  #login .btn { width: 100%; margin-bottom: 8px; }
+  #toast { position: fixed; bottom: 20px; inset-inline-start: 50%; transform: translateX(50%); background: var(--ink); color: #fff; padding: 10px 18px; border-radius: 10px; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 10; }
+  #toast.show { opacity: 1; }
+  dialog { border: 0; border-radius: 14px; padding: 0; width: min(520px, 92vw); }
+  dialog::backdrop { background: rgba(0,0,0,.35); }
+  dialog .card { margin: 0; border: 0; }
+  @media (max-width: 600px) { header, nav, main { padding-inline: 12px; } }
+</style>
+</head>
+<body>
+
+<section id="login" class="hidden">
+  <div class="card">
+    <h2>لوحة تحكم دردشة</h2>
+    <p class="muted">سجّل الدخول بحساب مدير.</p>
+    <form id="loginForm">
+      <input id="email" type="email" placeholder="البريد الإلكتروني" required>
+      <input id="password" type="password" placeholder="كلمة المرور" required>
+      <button class="btn" type="submit">دخول</button>
+    </form>
+    <button class="btn ghost" id="googleBtn">الدخول عبر Google</button>
+    <p id="loginErr" class="muted"></p>
+  </div>
+</section>
+
+<section id="app" class="hidden">
+  <header>
+    <h1>لوحة تحكم دردشة</h1>
+    <span id="who" class="muted"></span>
+    <button class="btn plain sm" id="logout">خروج</button>
+  </header>
+  <nav id="tabs">
+    <button data-tab="overview" class="active">نظرة عامة</button>
+    <button data-tab="users">المستخدمون</button>
+    <button data-tab="rooms">الغرف</button>
+    <button data-tab="messages">الرسائل</button>
+    <button data-tab="broadcasts">البث</button>
+  </nav>
+  <main>
+    <div id="tab-overview">
+      <div class="stats" id="stats"></div>
+      <div class="card"><h2>آخر الرسائل</h2><div class="table-wrap" id="latest"></div></div>
+    </div>
+
+    <div id="tab-users" class="hidden">
+      <div class="card">
+        <div class="row">
+          <input id="userSearch" class="grow" placeholder="ابحث بالاسم…">
+          <select id="userFilter"><option value="">الكل</option><option value="banned">الموقوفون</option></select>
+        </div>
+        <div class="table-wrap" id="users"></div>
+      </div>
+    </div>
+
+    <div id="tab-rooms" class="hidden">
+      <div class="card">
+        <h2>إنشاء غرفة</h2>
+        <form class="row" id="roomForm">
+          <input id="roomName" placeholder="اسم الغرفة" required minlength="2" maxlength="40">
+          <input id="roomDesc" class="grow" placeholder="الوصف">
+          <button class="btn" type="submit">إنشاء</button>
+        </form>
+      </div>
+      <div class="card"><h2>الغرف</h2><div class="table-wrap" id="rooms"></div></div>
+    </div>
+
+    <div id="tab-messages" class="hidden">
+      <div class="card">
+        <div class="row">
+          <select id="msgConv" class="grow"><option value="">كل المحادثات</option></select>
+          <input id="msgSearch" class="grow" placeholder="ابحث في النص…">
+          <button class="btn plain" id="msgReload">تحديث</button>
+        </div>
+        <div class="table-wrap" id="messages"></div>
+      </div>
+    </div>
+
+    <div id="tab-broadcasts" class="hidden">
+      <div class="card">
+        <h2>إرسال بث</h2>
+        <form id="bcForm">
+          <div class="row">
+            <input id="bcTitle" class="grow" placeholder="العنوان" required maxlength="100">
+            <select id="bcTarget"><option value="">جميع المستخدمين</option></select>
+          </div>
+          <textarea id="bcBody" placeholder="نص الرسالة" required maxlength="2000"></textarea>
+          <div class="row" style="margin-top:10px"><button class="btn" type="submit">إرسال</button></div>
+        </form>
+      </div>
+      <div class="card"><h2>البث السابق</h2><div class="table-wrap" id="broadcasts"></div></div>
+    </div>
+  </main>
+</section>
+
+<dialog id="membersDlg">
+  <div class="card">
+    <h2 id="membersTitle">الأعضاء</h2>
+    <div class="row">
+      <select id="addMemberSel" class="grow"></select>
+      <button class="btn sm" id="addMemberBtn">إضافة</button>
+    </div>
+    <div class="table-wrap" id="membersList"></div>
+    <div class="row" style="margin-top:12px"><button class="btn plain" onclick="membersDlg.close()">إغلاق</button></div>
+  </div>
+</dialog>
+
+<dialog id="editDlg">
+  <div class="card">
+    <h2>تعديل الغرفة</h2>
+    <form id="editForm">
+      <input id="editName" style="width:100%;margin-bottom:8px" required minlength="2" maxlength="40">
+      <textarea id="editDesc"></textarea>
+      <label class="row" style="margin-top:8px"><input type="checkbox" id="editUnlock"> إزالة كلمة المرور</label>
+      <div class="row">
+        <button class="btn" type="submit">حفظ</button>
+        <button class="btn plain" type="button" onclick="editDlg.close()">إلغاء</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<div id="toast"></div>
+
+<script>
+// Same project and publishable key as the app (lib/core/config.dart).
+// Everything is enforced by RLS: only users listed in chat_admins get data.
+const SUPABASE_URL = 'https://axncazensmjdqpczvzwf.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_7hGIGHFa1mcWPMI8mEZKGw_-wgkkSYT';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmt = (d) => d ? new Date(d).toLocaleString('ar', { dateStyle: 'short', timeStyle: 'short' }) : '';
+const av = (p) => p?.avatar_url
+  ? `<img class="av" src="${esc(p.avatar_url)}" alt="">`
+  : `<span class="av">${esc((p?.name || '?').trim().charAt(0))}</span>`;
+
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast.timer); toast.timer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+async function run(promise, okMsg) {
+  const { data, error } = await promise;
+  if (error) { toast('خطأ: ' + error.message); throw error; }
+  if (okMsg) toast(okMsg);
+  return data;
+}
+const table = (head, rows, empty = 'لا يوجد شيء بعد') => rows.length
+  ? `<table><thead><tr>${head.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table>`
+  : `<p class="muted">${empty}</p>`;
+
+// ---------- auth ----------
+$('loginForm').onsubmit = async (e) => {
+  e.preventDefault();
+  $('loginErr').textContent = '';
+  const { error } = await db.auth.signInWithPassword({ email: $('email').value.trim(), password: $('password').value });
+  if (error) $('loginErr').textContent = error.message;
+};
+$('googleBtn').onclick = () => db.auth.signInWithOAuth({
+  provider: 'google',
+  options: { redirectTo: location.href.split('#')[0], queryParams: { prompt: 'select_account' } },
+});
+$('logout').onclick = () => db.auth.signOut();
+
+let started = false;
+db.auth.onAuthStateChange((_event, session) => setTimeout(() => gate(session), 0));
+
+async function gate(session) {
+  if (!session) {
+    started = false;
+    $('app').classList.add('hidden'); $('login').classList.remove('hidden');
+    return;
+  }
+  const { data: isAdmin } = await db.rpc('chat_is_admin');
+  if (!isAdmin) {
+    $('loginErr').textContent = `الحساب ${session.user.email} ليس مديراً.`;
+    await db.auth.signOut();
+    return;
+  }
+  $('who').textContent = session.user.email;
+  $('login').classList.add('hidden'); $('app').classList.remove('hidden');
+  if (!started) { started = true; show('overview'); }
+}
+
+// ---------- tabs ----------
+const loaders = { overview: loadOverview, users: loadUsers, rooms: loadRooms, messages: loadMessages, broadcasts: loadBroadcasts };
+function show(tab) {
+  document.querySelectorAll('#tabs button').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
+  Object.keys(loaders).forEach((t) => $('tab-' + t).classList.toggle('hidden', t !== tab));
+  loaders[tab]();
+}
+$('tabs').onclick = (e) => { if (e.target.dataset.tab) show(e.target.dataset.tab); };
+
+// ---------- shared lookups ----------
+async function allProfiles() {
+  return run(db.from('chat_profiles').select('id,name,avatar_url').order('name'));
+}
+async function allRooms() {
+  return run(db.from('chat_conversations').select('id,name').eq('kind', 'room').order('name'));
+}
+
+// ---------- overview ----------
+async function loadOverview() {
+  const s = await run(db.rpc('chat_admin_stats'));
+  const items = [['users', 'المستخدمون'], ['banned', 'موقوفون'], ['rooms', 'الغرف'], ['directs', 'محادثات خاصة'],
+                 ['messages', 'الرسائل'], ['messages_today', 'رسائل آخر 24 ساعة'], ['broadcasts', 'البث']];
+  $('stats').innerHTML = items.map(([k, l]) => `<div class="stat"><b>${s[k] ?? 0}</b><span>${l}</span></div>`).join('');
+  const rows = await run(db.from('chat_messages')
+    .select('id,body,image_url,created_at,sender:chat_profiles(name,avatar_url),conv:chat_conversations(kind,name)')
+    .order('created_at', { ascending: false }).limit(10));
+  $('latest').innerHTML = messageTable(rows, false);
+}
+
+// ---------- users ----------
+let userTimer;
+$('userSearch').oninput = () => { clearTimeout(userTimer); userTimer = setTimeout(loadUsers, 300); };
+$('userFilter').onchange = loadUsers;
+
+async function loadUsers() {
+  let q = db.from('chat_profiles').select('*').order('created_at', { ascending: false }).limit(500);
+  const term = $('userSearch').value.trim();
+  if (term) q = q.ilike('name', `%${term}%`);
+  if ($('userFilter').value === 'banned') q = q.eq('banned', true);
+  const rows = await run(q);
+  $('users').innerHTML = table(['المستخدم', 'النبذة', 'النجوم', 'الحالة', 'انضم', ''], rows.map((u) => `
+    <tr>
+      <td>${av(u)}${esc(u.name)}</td>
+      <td class="muted">${esc(u.bio)}</td>
+      <td>${u.stars}</td>
+      <td>${u.banned ? '<span class="pill red">موقوف</span>' : '<span class="pill green">نشط</span>'}</td>
+      <td class="muted">${fmt(u.created_at)}</td>
+      <td class="actions">
+        <button class="btn ghost sm" data-ban="${u.id}" data-val="${!u.banned}">${u.banned ? 'رفع الإيقاف' : 'إيقاف'}</button>
+        <button class="btn plain sm" data-del-user="${u.id}" data-name="${esc(u.name)}">حذف</button>
+      </td>
+    </tr>`), 'لا يوجد مستخدمون');
+}
+$('users').onclick = async (e) => {
+  const b = e.target;
+  if (b.dataset.ban) {
+    const banned = b.dataset.val === 'true';
+    await run(db.from('chat_profiles').update({ banned }).eq('id', b.dataset.ban), banned ? 'تم الإيقاف' : 'تم رفع الإيقاف');
+    loadUsers();
+  } else if (b.dataset.delUser) {
+    if (!confirm(`حذف ${b.dataset.name} مع كل رسائله؟ يمكنه إنشاء ملف جديد بنفس الحساب لاحقاً.`)) return;
+    await run(db.from('chat_profiles').delete().eq('id', b.dataset.delUser), 'تم الحذف');
+    loadUsers();
+  }
+};
+
+// ---------- rooms ----------
+let roomsCache = [];
+$('roomForm').onsubmit = async (e) => {
+  e.preventDefault();
+  await run(db.from('chat_conversations').insert({ kind: 'room', name: $('roomName').value.trim(), description: $('roomDesc').value.trim() }), 'تم إنشاء الغرفة');
+  e.target.reset(); loadRooms();
+};
+
+async function loadRooms() {
+  roomsCache = await run(db.from('chat_conversations')
+    .select('id,name,description,password_hash,created_at,last_message_at,chat_members(count),chat_messages(count)')
+    .eq('kind', 'room').order('last_message_at', { ascending: false }));
+  $('rooms').innerHTML = table(['الغرفة', 'الأعضاء', 'الرسائل', 'آخر نشاط', ''], roomsCache.map((r) => `
+    <tr>
+      <td><b>${esc(r.name)}</b> ${r.password_hash ? '<span class="pill">🔒 محمية</span>' : ''}<div class="muted">${esc(r.description)}</div></td>
+      <td>${r.chat_members[0]?.count ?? 0}</td>
+      <td>${r.chat_messages[0]?.count ?? 0}</td>
+      <td class="muted">${fmt(r.last_message_at)}</td>
+      <td class="actions">
+        <button class="btn ghost sm" data-members="${r.id}">الأعضاء</button>
+        <button class="btn ghost sm" data-msgs="${r.id}">الرسائل</button>
+        <button class="btn ghost sm" data-edit="${r.id}">تعديل</button>
+        <button class="btn plain sm" data-del-room="${r.id}">حذف</button>
+      </td>
+    </tr>`), 'لا توجد غرف');
+}
+$('rooms').onclick = async (e) => {
+  const b = e.target;
+  const room = roomsCache.find((r) => r.id === (b.dataset.members || b.dataset.msgs || b.dataset.edit || b.dataset.delRoom));
+  if (!room) return;
+  if (b.dataset.members) openMembers(room);
+  if (b.dataset.msgs) { show('messages'); await fillConvSelect(); $('msgConv').value = room.id; loadMessages(); }
+  if (b.dataset.edit) {
+    editing = room;
+    $('editName').value = room.name; $('editDesc').value = room.description; $('editUnlock').checked = false;
+    $('editUnlock').parentElement.classList.toggle('hidden', !room.password_hash);
+    editDlg.showModal();
+  }
+  if (b.dataset.delRoom) {
+    if (!confirm(`حذف غرفة "${room.name}" وكل رسائلها؟`)) return;
+    await run(db.from('chat_conversations').delete().eq('id', room.id), 'تم حذف الغرفة');
+    loadRooms();
+  }
+};
+
+let editing;
+$('editForm').onsubmit = async (e) => {
+  e.preventDefault();
+  const patch = { name: $('editName').value.trim(), description: $('editDesc').value.trim() };
+  if ($('editUnlock').checked) patch.password_hash = null;
+  await run(db.from('chat_conversations').update(patch).eq('id', editing.id), 'تم الحفظ');
+  editDlg.close(); loadRooms();
+};
+
+let membersRoom;
+async function openMembers(room) {
+  membersRoom = room;
+  $('membersTitle').textContent = `أعضاء ${room.name}`;
+  await renderMembers();
+  membersDlg.showModal();
+}
+async function renderMembers() {
+  const [members, people] = await Promise.all([
+    run(db.from('chat_members').select('user_id,joined_at,p:chat_profiles(name,avatar_url)').eq('conversation_id', membersRoom.id)),
+    allProfiles(),
+  ]);
+  const inRoom = new Set(members.map((m) => m.user_id));
+  $('addMemberSel').innerHTML = people.filter((p) => !inRoom.has(p.id))
+    .map((p) => `<option value="${p.id}">${esc(p.name)}</option>`).join('') || '<option value="">الجميع أعضاء</option>';
+  $('membersList').innerHTML = table(['العضو', 'انضم', ''], members.map((m) => `
+    <tr><td>${av(m.p)}${esc(m.p?.name)}</td><td class="muted">${fmt(m.joined_at)}</td>
+    <td class="actions"><button class="btn plain sm" data-kick="${m.user_id}">إزالة</button></td></tr>`), 'لا يوجد أعضاء');
+}
+$('addMemberBtn').onclick = async () => {
+  const uid = $('addMemberSel').value; if (!uid) return;
+  await run(db.from('chat_members').insert({ conversation_id: membersRoom.id, user_id: uid }), 'تمت الإضافة');
+  renderMembers(); loadRooms();
+};
+$('membersList').onclick = async (e) => {
+  const uid = e.target.dataset.kick; if (!uid) return;
+  await run(db.from('chat_members').delete().eq('conversation_id', membersRoom.id).eq('user_id', uid), 'تمت الإزالة');
+  renderMembers(); loadRooms();
+};
+
+// ---------- messages ----------
+async function fillConvSelect() {
+  const keep = $('msgConv').value;
+  const convs = await run(db.from('chat_conversations')
+    .select('id,kind,name,chat_members(p:chat_profiles(name))').order('last_message_at', { ascending: false }));
+  $('msgConv').innerHTML = '<option value="">كل المحادثات</option>' + convs.map((c) => {
+    const label = c.kind === 'room' ? '# ' + c.name : '👤 ' + c.chat_members.map((m) => m.p?.name).join(' ↔ ');
+    return `<option value="${c.id}">${esc(label)}</option>`;
+  }).join('');
+  $('msgConv').value = keep;
+}
+function messageTable(rows, withDelete = true) {
+  return table(['المرسل', 'المحادثة', 'الرسالة', 'الوقت', ...(withDelete ? [''] : [])], rows.map((m) => `
+    <tr>
+      <td>${av(m.sender)}${esc(m.sender?.name)}</td>
+      <td class="muted">${m.conv?.kind === 'room' ? '# ' + esc(m.conv.name) : 'خاصة'}</td>
+      <td class="msg-body">${m.image_url ? `<a href="${esc(m.image_url)}" target="_blank"><img src="${esc(m.image_url)}" alt=""></a>` : ''}${esc(m.body)}</td>
+      <td class="muted">${fmt(m.created_at)}</td>
+      ${withDelete ? `<td class="actions"><button class="btn plain sm" data-del-msg="${m.id}">حذف</button></td>` : ''}
+    </tr>`), 'لا توجد رسائل');
+}
+async function loadMessages() {
+  if ($('msgConv').options.length <= 1) await fillConvSelect();
+  let q = db.from('chat_messages')
+    .select('id,body,image_url,created_at,sender:chat_profiles(name,avatar_url),conv:chat_conversations(kind,name)')
+    .order('created_at', { ascending: false }).limit(200);
+  if ($('msgConv').value) q = q.eq('conversation_id', $('msgConv').value);
+  const term = $('msgSearch').value.trim();
+  if (term) q = q.ilike('body', `%${term}%`);
+  $('messages').innerHTML = messageTable(await run(q));
+}
+let msgTimer;
+$('msgConv').onchange = loadMessages;
+$('msgSearch').oninput = () => { clearTimeout(msgTimer); msgTimer = setTimeout(loadMessages, 300); };
+$('msgReload').onclick = async () => { await fillConvSelect(); loadMessages(); };
+$('messages').onclick = async (e) => {
+  const id = e.target.dataset.delMsg; if (!id) return;
+  if (!confirm('حذف هذه الرسالة؟')) return;
+  await run(db.from('chat_messages').delete().eq('id', id), 'تم حذف الرسالة');
+  loadMessages();
+};
+
+// ---------- broadcasts ----------
+async function loadBroadcasts() {
+  const [rooms, rows] = await Promise.all([
+    allRooms(),
+    run(db.from('chat_broadcasts').select('id,title,body,created_at,room:chat_conversations(name)').order('created_at', { ascending: false }).limit(100)),
+  ]);
+  const keep = $('bcTarget').value;
+  $('bcTarget').innerHTML = '<option value="">جميع المستخدمين</option>' +
+    rooms.map((r) => `<option value="${r.id}">أعضاء غرفة: ${esc(r.name)}</option>`).join('');
+  $('bcTarget').value = keep;
+  $('broadcasts').innerHTML = table(['العنوان', 'النص', 'إلى', 'الوقت', ''], rows.map((b) => `
+    <tr>
+      <td><b>${esc(b.title)}</b></td>
+      <td class="msg-body">${esc(b.body)}</td>
+      <td>${b.room ? '# ' + esc(b.room.name) : '<span class="pill red">الجميع</span>'}</td>
+      <td class="muted">${fmt(b.created_at)}</td>
+      <td class="actions"><button class="btn plain sm" data-del-bc="${b.id}">حذف</button></td>
+    </tr>`), 'لم يُرسل أي بث بعد');
+}
+$('bcForm').onsubmit = async (e) => {
+  e.preventDefault();
+  const { data: { user } } = await db.auth.getUser();
+  await run(db.from('chat_broadcasts').insert({
+    title: $('bcTitle').value.trim(), body: $('bcBody').value.trim(),
+    room_id: $('bcTarget').value || null, created_by: user.id,
+  }), 'تم إرسال البث');
+  $('bcTitle').value = ''; $('bcBody').value = '';
+  loadBroadcasts();
+};
+$('broadcasts').onclick = async (e) => {
+  const id = e.target.dataset.delBc; if (!id) return;
+  if (!confirm('حذف هذا البث؟')) return;
+  await run(db.from('chat_broadcasts').delete().eq('id', id), 'تم الحذف');
+  loadBroadcasts();
+};
+</script>
+</body>
+</html>

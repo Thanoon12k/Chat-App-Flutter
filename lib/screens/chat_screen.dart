@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show PostgrestException;
 
 import '../core/theme.dart';
 import '../data/models.dart';
@@ -27,8 +28,16 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    Repo.i.openChatId = widget.chat.id;
     Repo.i.markRead(widget.chat.id);
     Repo.i.memberIds(widget.chat.id).then(_loadPeople);
+  }
+
+  @override
+  void dispose() {
+    if (Repo.i.openChatId == widget.chat.id) Repo.i.openChatId = null;
+    _text.dispose();
+    super.dispose();
   }
 
   Future<void> _loadPeople(Iterable<String> ids) async {
@@ -54,7 +63,13 @@ class _ChatScreenState extends State<ChatScreen> {
       await Repo.i.send(widget.chat.id, text: text, image: image);
     } catch (e) {
       if (image == null) _text.text = text;
-      if (mounted) toast(context, 'لم يتم الإرسال، حاول مجدداً');
+      if (mounted) {
+        toast(
+            context,
+            e is PostgrestException && e.code == '42501'
+                ? 'حسابك موقوف ولا يمكنه الإرسال'
+                : 'لم يتم الإرسال، حاول مجدداً');
+      }
     } finally {
       if (mounted) setState(() => _sending = false);
     }

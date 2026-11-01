@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show RealtimeChannel;
 
 import '../data/models.dart';
 import '../data/repo.dart';
 import '../widgets/common.dart';
+import 'broadcasts_screen.dart';
 import 'chat_screen.dart';
 import 'people_screen.dart';
 import 'profile_screen.dart';
@@ -25,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Profile? _me;
   bool _failed = false;
   RealtimeChannel? _channel;
+  RealtimeChannel? _broadcasts;
   Timer? _debounce;
 
   @override
@@ -33,17 +35,76 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     _load();
     Repo.i.myProfile().then((p) => mounted ? setState(() => _me = p) : null);
-    _channel = Repo.i.onAnyMessage(() {
+    _channel = Repo.i.onAnyMessage((m) {
       _debounce?.cancel();
       _debounce = Timer(const Duration(milliseconds: 400), _load);
+      _alertMessage(m);
     });
+    _broadcasts = Repo.i.onBroadcast(_showBroadcast);
   }
+
+  /// A message reached one of my chats while I'm elsewhere: show who sent it
+  /// and where, with a shortcut to open that chat.
+  Future<void> _alertMessage(Message m) async {
+    if (m.senderId == Repo.i.myId || m.conversationId == Repo.i.openChatId) {
+      return;
+    }
+    final sender = await Repo.i.profile(m.senderId);
+    var chat = _chats?.where((c) => c.id == m.conversationId).firstOrNull;
+    if (chat == null) {
+      await _load();
+      chat = _chats?.where((c) => c.id == m.conversationId).firstOrNull;
+    }
+    if (!mounted || chat == null || m.conversationId == Repo.i.openChatId) {
+      return;
+    }
+    final who = sender?.name ?? '';
+    final where = chat.isRoom ? '$who في ${chat.title}' : who;
+    final body = m.body?.trim() ?? '';
+    final text = body.isEmpty ? '📷 صورة' : body;
+    final target = chat;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Text('$where: $text',
+            maxLines: 2, overflow: TextOverflow.ellipsis),
+        action: SnackBarAction(label: 'فتح', onPressed: () => _open(target)),
+      ));
+  }
+
+  void _showBroadcast(Broadcast b) {
+    if (!mounted) return;
+    showDialog<void>(
+      context: context,
+      builder: (c) => AlertDialog(
+        icon: const Icon(Icons.campaign_rounded),
+        title: Text(b.title),
+        content: SingleChildScrollView(child: Text(b.body)),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(c);
+              _openBroadcasts();
+            },
+            child: const Text('كل الإعلانات'),
+          ),
+          FilledButton(
+              onPressed: () => Navigator.pop(c), child: const Text('حسناً')),
+        ],
+      ),
+    );
+  }
+
+  void _openBroadcasts() => Navigator.push(context,
+      MaterialPageRoute(builder: (_) => const BroadcastsScreen()));
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _debounce?.cancel();
     if (_channel != null) Repo.i.unsubscribe(_channel!);
+    if (_broadcasts != null) Repo.i.unsubscribe(_broadcasts!);
     super.dispose();
   }
 
@@ -138,6 +199,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         leadingWidth: 60,
         title: const Text('المحادثات'),
         actions: [
+          IconButton(
+            tooltip: 'الإعلانات',
+            onPressed: _openBroadcasts,
+            icon: const Icon(Icons.campaign_outlined),
+          ),
           Padding(
             padding: const EdgeInsetsDirectional.only(end: 12),
             child: InkWell(

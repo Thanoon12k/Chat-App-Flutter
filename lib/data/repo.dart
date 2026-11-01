@@ -218,14 +218,40 @@ class Repo {
   Future<void> deleteMessage(int id) =>
       _db.from('chat_messages').delete().eq('id', id);
 
-  /// Fires whenever a message lands in any chat I belong to.
-  RealtimeChannel onAnyMessage(void Function() cb) => _db
+  /// The chat currently on screen, so new-message alerts skip it.
+  String? openChatId;
+
+  /// Fires whenever a message lands in any chat I belong to (RLS filters
+  /// realtime to members, so every member of a room gets every message).
+  RealtimeChannel onAnyMessage(void Function(Message m) cb) => _db
       .channel('home-${DateTime.now().microsecondsSinceEpoch}')
       .onPostgresChanges(
         event: PostgresChangeEvent.insert,
         schema: 'public',
         table: 'chat_messages',
-        callback: (_) => cb(),
+        callback: (p) => cb(Message.fromJson(p.newRecord)),
+      )
+      .subscribe();
+
+  // ---------- broadcasts ----------
+  Future<List<Broadcast>> broadcasts() async {
+    final rows = await _db
+        .from('chat_broadcasts')
+        .select(
+            'id, title, body, room_id, created_at, room:chat_conversations(name)')
+        .order('created_at', ascending: false)
+        .limit(100);
+    return rows.map(Broadcast.fromJson).toList();
+  }
+
+  /// Fires when a manager broadcasts to everyone or to a room I'm in.
+  RealtimeChannel onBroadcast(void Function(Broadcast b) cb) => _db
+      .channel('broadcasts-${DateTime.now().microsecondsSinceEpoch}')
+      .onPostgresChanges(
+        event: PostgresChangeEvent.insert,
+        schema: 'public',
+        table: 'chat_broadcasts',
+        callback: (p) => cb(Broadcast.fromJson(p.newRecord)),
       )
       .subscribe();
 
