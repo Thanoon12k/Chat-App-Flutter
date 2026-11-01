@@ -53,9 +53,8 @@ RPCs: `chat_my_conversations`, `chat_rooms_directory`, `chat_create_room`, `chat
 - **Messages**: browse by conversation, search text, delete
 - **Broadcasts**: send an announcement to everyone or to one room, delete old ones
 
-**Live:** https://thanoon12k.github.io/Chat-App-Flutter/ — deployed by
-`.github/workflows/admin-pages.yml` on every push to `main` that touches `admin/`
-(one-time setup: repo Settings → Pages → Source: **GitHub Actions**).
+**Live:** https://iraqchatapp.pythonanywhere.com/ — publish or update it with
+`scripts/deploy_admin.sh` (needs the PythonAnywhere API token in `$iraqchatapp_PA_TOKEN`).
 
 Or run it locally:
 
@@ -69,7 +68,7 @@ Only accounts listed in `chat_admins` see data; everyone else is signed out. Add
 insert into public.chat_admins (user_id) select id from auth.users where email = 'someone@example.com';
 ```
 
-For Google sign-in on the dashboard, add its URL (`https://thanoon12k.github.io/Chat-App-Flutter/` and/or `http://localhost:8080/`) to
+For Google sign-in on the dashboard, add its URL (`https://iraqchatapp.pythonanywhere.com/` and/or `http://localhost:8080/`) to
 Supabase Auth → URL Configuration → Redirect URLs.
 
 ## Run
