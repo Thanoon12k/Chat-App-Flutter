@@ -19,13 +19,18 @@ class AppConfig {
   static const mediaBucket = 'chat-media';
 
   /// Firebase (push notifications). Public values from Firebase console →
-  /// Project settings → Your apps → Android app. Empty = push turned off.
+  /// Project settings → Your apps → Android app (project chat-app-9d26a).
+  /// Empty = push turned off.
   static const firebaseApiKey =
-      String.fromEnvironment('FIREBASE_API_KEY', defaultValue: '');
+      String.fromEnvironment('FIREBASE_API_KEY',
+          defaultValue: 'AIzaSyAQpi8YjEu4CNV3yEz8IlxwIXhQH0cyyKI');
   static const firebaseAppId =
-      String.fromEnvironment('FIREBASE_APP_ID', defaultValue: '');
+      String.fromEnvironment('FIREBASE_APP_ID',
+          defaultValue: '1:558553765590:android:370429193735f958355b77');
   static const firebaseSenderId =
-      String.fromEnvironment('FIREBASE_SENDER_ID', defaultValue: '');
+      String.fromEnvironment('FIREBASE_SENDER_ID',
+          defaultValue: '558553765590');
   static const firebaseProjectId =
-      String.fromEnvironment('FIREBASE_PROJECT_ID', defaultValue: '');
+      String.fromEnvironment('FIREBASE_PROJECT_ID',
+          defaultValue: 'chat-app-9d26a');
 }
