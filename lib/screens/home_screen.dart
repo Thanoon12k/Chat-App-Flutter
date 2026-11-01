@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' show RealtimeChannel;
 
+import '../core/push.dart';
 import '../data/models.dart';
 import '../data/repo.dart';
 import '../widgets/common.dart';
@@ -41,12 +42,29 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       _alertMessage(m);
     });
     _broadcasts = Repo.i.onBroadcast(_showBroadcast);
+    Push.register(_openFromNotification);
+  }
+
+  /// A tapped phone notification: open that chat, or the announcements.
+  Future<void> _openFromNotification(String? conversationId) async {
+    if (!mounted) return;
+    if (conversationId == null) {
+      _openBroadcasts();
+      return;
+    }
+    if (conversationId == Repo.i.openChatId) return;
+    await _load();
+    final chat = _chats?.where((c) => c.id == conversationId).firstOrNull;
+    if (chat != null && mounted) _open(chat);
   }
 
   /// A message reached one of my chats while I'm elsewhere: show who sent it
   /// and where, with a shortcut to open that chat.
   Future<void> _alertMessage(Message m) async {
-    if (m.senderId == Repo.i.myId || m.conversationId == Repo.i.openChatId) {
+    // With push on, the phone notification covers this.
+    if (Push.ready ||
+        m.senderId == Repo.i.myId ||
+        m.conversationId == Repo.i.openChatId) {
       return;
     }
     final sender = await Repo.i.profile(m.senderId);
