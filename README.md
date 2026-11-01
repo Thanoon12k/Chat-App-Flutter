@@ -54,7 +54,7 @@ RPCs: `chat_my_conversations`, `chat_rooms_directory`, `chat_create_room`, `chat
 - **Broadcasts**: send an announcement to everyone or to one room, delete old ones
 
 **Live:** https://iraqchatapp.pythonanywhere.com/ — publish or update it with
-`scripts/deploy_admin.sh` (needs the PythonAnywhere API token in `$iraqchatapp_PA_TOKEN`).
+`scripts/deploy_admin.sh` (needs the PythonAnywhere API token in `$iraqchatapp_api_token`).
 
 Or run it locally:
 

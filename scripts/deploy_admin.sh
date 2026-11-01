@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 # Publishes admin/index.html to PythonAnywhere as https://<user>.pythonanywhere.com/
-# Needs an API token (PythonAnywhere → Account → API token) in $iraqchatapp_PA_TOKEN.
+# Needs an API token (PythonAnywhere → Account → API token) in
+# $iraqchatapp_api_token (or $iraqchatapp_PA_TOKEN).
 #   scripts/deploy_admin.sh            # user iraqchatapp
 #   PA_USER=other scripts/deploy_admin.sh
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
 PA_USER="${PA_USER:-iraqchatapp}"
-TOKEN_VAR="${PA_USER}_PA_TOKEN"
-TOKEN="${!TOKEN_VAR:-}"
+TOKEN_VAR="${PA_USER}_api_token"
+ALT_VAR="${PA_USER}_PA_TOKEN"
+TOKEN="${!TOKEN_VAR:-${!ALT_VAR:-}}"
 [ -n "$TOKEN" ] || { echo "Set \$$TOKEN_VAR to the PythonAnywhere API token"; exit 1; }
 HOST="${PA_HOST:-www.pythonanywhere.com}"
 API="https://$HOST/api/v0/user/$PA_USER"
