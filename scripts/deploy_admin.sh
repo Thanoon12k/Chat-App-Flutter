@@ -27,8 +27,7 @@ upload() { # local remote
 upload admin/index.html "/home/$PA_USER/admin/index.html"
 
 # 2. Web app (created once).
-code=$(curl -s -o /dev/null -w '%{http_code}' "${auth[@]}" "$API/webapps/$DOMAIN/")
-if [ "$code" = 404 ]; then
+if ! curl -sS --fail-with-body "${auth[@]}" "$API/webapps/" | grep -q "\"$DOMAIN\""; then
   curl -sS --fail-with-body "${auth[@]}" -X POST "$API/webapps/" \
     -d "domain_name=$DOMAIN" -d "python_version=python310" > /dev/null
   echo "created web app $DOMAIN"
