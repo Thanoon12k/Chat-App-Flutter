@@ -1,52 +1,54 @@
 name: chatapp
-description: A new Flutter project.
+description: دردشة — تطبيق محادثات بسيط مبني على Supabase.
 publish_to: 'none'
-version: 1.0.0+1
+version: 2.0.2+4
 
 environment:
-  sdk: ">=2.16.2 <3.0.0"
+  sdk: ">=3.5.0 <4.0.0"
+
 dependencies:
   flutter:
     sdk: flutter
-   
-  cupertino_icons: ^1.0.2
-  image_picker : ^0.8.1
-  intl: ^0.17.0
-  http: ^0.13.5
-  flutter_launcher_icons: ^0.11.0
-  dio: ^5.0.0
-  emoji_picker_flutter: ^1.0.8
-  get: ^4.6.5
-  provider: ^6.0.5
-  shared_preferences: ^2.0.17
-  cloud_firestore: ^4.4.3
-  firebase_database: ^10.0.14
-  firebase_core: ^2.7.0
-  google_fonts: ^4.0.3
-  bubble: ^1.2.1
-  path_provider: ^2.0.11
-  url_launcher: ^6.1.8
-  url_launcher_web: ^2.0.14
-  firebase_messaging: ^14.2.6
-  flutter_localizations: 
+  flutter_localizations:
     sdk: flutter
-    version: ^0.0.0
- 
-  
+  supabase_flutter: ^2.8.0
+  image_picker: ^1.1.2
+  intl: any
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^1.0.0
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.1
+
 flutter:
   uses-material-design: true
   assets:
-         - assets/
+    - assets/icon/
+    - assets/images/
   fonts:
-  - family: Cairo
-    fonts:
-      - asset: assets/fonts/cairo/Cairo-Black.ttf
-  - family: arabic
-    fonts:
-      - asset: assets/fonts/arabtype.ttf
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/cairo/Cairo-Light.ttf
+          weight: 300
+        - asset: assets/fonts/cairo/Cairo-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/cairo/Cairo-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/cairo/Cairo-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/cairo/Cairo-Bold.ttf
+          weight: 700
 
- 
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/icon/icon.png
+  adaptive_icon_background: assets/icon/icon.png
+  adaptive_icon_foreground: assets/icon/icon_foreground.png
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: assets/icon/icon.png
+    background_color: "#E4D3D3"
+    theme_color: "#F44336"
