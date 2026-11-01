@@ -45,7 +45,24 @@ class Repo {
     return (m?['avatar_url'] ?? m?['picture']) as String?;
   }
 
-  Future<void> signOut() => _db.auth.signOut();
+  Future<void> signOut() async {
+    final t = pushToken;
+    if (t != null) {
+      try {
+        await _db.from('chat_push_tokens').delete().eq('token', t);
+      } catch (_) {}
+    }
+    await _db.auth.signOut();
+  }
+
+  // ---------- push ----------
+  /// This device's FCM token, once push is set up.
+  String? pushToken;
+
+  Future<void> savePushToken(String token) async {
+    pushToken = token;
+    await _db.rpc('chat_save_push_token', params: {'p_token': token});
+  }
 
   // ---------- profiles ----------
   final Map<String, Profile> _cache = {};

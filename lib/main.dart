@@ -4,6 +4,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/config.dart';
+import 'core/push.dart';
 import 'core/theme.dart';
 import 'data/models.dart';
 import 'data/repo.dart';
@@ -19,6 +20,7 @@ Future<void> main() async {
     url: AppConfig.supabaseUrl,
     publishableKey: AppConfig.supabaseKey,
   );
+  await Push.init();
   runApp(const ChatApp());
 }
 

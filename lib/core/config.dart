@@ -17,4 +17,15 @@ class AppConfig {
   /// Configuration → Redirect URLs).
   static const authRedirect = 'com.thanoon12k.chatapp://login-callback';
   static const mediaBucket = 'chat-media';
+
+  /// Firebase (push notifications). Public values from Firebase console →
+  /// Project settings → Your apps → Android app. Empty = push turned off.
+  static const firebaseApiKey =
+      String.fromEnvironment('FIREBASE_API_KEY', defaultValue: '');
+  static const firebaseAppId =
+      String.fromEnvironment('FIREBASE_APP_ID', defaultValue: '');
+  static const firebaseSenderId =
+      String.fromEnvironment('FIREBASE_SENDER_ID', defaultValue: '');
+  static const firebaseProjectId =
+      String.fromEnvironment('FIREBASE_PROJECT_ID', defaultValue: '');
 }

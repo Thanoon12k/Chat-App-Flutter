@@ -12,6 +12,22 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        // Needed by flutter_local_notifications.
+        isCoreLibraryDesugaringEnabled = true
+    }
+
+    // Release builds use android/app/upload.jks when it exists (kept out of git),
+    // so every published version is signed with the same key and installs as an update.
+    val uploadKeystore = file("upload.jks")
+    signingConfigs {
+        if (uploadKeystore.exists()) {
+            create("upload") {
+                storeFile = uploadKeystore
+                storePassword = System.getenv("UPLOAD_STORE_PASSWORD") ?: "chatapp-upload-2026"
+                keyAlias = "upload"
+                keyPassword = System.getenv("UPLOAD_STORE_PASSWORD") ?: "chatapp-upload-2026"
+            }
+        }
     }
 
     defaultConfig {
@@ -31,9 +47,8 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            // Falls back to the debug key for local `flutter run --release`.
+            signingConfig = signingConfigs.findByName("upload") ?: signingConfigs.getByName("debug")
         }
     }
 }
@@ -46,4 +61,8 @@ kotlin {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
