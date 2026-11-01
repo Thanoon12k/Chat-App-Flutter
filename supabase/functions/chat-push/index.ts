@@ -14,6 +14,14 @@ Deno.serve(async (req) => {
   if (!sa) return Response.json({ skipped: "FCM_SERVICE_ACCOUNT not set" });
 
   const { type, id } = await req.json().catch(() => ({}));
+  if (type === "check") { // health check: can we get a Google token? Sends nothing.
+    try {
+      await googleAccessToken(JSON.parse(sa));
+      return Response.json({ ok: true, project: JSON.parse(sa).project_id });
+    } catch (e) {
+      return Response.json({ ok: false, error: String(e).slice(0, 300) }, { status: 500 });
+    }
+  }
   if (!["chat_messages", "chat_broadcasts"].includes(type) || !Number.isInteger(id)) {
     return new Response("bad request", { status: 400 });
   }
