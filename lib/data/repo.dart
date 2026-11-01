@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../core/config.dart';
+import '../services/push_service.dart';
 import 'models.dart';
 
 /// Every call to Supabase lives here, so screens only deal with models.
@@ -45,7 +46,11 @@ class Repo {
     return (m?['avatar_url'] ?? m?['picture']) as String?;
   }
 
-  Future<void> signOut() => _db.auth.signOut();
+  Future<void> signOut() async {
+    await PushService.i.detach();
+    await _db.auth.signOut();
+    _cache.clear();
+  }
 
   // ---------- profiles ----------
   final Map<String, Profile> _cache = {};
@@ -54,8 +59,11 @@ class Repo {
 
   Future<Profile?> profile(String id, {bool fresh = false}) async {
     if (!fresh && _cache.containsKey(id)) return _cache[id];
-    final row =
-        await _db.from('chat_profiles').select().eq('id', id).maybeSingle();
+    final row = await _db
+        .from('chat_profiles')
+        .select()
+        .eq('id', id)
+        .maybeSingle();
     if (row == null) return null;
     return _cache[id] = Profile.fromJson(row);
   }
@@ -74,7 +82,7 @@ class Repo {
     }
     return {
       for (final id in ids)
-        if (_cache[id] != null) id: _cache[id]!
+        if (_cache[id] != null) id: _cache[id]!,
     };
   }
 
@@ -86,11 +94,12 @@ class Repo {
   }
 
   /// Creates or updates my profile. Throws [NameTakenException] on duplicates.
-  Future<void> saveProfile(
-      {required String name,
-      String bio = '',
-      XFile? avatar,
-      String? avatarUrl}) async {
+  Future<void> saveProfile({
+    required String name,
+    String bio = '',
+    XFile? avatar,
+    String? avatarUrl,
+  }) async {
     if (avatar != null) avatarUrl = await uploadImage(avatar, 'avatar');
     try {
       await _db.from('chat_profiles').upsert({
@@ -119,9 +128,10 @@ class Repo {
 
   Future<void> setStar(String profileId, bool on) async {
     if (on) {
-      await _db
-          .from('chat_profile_stars')
-          .upsert({'profile_id': profileId, 'giver_id': myId});
+      await _db.from('chat_profile_stars').upsert({
+        'profile_id': profileId,
+        'giver_id': myId,
+      });
     } else {
       await _db
           .from('chat_profile_stars')
@@ -136,7 +146,8 @@ class Repo {
     final rows = await _db
         .from('chat_profile_comments')
         .select(
-            'id, body, created_at, author:chat_profiles!chat_profile_comments_author_id_fkey(*)')
+          'id, body, created_at, author:chat_profiles!chat_profile_comments_author_id_fkey(*)',
+        )
         .eq('profile_id', profileId)
         .order('created_at', ascending: false)
         .limit(100);
@@ -144,8 +155,11 @@ class Repo {
   }
 
   Future<void> addComment(String profileId, String body) =>
-      _db.from('chat_profile_comments').insert(
-          {'profile_id': profileId, 'author_id': myId, 'body': body.trim()});
+      _db.from('chat_profile_comments').insert({
+        'profile_id': profileId,
+        'author_id': myId,
+        'body': body.trim(),
+      });
 
   Future<void> deleteComment(int id) =>
       _db.from('chat_profile_comments').delete().eq('id', id);
@@ -162,17 +176,24 @@ class Repo {
   }
 
   Future<String> createRoom(
-          String name, String description, String password) async =>
-      await _db.rpc('chat_create_room', params: {
-        'p_name': name.trim(),
-        'p_description': description.trim(),
-        'p_password': password.isEmpty ? null : password,
-      }) as String;
+    String name,
+    String description,
+    String password,
+  ) async => await _db.rpc(
+    'chat_create_room',
+    params: {
+      'p_name': name.trim(),
+      'p_description': description.trim(),
+      'p_password': password.isEmpty ? null : password,
+    },
+  ) as String;
 
   /// False when the password is wrong.
   Future<bool> joinRoom(String roomId, [String? password]) async =>
-      await _db.rpc('chat_join_room',
-          params: {'p_room': roomId, 'p_password': password}) as bool;
+      await _db.rpc(
+        'chat_join_room',
+        params: {'p_room': roomId, 'p_password': password},
+      ) as bool;
 
   Future<void> leave(String conversationId) => _db
       .from('chat_members')
@@ -236,7 +257,9 @@ class Repo {
     final bytes = await file.readAsBytes();
     final ext = _ext(file);
     final path = '$myId/$prefix-${DateTime.now().millisecondsSinceEpoch}.$ext';
-    await _db.storage.from(AppConfig.mediaBucket).uploadBinary(
+    await _db.storage
+        .from(AppConfig.mediaBucket)
+        .uploadBinary(
           path,
           bytes,
           fileOptions: FileOptions(contentType: _mime(ext), upsert: true),

@@ -1,0 +1,9 @@
+project_id = "chat-app"
+
+# Each endpoint performs explicit authentication in its handler.
+[functions.chat-push]
+verify_jwt = false
+[functions.chat-vip-sync]
+verify_jwt = false
+[functions.chat-vip-webhook]
+verify_jwt = false

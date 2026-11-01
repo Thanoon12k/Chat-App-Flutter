@@ -7,6 +7,8 @@ import 'core/config.dart';
 import 'core/theme.dart';
 import 'data/repo.dart';
 import 'screens/auth_screen.dart';
+import 'screens/phone_gate.dart';
+import 'services/push_service.dart';
 import 'screens/home_screen.dart';
 import 'screens/profile_setup_screen.dart';
 
@@ -17,6 +19,7 @@ Future<void> main() async {
     url: AppConfig.supabaseUrl,
     publishableKey: AppConfig.supabaseKey,
   );
+  await PushService.i.initialize();
   runApp(const ChatApp());
 }
 
@@ -49,7 +52,7 @@ class AuthGate extends StatelessWidget {
       builder: (context, _) {
         final user = auth.currentUser;
         if (user == null) return const AuthScreen();
-        return _ProfileGate(key: ValueKey(user.id));
+        return PhoneGate(key: ValueKey(user.id), child: const _ProfileGate());
       },
     );
   }
@@ -84,7 +87,8 @@ class _ProfileGateState extends State<_ProfileGate> {
         }
         if (!snap.hasData) {
           return const Scaffold(
-              body: Center(child: CircularProgressIndicator()));
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
         if (snap.data!) return const HomeScreen();
         return ProfileSetupScreen(

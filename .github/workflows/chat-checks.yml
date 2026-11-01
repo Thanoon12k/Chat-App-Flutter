@@ -1,0 +1,34 @@
+name: Chat checks
+on:
+  push:
+    branches: ['codex/chat-phone-push-vip']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  flutter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze --no-fatal-infos
+      - run: flutter test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: resolved-pubspec-lock
+          path: pubspec.lock
+  functions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno check supabase/functions/chat-push/index.ts supabase/functions/chat-vip-sync/index.ts supabase/functions/chat-vip-webhook/index.ts
+      - run: deno test --allow-env supabase/functions/_shared/vip_test.ts

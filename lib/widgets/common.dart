@@ -10,8 +10,13 @@ class Avatar extends StatelessWidget {
   final double size;
   final IconData? icon;
 
-  const Avatar(
-      {super.key, required this.name, this.url, this.size = 48, this.icon});
+  const Avatar({
+    super.key,
+    required this.name,
+    this.url,
+    this.size = 48,
+    this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +42,14 @@ class Avatar extends StatelessWidget {
       foregroundImage: url != null ? NetworkImage(url!) : null,
       child: icon != null
           ? Icon(icon, size: size * 0.5, color: scheme.onPrimaryContainer)
-          : Text(initial,
+          : Text(
+              initial,
               style: TextStyle(
-                  fontSize: size * 0.4,
-                  fontWeight: FontWeight.w700,
-                  color: scheme.onPrimaryContainer)),
+                fontSize: size * 0.4,
+                fontWeight: FontWeight.w700,
+                color: scheme.onPrimaryContainer,
+              ),
+            ),
     );
   }
 }
@@ -53,12 +61,13 @@ class EmptyState extends StatelessWidget {
   final String? subtitle;
   final Widget? action;
 
-  const EmptyState(
-      {super.key,
-      required this.icon,
-      required this.title,
-      this.subtitle,
-      this.action});
+  const EmptyState({
+    super.key,
+    required this.icon,
+    required this.title,
+    this.subtitle,
+    this.action,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -72,22 +81,25 @@ class EmptyState extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                  color: scheme.primaryContainer.withValues(alpha: 0.5),
-                  shape: BoxShape.circle),
+                color: scheme.primaryContainer.withValues(alpha: 0.5),
+                shape: BoxShape.circle,
+              ),
               child: Icon(icon, size: 48, color: scheme.primary),
             ),
             const SizedBox(height: 20),
-            Text(title,
-                textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w700)),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w700),
+            ),
             if (subtitle != null) ...[
               const SizedBox(height: 6),
-              Text(subtitle!,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: scheme.onSurfaceVariant)),
+              Text(
+                subtitle!,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: scheme.onSurfaceVariant),
+              ),
             ],
             if (action != null) ...[const SizedBox(height: 20), action!],
           ],
@@ -116,6 +128,14 @@ void toast(BuildContext context, String msg) {
 
 /// Human message for any error thrown by Supabase or the network.
 String errorText(Object e) {
+  if (e is PostgrestException) {
+    if (e.message.contains('ROOM_LIMIT_REACHED'))
+      return 'وصلت إلى حد إنشاء الغرف في خطتك. راجع اشتراك VIP.';
+    if (e.message.contains('PHONE_REQUIRED'))
+      return 'يجب تأكيد رقم الهاتف أولاً';
+    if (e.message.contains('MESSAGE_RATE_LIMIT'))
+      return 'انتظر ثانيتين قبل إرسال رسالة أخرى';
+  }
   if (e is AuthException) {
     final m = e.message.toLowerCase();
     if (m.contains('invalid login')) return 'البريد أو كلمة المرور غير صحيحة';
@@ -139,19 +159,22 @@ Future<XFile?> pickImage(BuildContext context) async {
     context: context,
     showDragHandle: true,
     builder: (c) => SafeArea(
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        ListTile(
-          leading: const Icon(Icons.photo_library_outlined),
-          title: const Text('من المعرض'),
-          onTap: () => Navigator.pop(c, ImageSource.gallery),
-        ),
-        ListTile(
-          leading: const Icon(Icons.photo_camera_outlined),
-          title: const Text('التقاط صورة'),
-          onTap: () => Navigator.pop(c, ImageSource.camera),
-        ),
-        const SizedBox(height: 8),
-      ]),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.photo_library_outlined),
+            title: const Text('من المعرض'),
+            onTap: () => Navigator.pop(c, ImageSource.gallery),
+          ),
+          ListTile(
+            leading: const Icon(Icons.photo_camera_outlined),
+            title: const Text('التقاط صورة'),
+            onTap: () => Navigator.pop(c, ImageSource.camera),
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
     ),
   );
   if (source == null) return null;

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../core/theme.dart';
+import '../services/push_service.dart';
+
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../data/models.dart';
 import '../data/repo.dart';
 import '../widgets/common.dart';
@@ -21,12 +25,47 @@ class _ChatScreenState extends State<ChatScreen> {
   Map<String, Profile> _people = {};
   bool _sending = false;
   int _lastSeenId = 0;
+  bool? _muted;
+  @override
+  void dispose() {
+    if (PushService.i.activeConversation == widget.chat.id)
+      PushService.i.activeConversation = null;
+    _text.dispose();
+    super.dispose();
+  }
+
+  Future<void> _toggleMute() async {
+    if (_muted == null) return;
+    try {
+      await Supabase.instance.client
+          .from('chat_notification_preferences')
+          .upsert({
+            'user_id': _me,
+            'conversation_id': widget.chat.id,
+            'muted': !_muted!,
+          });
+      if (mounted) setState(() => _muted = !_muted!);
+    } catch (_) {
+      if (mounted) toast(context, 'تعذر تغيير إعداد الإشعارات');
+    }
+  }
 
   String get _me => Repo.i.myId;
 
   @override
   void initState() {
     super.initState();
+    PushService.i.activeConversation = widget.chat.id;
+    Supabase.instance.client
+        .from('chat_notification_preferences')
+        .select('muted')
+        .eq('user_id', _me)
+        .eq('conversation_id', widget.chat.id)
+        .maybeSingle()
+        .then((row) {
+          if (mounted) setState(() => _muted = row?['muted'] as bool? ?? false);
+        })
+        .catchError((_) {});
     Repo.i.markRead(widget.chat.id);
     Repo.i.memberIds(widget.chat.id).then(_loadPeople);
   }
@@ -40,8 +79,9 @@ class _ChatScreenState extends State<ChatScreen> {
     if (msgs.isEmpty || msgs.first.id == _lastSeenId) return;
     _lastSeenId = msgs.first.id;
     Repo.i.markRead(widget.chat.id);
-    final unknown =
-        msgs.map((m) => m.senderId).where((id) => !_people.containsKey(id));
+    final unknown = msgs
+        .map((m) => m.senderId)
+        .where((id) => !_people.containsKey(id));
     if (unknown.isNotEmpty) _loadPeople(unknown.toSet());
   }
 
@@ -66,7 +106,9 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _openProfile(String id) => Navigator.push(
-      context, MaterialPageRoute(builder: (_) => ProfileScreen(userId: id)));
+    context,
+    MaterialPageRoute(builder: (_) => ProfileScreen(userId: id)),
+  );
 
   Future<void> _messageMenu(Message m) async {
     if (m.senderId != _me) return;
@@ -75,8 +117,10 @@ class _ChatScreenState extends State<ChatScreen> {
       showDragHandle: true,
       builder: (c) => SafeArea(
         child: ListTile(
-          leading: Icon(Icons.delete_outline_rounded,
-              color: Theme.of(c).colorScheme.error),
+          leading: Icon(
+            Icons.delete_outline_rounded,
+            color: Theme.of(c).colorScheme.error,
+          ),
           title: const Text('حذف الرسالة'),
           onTap: () => Navigator.pop(c, true),
         ),
@@ -122,100 +166,122 @@ class _ChatScreenState extends State<ChatScreen> {
     final chat = widget.chat;
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            tooltip: _muted == true ? 'تشغيل الإشعارات' : 'كتم الإشعارات',
+            onPressed: _muted == null ? null : _toggleMute,
+            icon: Icon(
+              _muted == true
+                  ? Icons.notifications_off_outlined
+                  : Icons.notifications_active_outlined,
+            ),
+          ),
+        ],
         titleSpacing: 0,
         title: InkWell(
           onTap: _info,
           borderRadius: BorderRadius.circular(12),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-            child: Row(children: [
-              Avatar(
-                name: chat.title,
-                url: chat.imageUrl,
-                size: 38,
-                icon: chat.isRoom && chat.imageUrl == null
-                    ? Icons.groups_rounded
-                    : null,
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(chat.title,
+            child: Row(
+              children: [
+                Avatar(
+                  name: chat.title,
+                  url: chat.imageUrl,
+                  size: 38,
+                  icon: chat.isRoom && chat.imageUrl == null
+                      ? Icons.groups_rounded
+                      : null,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        chat.title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.w700)),
-                    Text(
-                      chat.isRoom
-                          ? '${_people.length} أعضاء'
-                          : 'اضغط لعرض الملف الشخصي',
-                      style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        chat.isRoom
+                            ? '${_people.length} أعضاء'
+                            : 'اضغط لعرض الملف الشخصي',
+                        style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.normal,
-                          color:
-                              Theme.of(context).colorScheme.onSurfaceVariant),
-                    ),
-                  ],
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ]),
+              ],
+            ),
           ),
         ),
       ),
-      body: Column(children: [
-        Expanded(
-          child: StreamBuilder<List<Message>>(
-            stream: _stream,
-            builder: (context, snap) {
-              if (snap.hasError) {
-                return const EmptyState(
-                    icon: Icons.wifi_off_rounded, title: 'تعذر تحميل الرسائل');
-              }
-              if (!snap.hasData) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              final msgs = snap.data!;
-              _onMessages(msgs);
-              if (msgs.isEmpty) {
-                return const EmptyState(
-                  icon: Icons.waving_hand_rounded,
-                  title: 'لا توجد رسائل',
-                  subtitle: 'ابدأ المحادثة بكلمة لطيفة',
-                );
-              }
-              return ListView.builder(
-                reverse: true, // newest at the bottom, no manual scrolling
-                padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
-                itemCount: msgs.length,
-                itemBuilder: (_, i) {
-                  final m = msgs[i];
-                  final older = i + 1 < msgs.length ? msgs[i + 1] : null;
-                  final firstOfGroup = older == null ||
-                      older.senderId != m.senderId ||
-                      m.createdAt.difference(older.createdAt).inMinutes > 5;
-                  return _Bubble(
-                    message: m,
-                    mine: m.senderId == _me,
-                    sender: _people[m.senderId],
-                    showSender: chat.isRoom && firstOfGroup,
-                    isRoom: chat.isRoom,
-                    onAvatarTap: () => _openProfile(m.senderId),
-                    onLongPress: () => _messageMenu(m),
+      body: Column(
+        children: [
+          Expanded(
+            child: StreamBuilder<List<Message>>(
+              stream: _stream,
+              builder: (context, snap) {
+                if (snap.hasError) {
+                  return const EmptyState(
+                    icon: Icons.wifi_off_rounded,
+                    title: 'تعذر تحميل الرسائل',
                   );
-                },
-              );
-            },
+                }
+                if (!snap.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final msgs = snap.data!;
+                _onMessages(msgs);
+                if (msgs.isEmpty) {
+                  return const EmptyState(
+                    icon: Icons.waving_hand_rounded,
+                    title: 'لا توجد رسائل',
+                    subtitle: 'ابدأ المحادثة بكلمة لطيفة',
+                  );
+                }
+                return ListView.builder(
+                  reverse: true, // newest at the bottom, no manual scrolling
+                  padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+                  itemCount: msgs.length,
+                  itemBuilder: (_, i) {
+                    final m = msgs[i];
+                    final older = i + 1 < msgs.length ? msgs[i + 1] : null;
+                    final firstOfGroup =
+                        older == null ||
+                        older.senderId != m.senderId ||
+                        m.createdAt.difference(older.createdAt).inMinutes > 5;
+                    return _Bubble(
+                      message: m,
+                      mine: m.senderId == _me,
+                      sender: _people[m.senderId],
+                      showSender: chat.isRoom && firstOfGroup,
+                      isRoom: chat.isRoom,
+                      onAvatarTap: () => _openProfile(m.senderId),
+                      onLongPress: () => _messageMenu(m),
+                    );
+                  },
+                );
+              },
+            ),
           ),
-        ),
-        _Composer(
-          controller: _text,
-          sending: _sending,
-          onSend: () => _send(),
-          onImage: _sendImage,
-        ),
-      ]),
+          _Composer(
+            controller: _text,
+            sending: _sending,
+            onSend: () => _send(),
+            onImage: _sendImage,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -270,12 +336,19 @@ class _Bubble extends StatelessWidget {
             if (showSender && !mine && sender != null)
               Padding(
                 padding: EdgeInsets.fromLTRB(
-                    message.imageUrl != null ? 10 : 0, 2, 0, 2),
-                child: Text(sender!.name,
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: scheme.primary)),
+                  message.imageUrl != null ? 10 : 0,
+                  2,
+                  0,
+                  2,
+                ),
+                child: Text(
+                  sender!.name,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: scheme.primary,
+                  ),
+                ),
               ),
             if (message.imageUrl != null)
               GestureDetector(
@@ -292,11 +365,13 @@ class _Bubble extends StatelessWidget {
                             height: 200,
                             width: maxW,
                             child: const Center(
-                                child: CircularProgressIndicator())),
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
                     errorBuilder: (_, __, ___) => const SizedBox(
-                        height: 120,
-                        child:
-                            Center(child: Icon(Icons.broken_image_outlined))),
+                      height: 120,
+                      child: Center(child: Icon(Icons.broken_image_outlined)),
+                    ),
                   ),
                 ),
               ),
@@ -305,16 +380,22 @@ class _Bubble extends StatelessWidget {
                 padding: message.imageUrl != null
                     ? const EdgeInsets.fromLTRB(10, 6, 10, 0)
                     : EdgeInsets.zero,
-                child: Text(message.body!,
-                    style: TextStyle(color: fg, fontSize: 15, height: 1.4)),
+                child: Text(
+                  message.body!,
+                  style: TextStyle(color: fg, fontSize: 15, height: 1.4),
+                ),
               ),
             Padding(
               padding: message.imageUrl != null
                   ? const EdgeInsets.fromLTRB(10, 2, 10, 4)
                   : EdgeInsets.zero,
-              child: Text(clockTime(message.createdAt),
-                  style: TextStyle(
-                      color: fg.withValues(alpha: 0.65), fontSize: 11)),
+              child: Text(
+                clockTime(message.createdAt),
+                style: TextStyle(
+                  color: fg.withValues(alpha: 0.65),
+                  fontSize: 11,
+                ),
+              ),
             ),
           ],
         ),
@@ -324,8 +405,9 @@ class _Bubble extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: showSender ? 10 : 3),
       child: Row(
-        mainAxisAlignment:
-            mine ? MainAxisAlignment.start : MainAxisAlignment.end,
+        mainAxisAlignment: mine
+            ? MainAxisAlignment.start
+            : MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (!mine && isRoom) ...[
@@ -337,9 +419,10 @@ class _Bubble extends StatelessWidget {
                   ? GestureDetector(
                       onTap: onAvatarTap,
                       child: Avatar(
-                          name: sender?.name ?? '',
-                          url: sender?.avatarUrl,
-                          size: 32),
+                        name: sender?.name ?? '',
+                        url: sender?.avatarUrl,
+                        size: 32,
+                      ),
                     )
                   : null,
             ),
@@ -357,7 +440,9 @@ class _Bubble extends StatelessWidget {
         builder: (_) => Scaffold(
           backgroundColor: Colors.black,
           appBar: AppBar(
-              backgroundColor: Colors.black, foregroundColor: Colors.white),
+            backgroundColor: Colors.black,
+            foregroundColor: Colors.white,
+          ),
           body: Center(child: InteractiveViewer(child: Image.network(url))),
         ),
       ),
@@ -384,57 +469,69 @@ class _Composer extends StatelessWidget {
       top: false,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          IconButton.filled(
-            tooltip: 'إرسال صورة',
-            onPressed: sending ? null : onImage,
-            style: IconButton.styleFrom(
-                backgroundColor: Colors.black, foregroundColor: Colors.white),
-            icon: const Icon(Icons.image_rounded),
-          ),
-          const SizedBox(width: 6),
-          Expanded(
-            child: TextField(
-              controller: controller,
-              minLines: 1,
-              maxLines: 5,
-              textInputAction: TextInputAction.newline,
-              decoration: InputDecoration(
-                hintText: 'اكتب رسالة…',
-                border: OutlineInputBorder(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            IconButton.filled(
+              tooltip: 'إرسال صورة',
+              onPressed: sending ? null : onImage,
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+              ),
+              icon: const Icon(Icons.image_rounded),
+            ),
+            const SizedBox(width: 6),
+            Expanded(
+              child: TextField(
+                controller: controller,
+                minLines: 1,
+                maxLines: 5,
+                textInputAction: TextInputAction.newline,
+                decoration: InputDecoration(
+                  hintText: 'اكتب رسالة…',
+                  border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide.none),
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 10,
+                  ),
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: 6),
-          ValueListenableBuilder(
-            valueListenable: controller,
-            builder: (_, value, __) {
-              final can = value.text.trim().isNotEmpty && !sending;
-              return IconButton.filled(
-                tooltip: 'إرسال',
-                onPressed: can ? onSend : null,
-                style: IconButton.styleFrom(
+            const SizedBox(width: 6),
+            ValueListenableBuilder(
+              valueListenable: controller,
+              builder: (_, value, __) {
+                final can = value.text.trim().isNotEmpty && !sending;
+                return IconButton.filled(
+                  tooltip: 'إرسال',
+                  onPressed: can ? onSend : null,
+                  style: IconButton.styleFrom(
                     minimumSize: const Size(48, 48),
                     backgroundColor: Colors.black,
                     foregroundColor: Colors.white,
                     disabledBackgroundColor: Colors.black38,
-                    disabledForegroundColor: Colors.white70),
-                icon: sending
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2))
-                    // Arrow points "forward" in RTL
-                    : const Icon(Icons.send_rounded,
-                        textDirection: TextDirection.rtl),
-              );
-            },
-          ),
-        ]),
+                    disabledForegroundColor: Colors.white70,
+                  ),
+                  icon: sending
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      // Arrow points "forward" in RTL
+                      : const Icon(
+                          Icons.send_rounded,
+                          textDirection: TextDirection.rtl,
+                        ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -445,8 +542,11 @@ class _RoomInfoSheet extends StatelessWidget {
   final List<Profile> members;
   final void Function(String id) onOpenProfile;
 
-  const _RoomInfoSheet(
-      {required this.chat, required this.members, required this.onOpenProfile});
+  const _RoomInfoSheet({
+    required this.chat,
+    required this.members,
+    required this.onOpenProfile,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -459,24 +559,29 @@ class _RoomInfoSheet extends StatelessWidget {
         controller: scroll,
         children: [
           Center(
-              child: Avatar(
-                  name: chat.title,
-                  url: chat.imageUrl,
-                  size: 72,
-                  icon: Icons.groups_rounded)),
+            child: Avatar(
+              name: chat.title,
+              url: chat.imageUrl,
+              size: 72,
+              icon: Icons.groups_rounded,
+            ),
+          ),
           const SizedBox(height: 12),
-          Text(chat.title,
-              textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.w700)),
+          Text(
+            chat.title,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleLarge
+                ?.copyWith(fontWeight: FontWeight.w700),
+          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 20, 16, 4),
-            child: Text('الأعضاء (${members.length})',
-                style: TextStyle(
-                    color: scheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w600)),
+            child: Text(
+              'الأعضاء (${members.length})',
+              style: TextStyle(
+                color: scheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
           for (final p in members)
             ListTile(
