@@ -11,6 +11,7 @@ import 'people_screen.dart';
 import 'profile_screen.dart';
 import 'rooms_screen.dart';
 import 'vip_screen.dart';
+import 'admin_screen.dart';
 import '../services/push_service.dart';
 
 /// The one screen that matters: your conversations. Everything else is one
@@ -26,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   List<ChatSummary>? _chats;
   Profile? _me;
   bool _failed = false;
+  bool _admin = false;
   RealtimeChannel? _channel;
   Timer? _debounce;
   StreamSubscription<String>? _pushOpen;
@@ -58,6 +60,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    Supabase.instance.client
+        .rpc('chat_admin_status')
+        .then((v) {
+          if (mounted) setState(() => _admin = v == true);
+        })
+        .catchError((_) {});
     WidgetsBinding.instance.addObserver(this);
     _load();
     _pushOpen = PushService.i.opened.stream.listen(_openPush);
@@ -200,6 +208,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         leadingWidth: 60,
         title: const Text('المحادثات'),
         actions: [
+          if (_admin)
+            IconButton(
+              tooltip: 'إدارة التطبيق',
+              icon: const Icon(Icons.admin_panel_settings_outlined),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AdminScreen()),
+              ),
+            ),
           IconButton(
             tooltip: 'اشتراك VIP',
             icon: const Icon(Icons.workspace_premium_outlined),

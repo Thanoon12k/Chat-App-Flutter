@@ -59,7 +59,7 @@ class AuthGate extends StatelessWidget {
 }
 
 class _ProfileGate extends StatefulWidget {
-  const _ProfileGate({super.key});
+  const _ProfileGate();
 
   @override
   State<_ProfileGate> createState() => _ProfileGateState();
