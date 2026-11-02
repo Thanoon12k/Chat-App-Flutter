@@ -42,6 +42,7 @@ Deno.serve(async (req) => {
       }
       for (const msg of value.messages ?? []) {
         const text: string = msg.text?.body ?? msg.button?.text ?? "";
+        console.log("incoming", msg.from, msg.type);
         const code = text.replace(/[٠-٩]/g, (d) => String("٠١٢٣٤٥٦٧٨٩".indexOf(d))).match(/\b(\d{6})\b/)?.[1];
         if (!code || !msg.from) continue;
         const { data: status } = await db.rpc("chat_confirm_phone", { p_code: code, p_phone: `+${msg.from}` });
@@ -55,11 +56,12 @@ Deno.serve(async (req) => {
 async function reply(phoneNumberId: string | undefined, to: string, text: string) {
   const token = Deno.env.get("WHATSAPP_TOKEN");
   if (!token || !phoneNumberId) return;
-  await fetch(`https://graph.facebook.com/v21.0/${phoneNumberId}/messages`, {
+  const res = await fetch(`https://graph.facebook.com/v21.0/${phoneNumberId}/messages`, {
     method: "POST",
     headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
     body: JSON.stringify({ messaging_product: "whatsapp", to, type: "text", text: { body: text } }),
-  }).catch(() => {});
+  }).catch((e) => { console.log("reply error", String(e)); return null; });
+  if (res && !res.ok) console.log("reply failed", res.status, (await res.text()).slice(0, 300));
 }
 
 async function validSignature(raw: string, header: string | null, secret: string) {
