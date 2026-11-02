@@ -61,7 +61,10 @@ Deno.serve(async (req) => {
   let q = db.from("chat_push_tokens").select("token");
   if (userIds) q = q.in("user_id", userIds);
   const { data: tokens } = await q;
-  if (!tokens?.length) return Response.json({ sent: 0 });
+  if (!tokens?.length) {
+    console.log("push", type, id, "no registered phones for", userIds ? userIds.length + " recipient(s)" : "everyone");
+    return Response.json({ sent: 0 });
+  }
 
   const account = JSON.parse(sa);
   const access = await googleAccessToken(account);
@@ -84,13 +87,15 @@ Deno.serve(async (req) => {
       }),
     });
     if (res.ok) sent++;
-    else if (res.status === 404 || res.status === 400) {
+    else {
       const err = await res.text();
+      console.log("push failed", res.status, err.slice(0, 200));
       if (err.includes("UNREGISTERED") || err.includes("INVALID_ARGUMENT")) {
         await db.from("chat_push_tokens").delete().eq("token", token);
       }
     }
   }));
+  console.log("push", type, id, "sent", sent, "of", tokens.length);
   return Response.json({ sent, of: tokens.length });
 });
 
