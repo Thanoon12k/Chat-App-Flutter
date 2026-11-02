@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show FunctionException;
 
 import '../core/config.dart';
+import '../core/push.dart';
 import '../data/models.dart';
 import '../data/repo.dart';
 import '../widgets/common.dart';
@@ -133,6 +135,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (saved == true) _load();
   }
 
+  Future<void> _testNotification() async {
+    if (!await Push.allowed()) {
+      if (!mounted) return;
+      toast(context, 'الإشعارات متوقفة لهذا التطبيق، فعّلها أولاً');
+      await Push.fix();
+      return;
+    }
+    try {
+      final r = await Push.sendTest();
+      if (!mounted) return;
+      toast(
+          context,
+          r.of == 0
+              ? 'هذا الجهاز غير مسجّل للإشعارات، أعد فتح التطبيق وحاول مجدداً'
+              : r.sent > 0
+                  ? 'تم الإرسال ✅ يجب أن يظهر الإشعار خلال ثوانٍ'
+                  : 'تعذر الإرسال إلى هذا الجهاز، أعد فتح التطبيق وحاول مجدداً');
+    } on FunctionException catch (e) {
+      if (mounted) {
+        toast(context,
+            e.status == 429 ? 'انتظر قليلاً ثم حاول' : 'تعذر الإرسال، حاول لاحقاً');
+      }
+    } catch (e) {
+      if (mounted) toast(context, errorText(e));
+    }
+  }
+
   Future<void> _signOut() async {
     final ok = await showDialog<bool>(
       context: context,
@@ -164,7 +193,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             PopupMenuButton<int>(
               onSelected: (v) => v == 0
                   ? _edit()
-                  : v == 2
+                  : v == 3
+                      ? _testNotification()
+                      : v == 2
                       ? Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -177,6 +208,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: ListTile(
                           leading: Icon(Icons.verified_user_outlined),
                           title: Text('تأكيد رقم الهاتف'))),
+                if (Push.ready)
+                  const PopupMenuItem(
+                      value: 3,
+                      child: ListTile(
+                          leading: Icon(Icons.notifications_active_outlined),
+                          title: Text('إرسال إشعار تجريبي'))),
                 const PopupMenuItem(
                     value: 0,
                     child: ListTile(

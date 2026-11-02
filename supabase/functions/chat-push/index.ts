@@ -22,6 +22,7 @@ Deno.serve(async (req) => {
       return Response.json({ ok: false, error: String(e).slice(0, 300) }, { status: 500 });
     }
   }
+  if (type === "test") return sendTest(req, sa);
   if (!["chat_messages", "chat_broadcasts"].includes(type) || !Number.isInteger(id)) {
     return new Response("bad request", { status: 400 });
   }
@@ -61,13 +62,43 @@ Deno.serve(async (req) => {
   let q = db.from("chat_push_tokens").select("token");
   if (userIds) q = q.in("user_id", userIds);
   const { data: tokens } = await q;
-  if (!tokens?.length) return Response.json({ sent: 0 });
+  if (!tokens?.length) {
+    console.log("push", type, id, "no registered phones for", userIds ? userIds.length + " recipient(s)" : "everyone");
+    return Response.json({ sent: 0 });
+  }
 
+  const tag = push.data.conversation_id ?? `b${push.data.broadcast_id}`;
+  const sent = await sendAll(sa, tokens.map((t) => t.token), push, tag);
+  console.log("push", type, id, "sent", sent, "of", tokens.length);
+  return Response.json({ sent, of: tokens.length });
+});
+
+// "Send me a test notification" from the app: to the caller's own phones only,
+// at most once per 20 seconds.
+async function sendTest(req: Request, sa: string) {
+  const jwt = (req.headers.get("authorization") ?? "").replace(/^Bearer\s+/i, "");
+  const { data: { user } } = await db.auth.getUser(jwt);
+  if (!user) return Response.json({ error: "sign in first" }, { status: 401 });
+  const { error: dup } = await db.from("chat_push_sent")
+    .insert({ kind: `test:${user.id}`, id: Math.floor(Date.now() / 20_000) });
+  if (dup) return Response.json({ error: "wait" }, { status: 429 });
+  const { data: tokens } = await db.from("chat_push_tokens").select("token").eq("user_id", user.id);
+  if (!tokens?.length) return Response.json({ sent: 0, of: 0 });
+  const sent = await sendAll(sa, tokens.map((t) => t.token), {
+    title: "🔔 إشعار تجريبي",
+    body: "الإشعارات تعمل على هذا الجهاز ✅",
+    data: { test: "1" },
+  }, "test");
+  console.log("push test", user.id, "sent", sent, "of", tokens.length);
+  return Response.json({ sent, of: tokens.length });
+}
+
+// Sends one notification to each token; drops tokens Google says are dead.
+async function sendAll(sa: string, tokens: string[], push: Push, tag: string) {
   const account = JSON.parse(sa);
   const access = await googleAccessToken(account);
-  const tag = push.data.conversation_id ?? `b${push.data.broadcast_id}`;
   let sent = 0;
-  await Promise.all(tokens.map(async ({ token }) => {
+  await Promise.all(tokens.map(async (token) => {
     const res = await fetch(`https://fcm.googleapis.com/v1/projects/${account.project_id}/messages:send`, {
       method: "POST",
       headers: { authorization: `Bearer ${access}`, "content-type": "application/json" },
@@ -84,15 +115,16 @@ Deno.serve(async (req) => {
       }),
     });
     if (res.ok) sent++;
-    else if (res.status === 404 || res.status === 400) {
+    else {
       const err = await res.text();
+      console.log("push failed", res.status, err.slice(0, 200));
       if (err.includes("UNREGISTERED") || err.includes("INVALID_ARGUMENT")) {
         await db.from("chat_push_tokens").delete().eq("token", token);
       }
     }
   }));
-  return Response.json({ sent, of: tokens.length });
-});
+  return sent;
+}
 
 // OAuth access token for FCM from a service account (JWT bearer grant).
 let cached: { token: string; exp: number } | null = null;

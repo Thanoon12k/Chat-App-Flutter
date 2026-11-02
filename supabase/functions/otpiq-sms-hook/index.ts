@@ -14,7 +14,9 @@ const fail = (http_code: number, message: string) =>
   Response.json({ error: { http_code, message } }, { status: http_code });
 
 async function count(filter: { phone?: string; minutes: number }) {
+  // Only codes OTPIQ actually accepted count; failed attempts cost nothing.
   let q = db.from("chat_otp_sends").select("id", { count: "exact", head: true })
+    .eq("ok", true)
     .gte("created_at", new Date(Date.now() - filter.minutes * 60_000).toISOString());
   if (filter.phone) q = q.eq("phone", filter.phone);
   const { count } = await q;
@@ -61,6 +63,8 @@ Deno.serve(async (req) => {
     console.log("otpiq failed", res?.status, res ? (await res.text()).slice(0, 300) : "");
     return fail(502, "Could not send the code, try again");
   }
+  const sent = await res.json().catch(() => ({}));
+  console.log("otpiq sent", phone.slice(0, 6) + "…", "cost", sent.cost, "credit left", sent.remainingCredit);
   if (row) await db.from("chat_otp_sends").update({ ok: true }).eq("id", row.id);
   return Response.json({});
 });
