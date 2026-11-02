@@ -36,6 +36,10 @@ Deno.serve(async (req) => {
   for (const entry of body.entry ?? []) {
     for (const change of entry.changes ?? []) {
       const value = change.value ?? {};
+      for (const st of value.statuses ?? []) {
+        // Delivery reports for messages we sent; failures carry the reason.
+        console.log("status", st.status, st.recipient_id, JSON.stringify(st.errors ?? []));
+      }
       for (const msg of value.messages ?? []) {
         const text: string = msg.text?.body ?? msg.button?.text ?? "";
         const code = text.replace(/[٠-٩]/g, (d) => String("٠١٢٣٤٥٦٧٨٩".indexOf(d))).match(/\b(\d{6})\b/)?.[1];
