@@ -63,6 +63,8 @@ Deno.serve(async (req) => {
     console.log("otpiq failed", res?.status, res ? (await res.text()).slice(0, 300) : "");
     return fail(502, "Could not send the code, try again");
   }
+  const sent = await res.json().catch(() => ({}));
+  console.log("otpiq sent", phone.slice(0, 6) + "…", "cost", sent.cost, "credit left", sent.remainingCredit);
   if (row) await db.from("chat_otp_sends").update({ ok: true }).eq("id", row.id);
   return Response.json({});
 });
