@@ -82,6 +82,13 @@ class Repo {
   /// This device's FCM token, once push is set up.
   String? pushToken;
 
+  /// Asks the server to send a test notification to my registered phones.
+  Future<({int sent, int of})> sendTestPush() async {
+    final res = await _db.functions.invoke('chat-push', body: {'type': 'test'});
+    final data = (res.data as Map?) ?? {};
+    return (sent: (data['sent'] ?? 0) as int, of: (data['of'] ?? 0) as int);
+  }
+
   Future<void> savePushToken(String token) async {
     pushToken = token;
     await _db.rpc('chat_save_push_token', params: {'p_token': token});

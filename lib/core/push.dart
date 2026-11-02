@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -94,8 +95,52 @@ class Push {
     }
   }
 
-  static void _openData(Map<String, dynamic> data) =>
-      _open(data['conversation_id'] as String?);
+  static void _openData(Map<String, dynamic> data) {
+    if (data['test'] != null) return; // test notification: nothing to open
+    _open(data['conversation_id'] as String?);
+  }
+
+  /// False when the user has turned notifications off for this app (or for
+  /// the chat channel), so nothing would show even though we send it.
+  static Future<bool> allowed() async {
+    if (!_ready) return true; // push not set up: nothing to warn about
+    try {
+      final s = await FirebaseMessaging.instance.getNotificationSettings();
+      if (s.authorizationStatus == AuthorizationStatus.denied) return false;
+      final android = _local.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+      if (android != null) {
+        if (await android.areNotificationsEnabled() == false) return false;
+        final channels = await android.getNotificationChannels() ?? [];
+        for (final c in channels) {
+          if (c.id == channel.id && c.importance == Importance.none) {
+            return false;
+          }
+        }
+      }
+    } catch (_) {}
+    return true;
+  }
+
+  /// Asks again; if Android won't show the prompt any more, opens the app's
+  /// notification settings.
+  static Future<void> fix() async {
+    try {
+      await FirebaseMessaging.instance.requestPermission();
+    } catch (_) {}
+    if (!await allowed()) {
+      await AppSettings.openAppSettings(type: AppSettingsType.notification);
+    }
+  }
+
+  /// Makes sure this phone is registered, then asks the server to send a test
+  /// notification to it. Returns how many of my phones it reached.
+  static Future<({int sent, int of})> sendTest() async {
+    if (!_ready) return (sent: 0, of: 0);
+    final token = await FirebaseMessaging.instance.getToken();
+    if (token != null) await Repo.i.savePushToken(token);
+    return Repo.i.sendTestPush();
+  }
 
   static void _open(String? conversationId) {
     final cb = _onOpen;
@@ -110,6 +155,20 @@ class Push {
   static void _showForeground(RemoteMessage m) {
     final n = m.notification;
     if (n == null) return;
+    if (m.data['test'] != null) {
+      _local.show(
+        0,
+        n.title,
+        n.body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(channel.id, channel.name,
+              channelDescription: channel.description,
+              importance: Importance.max,
+              priority: Priority.high),
+        ),
+      );
+      return;
+    }
     final conv = m.data['conversation_id'] as String?;
     if (conv == null) return; // broadcasts already pop up as a dialog in-app
     if (conv == Repo.i.openChatId) return;

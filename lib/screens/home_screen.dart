@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   List<ChatSummary>? _chats;
   Profile? _me;
   bool _failed = false;
+  bool _notifOff = false;
   RealtimeChannel? _channel;
   RealtimeChannel? _broadcasts;
   Timer? _debounce;
@@ -42,7 +43,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       _alertMessage(m);
     });
     _broadcasts = Repo.i.onBroadcast(_showBroadcast);
-    Push.register(_openFromNotification);
+    Push.register(_openFromNotification).then((_) => _checkNotifications());
+  }
+
+  Future<void> _checkNotifications() async {
+    final ok = await Push.allowed();
+    if (mounted && ok == _notifOff) setState(() => _notifOff = !ok);
   }
 
   /// A tapped phone notification: open that chat, or the announcements.
@@ -128,7 +134,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) _load();
+    if (state == AppLifecycleState.resumed) {
+      _load();
+      _checkNotifications(); // back from the settings page?
+    }
   }
 
   Future<void> _load() async {
@@ -238,7 +247,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         onPressed: _newChat,
         child: const Icon(Icons.add_comment_rounded),
       ),
-      body: _body(),
+      body: Column(children: [
+        if (_notifOff)
+          _NotificationsOffBanner(
+              onFix: () => Push.fix().then((_) => _checkNotifications())),
+        Expanded(child: _body()),
+      ]),
     );
   }
 
@@ -359,6 +373,37 @@ class _SheetAction extends StatelessWidget {
       ),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
       subtitle: Text(subtitle),
+    );
+  }
+}
+
+/// Shown when notifications are turned off for the app on this phone.
+class _NotificationsOffBanner extends StatelessWidget {
+  final VoidCallback onFix;
+  const _NotificationsOffBanner({required this.onFix});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Material(
+      color: scheme.errorContainer,
+      child: SafeArea(
+        top: false,
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 8, 8),
+          child: Row(children: [
+            Icon(Icons.notifications_off_rounded,
+                color: scheme.onErrorContainer),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text('الإشعارات متوقفة، لن تصلك الرسائل الجديدة',
+                  style: TextStyle(color: scheme.onErrorContainer)),
+            ),
+            TextButton(onPressed: onFix, child: const Text('تفعيل')),
+          ]),
+        ),
+      ),
     );
   }
 }
