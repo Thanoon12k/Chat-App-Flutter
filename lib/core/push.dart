@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:app_settings/app_settings.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../data/repo.dart';
@@ -129,7 +129,10 @@ class Push {
       await FirebaseMessaging.instance.requestPermission();
     } catch (_) {}
     if (!await allowed()) {
-      await AppSettings.openAppSettings(type: AppSettingsType.notification);
+      try {
+        await const MethodChannel('chatapp/settings')
+            .invokeMethod('openNotificationSettings');
+      } catch (_) {}
     }
   }
 
