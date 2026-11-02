@@ -118,6 +118,18 @@ void toast(BuildContext context, String msg) {
 String errorText(Object e) {
   if (e is AuthException) {
     final m = e.message.toLowerCase();
+    if (m.contains('iraqi mobile')) return 'يُقبل رقم عراقي فقط (07…)';
+    if (m.contains('too many codes') || m.contains('rate limit') ||
+        m.contains('for security purposes')) {
+      return 'طلبت رموزاً كثيرة، انتظر قليلاً ثم حاول';
+    }
+    if (m.contains('daily limit')) return 'تم بلوغ الحد اليومي، حاول غداً';
+    if (m.contains('could not send') || m.contains('not configured')) {
+      return 'تعذر إرسال الرمز الآن، حاول لاحقاً';
+    }
+    if (m.contains('expired') || (m.contains('invalid') && m.contains('token'))) {
+      return 'الرمز غير صحيح أو انتهت صلاحيته';
+    }
     if (m.contains('invalid login')) return 'البريد أو كلمة المرور غير صحيحة';
     if (m.contains('already registered')) return 'هذا البريد مسجّل مسبقاً';
     if (m.contains('email not confirmed')) {

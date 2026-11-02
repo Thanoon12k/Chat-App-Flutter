@@ -36,7 +36,7 @@ class AppConfig {
 
   /// WhatsApp Business number users send their verification code to (digits
   /// only, with country code). Empty = phone verification hidden.
-  /// Currently Meta's test number; switch to the real one before going live.
+  /// Off for now: sign-in by WhatsApp code (OTPIQ) covers phone numbers.
   static const whatsappNumber =
-      String.fromEnvironment('WHATSAPP_NUMBER', defaultValue: '15556101318');
+      String.fromEnvironment('WHATSAPP_NUMBER', defaultValue: '');
 }

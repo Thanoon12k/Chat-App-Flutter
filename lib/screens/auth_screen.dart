@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/config.dart';
 import '../data/repo.dart';
 import '../widgets/common.dart';
+import 'phone_login_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -123,6 +124,28 @@ class _AuthScreenState extends State<AuthScreen> {
                             const Text('المتابعة باستخدام Google'),
                           ],
                         ),
+                      ),
+                      const SizedBox(height: 12),
+                      FilledButton.icon(
+                        onPressed: _busy
+                            ? null
+                            : () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const PhoneLoginScreen())),
+                        style: FilledButton.styleFrom(
+                          minimumSize: const Size.fromHeight(52),
+                          backgroundColor: const Color(0xFF25D366),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)),
+                          textStyle: const TextStyle(
+                              fontFamily: 'Cairo',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        icon: const Icon(Icons.chat_rounded),
+                        label: const Text('المتابعة عبر واتساب'),
                       ),
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 18),
