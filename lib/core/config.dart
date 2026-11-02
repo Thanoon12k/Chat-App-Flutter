@@ -37,5 +37,6 @@ class AppConfig {
   /// WhatsApp Business number users send their verification code to (digits
   /// only, with country code). Empty = phone verification hidden.
   static const whatsappNumber =
-      String.fromEnvironment('WHATSAPP_NUMBER', defaultValue: '');
+      String.fromEnvironment('WHATSAPP_NUMBER',
+          defaultValue: '15556101318') // Meta test number for now;
 }
