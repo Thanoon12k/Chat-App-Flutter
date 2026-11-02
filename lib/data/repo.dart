@@ -24,6 +24,14 @@ class Repo {
     return res.session != null;
   }
 
+  /// "Continue with WhatsApp": Supabase sends a 6-digit code through OTPIQ
+  /// (WhatsApp, then Telegram, then SMS). [phone] is +9647XXXXXXXXX.
+  Future<void> sendPhoneCode(String phone) =>
+      _db.auth.signInWithOtp(phone: phone);
+
+  Future<void> verifyPhoneCode(String phone, String code) =>
+      _db.auth.verifyOTP(phone: phone, token: code.trim(), type: OtpType.sms);
+
   /// Opens Google in the browser; the session arrives through the deep link
   /// and AuthGate reacts to it.
   Future<void> signInWithGoogle() async {
