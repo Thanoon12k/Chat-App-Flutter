@@ -55,6 +55,21 @@ class Repo {
     await _db.auth.signOut();
   }
 
+  // ---------- phone (WhatsApp verification) ----------
+  /// My verified phone number, or null.
+  Future<String?> myPhone() async {
+    final row = await _db
+        .from('chat_phones')
+        .select('phone')
+        .eq('user_id', myId)
+        .maybeSingle();
+    return row?['phone'] as String?;
+  }
+
+  /// A fresh 6-digit code to send to our WhatsApp number.
+  Future<String> newPhoneCode() async =>
+      await _db.rpc('chat_new_phone_code') as String;
+
   // ---------- push ----------
   /// This device's FCM token, once push is set up.
   String? pushToken;
