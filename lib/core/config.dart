@@ -33,4 +33,10 @@ class AppConfig {
   static const firebaseProjectId =
       String.fromEnvironment('FIREBASE_PROJECT_ID',
           defaultValue: 'chat-app-9d26a');
+
+  /// WhatsApp Business number users send their verification code to (digits
+  /// only, with country code). Empty = phone verification hidden.
+  /// Currently Meta's test number; switch to the real one before going live.
+  static const whatsappNumber =
+      String.fromEnvironment('WHATSAPP_NUMBER', defaultValue: '15556101318');
 }

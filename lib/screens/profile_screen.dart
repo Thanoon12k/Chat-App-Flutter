@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../core/config.dart';
 import '../data/models.dart';
 import '../data/repo.dart';
 import '../widgets/common.dart';
 import 'chat_screen.dart';
 import 'profile_setup_screen.dart';
+import 'verify_phone_screen.dart';
 
 /// Anyone's profile: photo, bio, stars and comments.
 /// On my own profile the actions become "edit" and "sign out".
@@ -160,14 +162,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           if (_isMe)
             PopupMenuButton<int>(
-              onSelected: (v) => v == 0 ? _edit() : _signOut(),
-              itemBuilder: (_) => const [
-                PopupMenuItem(
+              onSelected: (v) => v == 0
+                  ? _edit()
+                  : v == 2
+                      ? Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const VerifyPhoneScreen()))
+                      : _signOut(),
+              itemBuilder: (_) => [
+                if (AppConfig.whatsappNumber.isNotEmpty)
+                  const PopupMenuItem(
+                      value: 2,
+                      child: ListTile(
+                          leading: Icon(Icons.verified_user_outlined),
+                          title: Text('تأكيد رقم الهاتف'))),
+                const PopupMenuItem(
                     value: 0,
                     child: ListTile(
                         leading: Icon(Icons.edit_outlined),
                         title: Text('تعديل'))),
-                PopupMenuItem(
+                const PopupMenuItem(
                     value: 1,
                     child: ListTile(
                         leading: Icon(Icons.logout_rounded),
